@@ -149,7 +149,7 @@ export const fallbacks: { [T in AiTask]: (input: AiInput<T>) => AiOutput<T> } = 
       bigIdea: `${input.product} for the Red Rocks family: cheer with ${names}, then come in with your VIP Pass.`,
       months,
       phases: [
-        { name: "Awareness", start: 0, end: firstEnd, keyHook: `${names} introduce ${input.product}` },
+        { name: "Awareness", start: 0, end: firstEnd, keyHook: `${names} ${team.length === 1 ? "introduces" : "introduce"} ${input.product}` },
         { name: "Engagement", start: Math.min(firstEnd + 1, last), end: Math.max(middle, Math.min(firstEnd + 1, last)), keyHook: "Fan challenge at a home meet" },
         { name: "Conversion", start: Math.min(middle + 1, last), end: last, keyHook: "VIP Pass member offer with a tracked code" },
       ],

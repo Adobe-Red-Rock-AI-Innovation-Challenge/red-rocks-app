@@ -50,6 +50,7 @@ export default function FanDashboardPage() {
   const { state } = useDemo();
   const { fan, membership } = state;
   const campaigns = state.offers.filter((offer) => isLive(offer) && offer.status !== "reported");
+  const myChats = fan ? state.conversations.filter((chat) => chat.fanName === fan.name) : [];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -70,6 +71,37 @@ export default function FanDashboardPage() {
               </Link>
             </div>
           )}
+
+          <h2 className="mt-8 text-2xl">Messages</h2>
+          <div className="mt-3 grid gap-2">
+            {myChats.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Write to an athlete from their profile page.{" "}
+                <Link href="/athletes" className="underline">
+                  Find an athlete
+                </Link>
+              </p>
+            )}
+            {myChats.map((chat) => {
+              const athlete = athletes.find((item) => item.id === chat.athleteId);
+              const last = chat.messages.at(-1);
+              return (
+                <Link
+                  key={chat.id}
+                  href={`/athletes/${chat.athleteId}`}
+                  className="rounded-lg border p-3 hover:border-primary"
+                >
+                  <p className="font-semibold">
+                    {athlete?.name}
+                    {last?.from === "athlete" && (
+                      <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[11px] text-white">Replied</span>
+                    )}
+                  </p>
+                  <p className="line-clamp-1 text-sm text-muted-foreground">{last?.text}</p>
+                </Link>
+              );
+            })}
+          </div>
 
           <h2 className="mt-8 text-2xl">Thank-you inbox</h2>
           <div className="mt-3 grid gap-3">

@@ -1,78 +1,579 @@
 [
   {
-    "id": "mara-ellison",
-    "name": "Mara Ellison",
+    "id": "avery-neff",
+    "name": "Avery Neff",
     "event": "All-Around",
-    "year": "Senior",
-    "hometown": "Boise, ID",
-    "story": "Mara tore her Achilles as a sophomore and came back a year later to post a career-best all-around score. She now spends her Sundays coaching kids with disabilities at a Salt Lake City gym and talks openly about the mental side of recovery.",
-    "vibeTags": ["Fitness Expert"],
-    "interestTags": ["#MentalHealthAdvocate", "#OutdoorAdventures"],
-    "followers": { "instagram": 48200, "tiktok": 31500 },
-    "engagementRate": 6.8,
-    "image": "/images/athletes/mara-ellison.svg",
-    "rateCard": [
-      { "deliverable": "Instagram post", "price": 650 },
-      { "deliverable": "Instagram Reel", "price": 900 },
-      { "deliverable": "Story set (3 frames)", "price": 300 },
-      { "deliverable": "In-person appearance (1 hr)", "price": 1200 }
-    ]
-  },
-  {
-    "id": "talia-reyes",
-    "name": "Talia Reyes",
-    "event": "Balance Beam",
     "year": "Junior",
-    "hometown": "Albuquerque, NM",
-    "story": "Talia learned beam on a chalk line her dad painted across the family garage. A first-generation college student, she studies dance alongside nutrition and is known for the quietest, cleanest routine on the team.",
-    "vibeTags": ["Elegant"],
-    "interestTags": ["#SkincareRoutine", "#MentalHealthAdvocate"],
-    "followers": { "instagram": 36700, "tiktok": 52400 },
-    "engagementRate": 7.4,
-    "image": "/images/athletes/talia-reyes.svg",
+    "hometown": "South Jordan, Utah",
+    "story": "Junior from South Jordan, Utah. Career highs: 39.700 on the all-around, 10.0 on vault, 10.0 on bars, 9.95 on beam, 9.975 on floor.",
+    "vibeTags": [
+      "Junior"
+    ],
+    "interestTags": [
+      "Vault",
+      "Bars",
+      "Beam",
+      "Floor"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/avery-neff.webp",
+    "instagram": "avery.neff",
+    "careerHighs": {
+      "All-Around": "39.700",
+      "Vault": "10.0",
+      "Bars": "10.0",
+      "Beam": "9.95",
+      "Floor": "9.975"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/avery-neff/18033",
     "rateCard": [
-      { "deliverable": "Instagram post", "price": 500 },
-      { "deliverable": "Instagram Reel", "price": 750 },
-      { "deliverable": "Story set (3 frames)", "price": 250 },
-      { "deliverable": "In-person appearance (1 hr)", "price": 900 }
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
     ]
   },
   {
-    "id": "josie-whitlock",
-    "name": "Josie Whitlock",
-    "event": "Floor Exercise",
+    "id": "zoe-johnson",
+    "name": "Zoe Johnson",
+    "event": "Vault & Floor",
+    "year": "Junior",
+    "hometown": "Durham, N.C.",
+    "story": "Junior from Durham, N.C. Career highs: 9.95 on vault, 9.90 on floor.",
+    "vibeTags": [
+      "Junior"
+    ],
+    "interestTags": [
+      "Vault",
+      "Floor"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/zoe-johnson.webp",
+    "instagram": "zoe.ljohnson",
+    "careerHighs": {
+      "Vault": "9.95",
+      "Floor": "9.90"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/zoe-johnson/18021",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "clara-raposo",
+    "name": "Clara Raposo",
+    "event": "Vault & Bars",
+    "year": "Junior",
+    "hometown": "Toronto, Canada",
+    "story": "Junior from Toronto, Canada. Career highs: 9.85 on vault, 9.925 on bars.",
+    "vibeTags": [
+      "Junior"
+    ],
+    "interestTags": [
+      "Vault",
+      "Bars"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/clara-raposo.webp",
+    "instagram": "_clararaposo",
+    "careerHighs": {
+      "Vault": "9.85",
+      "Bars": "9.925"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/clara-raposo/18045",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "abbi-ryssman",
+    "name": "Abbi Ryssman",
+    "event": "Bars & Beam",
     "year": "Sophomore",
-    "hometown": "Ogden, UT",
-    "story": "Josie grew up in the stands as a Utah kid and now choreographs the team's viral warm-up dances. Her floor routines end with a grin and her off-day videos rank every taco truck in the valley.",
-    "vibeTags": ["Energetic", "Humorous"],
-    "interestTags": ["#LocalFoodie"],
-    "followers": { "instagram": 29800, "tiktok": 88100 },
-    "engagementRate": 11.2,
-    "image": "/images/athletes/josie-whitlock.svg",
+    "hometown": "Rochester, Minnesota",
+    "story": "Sophomore from Rochester, Minnesota. Career highs: 9.925 on bars, 9.95 on beam.",
+    "vibeTags": [
+      "Sophomore"
+    ],
+    "interestTags": [
+      "Bars",
+      "Beam"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/abbi-ryssman.webp",
+    "instagram": "abbi_ryssman",
+    "careerHighs": {
+      "Bars": "9.925",
+      "Beam": "9.95"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/abbi-ryssman/18024",
     "rateCard": [
-      { "deliverable": "Instagram post", "price": 400 },
-      { "deliverable": "Instagram Reel", "price": 700 },
-      { "deliverable": "Story set (3 frames)", "price": 200 },
-      { "deliverable": "In-person appearance (1 hr)", "price": 800 }
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
     ]
   },
   {
-    "id": "kennedy-okafor",
-    "name": "Kennedy Okafor",
-    "event": "Vault & Uneven Bars",
-    "year": "Freshman",
-    "hometown": "Tulsa, OK",
-    "story": "Kennedy arrived on campus with a vault that made the coaches stop practice to watch. Between meets she trail-runs the Wasatch foothills and films honest first-year vlogs for student-athletes learning to balance it all.",
-    "vibeTags": ["Energetic", "Fitness Expert"],
-    "interestTags": ["#OutdoorAdventures", "#LocalFoodie"],
-    "followers": { "instagram": 14300, "tiktok": 21900 },
-    "engagementRate": 9.1,
-    "image": "/images/athletes/kennedy-okafor.svg",
+    "id": "sage-curtis",
+    "name": "Sage Curtis",
+    "event": "Floor",
+    "year": "Sophomore",
+    "hometown": "Riverton, Utah",
+    "story": "Sophomore from Riverton, Utah. Career highs: 9.95 on floor.",
+    "vibeTags": [
+      "Sophomore"
+    ],
+    "interestTags": [
+      "Floor"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/sage-curtis.webp",
+    "instagram": "sage_curtis2025",
+    "careerHighs": {
+      "Floor": "9.95"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/sage-curtis/18030",
     "rateCard": [
-      { "deliverable": "Instagram post", "price": 250 },
-      { "deliverable": "Instagram Reel", "price": 400 },
-      { "deliverable": "Story set (3 frames)", "price": 125 },
-      { "deliverable": "In-person appearance (1 hr)", "price": 500 }
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "bailey-stroud",
+    "name": "Bailey Stroud",
+    "event": "Bars",
+    "year": "Sophomore",
+    "hometown": "New Palestine, Indiana",
+    "story": "Sophomore from New Palestine, Indiana. Career highs: 9.925 on bars.",
+    "vibeTags": [
+      "Sophomore"
+    ],
+    "interestTags": [
+      "Bars"
+    ],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/bailey-stroud.webp",
+    "instagram": "baileystroud25",
+    "careerHighs": {
+      "Bars": "9.925"
+    },
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/bailey-stroud/18037",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "norah-christian",
+    "name": "Norah Christian",
+    "event": "Red Rocks gymnast",
+    "year": "Sophomore",
+    "hometown": "Bremerton, Washington",
+    "story": "Sophomore from Bremerton, Washington.",
+    "vibeTags": [
+      "Sophomore"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/norah-christian.webp",
+    "instagram": "norah_christian2025",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/norah-christian/18040",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "elizabeth-gantner",
+    "name": "Elizabeth Gantner",
+    "event": "Red Rocks gymnast",
+    "year": "Senior",
+    "hometown": "Indianapolis, Ind.",
+    "story": "Senior from Indianapolis, Ind.",
+    "vibeTags": [
+      "Senior"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/elizabeth-gantner.webp",
+    "instagram": "elizabeth_gantner",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/elizabeth-gantner/18042",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "lonie-gervais",
+    "name": "Léonie Gervais",
+    "event": "Red Rocks gymnast",
+    "year": "Freshman",
+    "hometown": "Trois-Rivières, Quebec, Canada",
+    "story": "Freshman from Trois-Rivières, Quebec, Canada.",
+    "vibeTags": [
+      "Freshman"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/lonie-gervais.webp",
+    "instagram": "leog.gym",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/lonie-gervais/18052",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "ayla-miller",
+    "name": "Ayla Miller",
+    "event": "Red Rocks gymnast",
+    "year": "Freshman",
+    "hometown": "Big Lake, Minnesota",
+    "story": "Freshman from Big Lake, Minnesota.",
+    "vibeTags": [
+      "Freshman"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/ayla-miller.webp",
+    "instagram": "ayla_miller26",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/ayla-miller/18051",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "poppygrace-stickler",
+    "name": "Poppy-Grace Stickler",
+    "event": "Red Rocks gymnast",
+    "year": "Junior",
+    "hometown": "Cardiff, Wales",
+    "story": "Junior from Cardiff, Wales.",
+    "vibeTags": [
+      "Junior"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/poppygrace-stickler.webp",
+    "instagram": "poppysticklerr",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/poppygrace-stickler/18047",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "lilly-tubbs",
+    "name": "Lilly Tubbs",
+    "event": "Red Rocks gymnast",
+    "year": "Graduate",
+    "hometown": "Pflugerville, Texas",
+    "story": "Graduate from Pflugerville, Texas.",
+    "vibeTags": [
+      "Graduate"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/lilly-tubbs.webp",
+    "instagram": "lilly.tubbs",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/lilly-tubbs/18054",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "arielle-ward",
+    "name": "Arielle Ward",
+    "event": "Red Rocks gymnast",
+    "year": "Graduate",
+    "hometown": "Frisco, Texas",
+    "story": "Graduate from Frisco, Texas.",
+    "vibeTags": [
+      "Graduate"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/arielle-ward.webp",
+    "instagram": "arielle__ward",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/arielle-ward/18053",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "camie-winger",
+    "name": "Camie Winger",
+    "event": "Red Rocks gymnast",
+    "year": "Senior",
+    "hometown": "Orem, Utah",
+    "story": "Senior from Orem, Utah.",
+    "vibeTags": [
+      "Senior"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/camie-winger.webp",
+    "instagram": "gymcambam",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/camie-winger/18049",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
+    ]
+  },
+  {
+    "id": "ella-zirbes",
+    "name": "Ella Zirbes",
+    "event": "Red Rocks gymnast",
+    "year": "Senior",
+    "hometown": "Stillwater, Minn.",
+    "story": "Senior from Stillwater, Minn.",
+    "vibeTags": [
+      "Senior"
+    ],
+    "interestTags": [],
+    "followers": null,
+    "engagementRate": null,
+    "image": "/images/athletes/ella-zirbes.webp",
+    "instagram": "ellazirbes",
+    "careerHighs": {},
+    "bioUrl": "https://utahutes.com/sports/womens-gymnastics/roster/ella-zirbes/18028",
+    "rateCard": [
+      {
+        "deliverable": "Instagram post",
+        "price": 400
+      },
+      {
+        "deliverable": "Instagram Reel",
+        "price": 600
+      },
+      {
+        "deliverable": "Story set (3 frames)",
+        "price": 200
+      },
+      {
+        "deliverable": "In-person appearance (1 hr)",
+        "price": 800
+      }
     ]
   }
 ]

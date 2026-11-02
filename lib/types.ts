@@ -11,9 +11,13 @@ export type Athlete = {
   story: string;
   vibeTags: string[];
   interestTags: string[];
-  followers: { instagram: number; tiktok: number };
-  engagementRate: number;
+  // Follower counts are not published, so they stay null until the athlete connects an account.
+  followers: { instagram: number; tiktok: number } | null;
+  engagementRate: number | null;
   image: string;
+  instagram: string | null;
+  careerHighs: Record<string, string>;
+  bioUrl: string;
   rateCard: RateCardItem[];
 };
 
@@ -91,6 +95,43 @@ export type Sale = {
   amount: number;
   athleteShare: number;
   createdAt: string;
+  done?: boolean;
+};
+
+export type ChatMessage = { id: string; from: "fan" | "athlete"; text: string; createdAt: string };
+
+export type Conversation = {
+  id: string;
+  athleteId: string;
+  fanName: string;
+  messages: ChatMessage[];
+  blocked?: boolean;
+};
+
+export type PlanItem = { start: number; end: number; text: string };
+
+export type CampaignPlan = {
+  bigIdea: string;
+  months: string[];
+  phases: { name: string; start: number; end: number; keyHook: string }[];
+  rows: { channel: string; group: "Athletes" | "Fans" | "In person" | "PR"; items: PlanItem[] }[];
+  research: {
+    audienceInsight: string;
+    whyTheseAthletes: string;
+    facts: string[];
+    assumptions: string[];
+    risks: string[];
+  };
+  budget: { item: string; amount: number }[];
+  kpis: { metric: string; target: string }[];
+};
+
+export type SavedCampaign = {
+  id: string;
+  sponsorName: string;
+  athleteIds: string[];
+  plan: CampaignPlan;
+  createdAt: string;
 };
 
 export type ThankYou = { id: string; from: string; message: string; createdAt: string };
@@ -160,6 +201,8 @@ export type DemoState = {
   claimedRewards: string[];
   fanCodes: Record<string, string>;
   sales: Sale[];
+  conversations: Conversation[];
+  campaigns: SavedCampaign[];
   requests: SponsorRequest[];
   rsvps: string[];
   thanks: ThankYou[];

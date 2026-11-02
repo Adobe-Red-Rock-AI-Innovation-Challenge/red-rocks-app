@@ -39,7 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Link href="/feasibility">Business plan</Link>
               <Link href="/privacy">Privacy</Link>
             </nav>
-            Student competition prototype. Athletes, sponsors and figures are fictional. Not
+            Student competition prototype. Athlete names, photos and career highs come from the
+            official Utah roster; deals, prices, quests, sponsors and messages are examples. Not
             affiliated with or endorsed by the University of Utah.
           </footer>
           <Toaster theme="light" position="top-center" />

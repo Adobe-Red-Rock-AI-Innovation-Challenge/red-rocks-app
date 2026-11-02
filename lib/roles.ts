@@ -3,7 +3,7 @@ import type { Role } from "@/lib/types";
 export const roles: { id: Role; label: string; home: string }[] = [
   { id: "fan", label: "Fan", home: "/" },
   { id: "sponsor", label: "Sponsor", home: "/sponsor/packages" },
-  { id: "athlete", label: "Athlete", home: "/athlete/dashboard" },
+  { id: "athlete", label: "Athlete", home: "/athlete/tasks" },
 ];
 
 export const navByRole: Record<Role, { href: string; label: string }[]> = {
@@ -15,15 +15,18 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
   sponsor: [
     { href: "/sponsor/packages", label: "Packages" },
     { href: "/sponsor/athletes", label: "Athletes" },
+    { href: "/sponsor/planner", label: "Planner" },
     { href: "/sponsor/requests", label: "Requests" },
     { href: "/sponsor/deals", label: "Deals" },
     { href: "/sponsor/results", label: "Results" },
     { href: "/sponsor/redeem", label: "Redeem" },
   ],
   athlete: [
+    { href: "/athlete/tasks", label: "Tasks" },
     { href: "/athlete/dashboard", label: "Deals" },
+    { href: "/athlete/messages", label: "Messages" },
     { href: "/athlete/opportunities", label: "Opportunities" },
-    { href: "/athlete/setup", label: "Profile Setup" },
+    { href: "/athlete/setup", label: "Profile" },
   ],
 };
 

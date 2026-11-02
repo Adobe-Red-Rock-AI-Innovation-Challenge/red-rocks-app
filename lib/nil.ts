@@ -6,7 +6,7 @@ export type NilCheck = { label: string; status: NilStatus; detail: string };
 
 const BLOCKED_CATEGORY =
   /\b(alcohol|beer|wine|bourbon|whiskey|vodka|spirits|tobacco|vape|cannabis|gambling|sportsbook|betting)\b/i;
-const PAY_FOR_PLAY = /\b(per win|per point|if you win|recruit\w*|transfer|enroll\w*)\b/i;
+const PAY_FOR_PLAY = /\b(per (?:meet )?win|per point|if you win|recruit\w*|transfer|enroll\w*)\b/i;
 const SCHOOL_MARKS = /\b(university|logo|uniform|jersey|campus)\b/i;
 
 // Rule-of-thumb screening for the demo. A real program sends these to its compliance office.

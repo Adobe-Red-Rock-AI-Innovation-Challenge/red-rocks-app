@@ -11,7 +11,7 @@ import type {
   VipEvent,
 } from "@/lib/types";
 
-export const athletes: Athlete[] = athletesJson;
+export const athletes = athletesJson as Athlete[];
 export const sponsors: Sponsor[] = sponsorsJson;
 export const quests: Quest[] = questsJson;
 export const events = eventsJson as VipEvent[];

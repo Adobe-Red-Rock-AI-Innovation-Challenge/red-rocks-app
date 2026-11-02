@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Textarea } from "@/components/ui/input";
 import type { AiSource as Source } from "@/lib/ai";
 import { askAi } from "@/lib/ai-client";
+import { AthleteChat } from "@/components/athlete-chat";
 import type { Athlete, Quest } from "@/lib/types";
 
 export function AthleteDetail({ athlete, quest }: { athlete: Athlete; quest: Quest | null }) {
@@ -27,11 +28,8 @@ export function AthleteDetail({ athlete, quest }: { athlete: Athlete; quest: Que
   const tags = profile?.tags ?? [...athlete.vibeTags, ...athlete.interestTags];
   const raised = quest ? quest.raised + (state.questContributions[quest.id] ?? 0) : 0;
   const percent = quest ? Math.min(100, Math.round((raised / quest.goal) * 100)) : 0;
-  const stats = [
-    { label: "Instagram", value: athlete.followers.instagram.toLocaleString("en-US") },
-    { label: "TikTok", value: athlete.followers.tiktok.toLocaleString("en-US") },
-    { label: "Engagement", value: `${athlete.engagementRate}%` },
-  ];
+  // Only published numbers appear here: career highs come from the official roster bio.
+  const stats = Object.entries(athlete.careerHighs).map(([label, value]) => ({ label, value }));
 
   async function polish() {
     setPolishing(true);
@@ -54,24 +52,44 @@ export function AthleteDetail({ athlete, quest }: { athlete: Athlete; quest: Que
       <div>
         <Image
           src={athlete.image}
-          alt=""
-          width={400}
-          height={400}
-          unoptimized
-          className="aspect-square w-full rounded-lg object-cover"
+          alt={athlete.name}
+          width={600}
+          height={750}
+          className="aspect-[4/5] w-full rounded-lg object-cover object-top"
         />
-        <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
-          {stats.map((stat) => (
-            <div key={stat.label} className="rounded-lg border p-2">
-              <dd className="font-heading text-xl font-extrabold text-primary">{stat.value}</dd>
-              <dt className="text-xs text-muted-foreground">{stat.label}</dt>
-            </div>
-          ))}
-        </dl>
+        {stats.length > 0 && (
+          <>
+            <p className="mt-4 text-xs font-semibold text-muted-foreground uppercase">Career highs</p>
+            <dl className="mt-2 grid grid-cols-3 gap-2 text-center">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-lg border p-2">
+                  <dd className="text-lg font-bold text-primary">{stat.value}</dd>
+                  <dt className="text-xs text-muted-foreground">{stat.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
+        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+          {athlete.instagram && (
+            <a
+              href={`https://www.instagram.com/${athlete.instagram}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary underline"
+            >
+              @{athlete.instagram}
+            </a>
+          )}
+          <a href={athlete.bioUrl} target="_blank" rel="noopener noreferrer" className="underline">
+            Official bio
+          </a>
+        </div>
+        <AthleteChat athlete={athlete} />
       </div>
 
       <div className="min-w-0">
-        <h1 className="text-5xl">{athlete.name}</h1>
+        <h1 className="text-4xl sm:text-5xl">{athlete.name}</h1>
         <p className="text-muted-foreground">
           {athlete.event} · {athlete.year} · {athlete.hometown}
         </p>

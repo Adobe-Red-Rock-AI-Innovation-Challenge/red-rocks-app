@@ -1,8 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { fallbacks, type AiTask } from "@/lib/ai";
+import { fallbacks, PLAN_FACTS, type AiTask } from "@/lib/ai";
 import { athletes } from "@/lib/data";
 
-const MAX_INPUT_LENGTH = 4000;
+// Refining resends the whole plan, so it gets a larger allowance than the short tasks.
+const MAX_INPUT_LENGTH: Partial<Record<AiTask, number>> = { refine: 20000 };
+const DEFAULT_MAX_INPUT = 4000;
 
 const client = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
 
@@ -19,15 +21,95 @@ const roster = JSON.stringify(
     id: athlete.id,
     name: athlete.name,
     event: athlete.event,
-    story: athlete.story,
-    tags: [...athlete.vibeTags, ...athlete.interestTags],
-    followers: athlete.followers,
-    engagementRate: athlete.engagementRate,
+    year: athlete.year,
+    hometown: athlete.hometown,
+    careerHighs: athlete.careerHighs,
     rateCard: athlete.rateCard,
   })),
 );
 
+const strings = { type: "array", items: text } as const;
+const span = {
+  type: "object",
+  properties: { start: { type: "integer" }, end: { type: "integer" }, text },
+  required: ["start", "end", "text"],
+  additionalProperties: false,
+};
+const planSchema = {
+  type: "object",
+  properties: {
+    bigIdea: text,
+    months: strings,
+    phases: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { name: text, start: { type: "integer" }, end: { type: "integer" }, keyHook: text },
+        required: ["name", "start", "end", "keyHook"],
+        additionalProperties: false,
+      },
+    },
+    rows: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          channel: text,
+          group: { type: "string", enum: ["Athletes", "Fans", "In person", "PR"] },
+          items: { type: "array", items: span },
+        },
+        required: ["channel", "group", "items"],
+        additionalProperties: false,
+      },
+    },
+    research: {
+      type: "object",
+      properties: {
+        audienceInsight: text,
+        whyTheseAthletes: text,
+        facts: strings,
+        assumptions: strings,
+        risks: strings,
+      },
+      required: ["audienceInsight", "whyTheseAthletes", "facts", "assumptions", "risks"],
+      additionalProperties: false,
+    },
+    budget: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { item: text, amount: { type: "integer" } },
+        required: ["item", "amount"],
+        additionalProperties: false,
+      },
+    },
+    kpis: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { metric: text, target: text },
+        required: ["metric", "target"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["bigIdea", "months", "phases", "rows", "research", "budget", "kpis"],
+  additionalProperties: false,
+};
+
+const planRules = `Plan an integrated NIL campaign for a local sponsor with Red Rocks gymnasts, laid out like a marketing calendar: a big idea, months, phases (Awareness, Engagement, Conversion), a key hook per phase, and channel rows grouped as Athletes, Fans, In person or PR. Item start and end are zero-based month indexes within months. Make the sponsor's results measurable through tracked VIP Pass offer codes and redemptions. Use only the athletes in athleteIds and describe them only with roster facts. The facts list may contain only these sourced facts, quoted as given: ${JSON.stringify(PLAN_FACTS)}. Put every estimate in assumptions. Risks must cover NIL Go clearance for deals of $600 or more, #ad disclosure and no school marks without approval. Budget lines must add up to the budget. Never tie pay to performance. Roster: ${roster}`;
+
 const tasks: Record<AiTask, { system: string; schema: Record<string, unknown> }> = {
+  plan: { system: planRules, schema: planSchema },
+  refine: {
+    system: `${planRules}\nYou receive an existing plan and the sponsor's instruction. Return the whole plan, changed only as the instruction asks.`,
+    schema: planSchema,
+  },
+  reply: {
+    system:
+      "Draft a short, warm reply (under 50 words) from a college gymnast to a fan's message. Stay positive and general. Never share personal details, schedules, locations or contact information, and never make promises.",
+    schema: textResult,
+  },
   polish: {
     system:
       "Polish a fan's short note to a college gymnast. Keep their meaning and voice, fix errors, stay under 60 words, and add no invented facts.",
@@ -101,7 +183,7 @@ async function askClaude(task: AiTask, input: unknown) {
   try {
     const response = await client.beta.messages.create({
       model: "claude-opus-5-5",
-      max_tokens: 4000,
+      max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: {
@@ -146,7 +228,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid AI request" }, { status: 400 });
   }
   // This route is public, so a size cap keeps one visitor from running up the API bill.
-  if (JSON.stringify(body.input).length > MAX_INPUT_LENGTH) {
+  if (JSON.stringify(body.input).length > (MAX_INPUT_LENGTH[task] ?? DEFAULT_MAX_INPUT)) {
     return Response.json({ error: "Input is too long" }, { status: 413 });
   }
 

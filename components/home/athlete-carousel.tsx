@@ -6,10 +6,6 @@ import { ArrowUpRight, Search } from "lucide-react";
 import { SpotlightShowcase } from "@/components/spotlight-showcase";
 import { athletes } from "@/lib/data";
 
-function compact(value: number) {
-  return value >= 1000 ? `${(value / 1000).toFixed(1)}K` : String(value);
-}
-
 export function AthleteCarousel() {
   const [query, setQuery] = useState("");
   const shown = athletes.filter((athlete) =>
@@ -54,9 +50,10 @@ export function AthleteCarousel() {
               subtitle: `${athlete.event} · ${athlete.year}`,
               details: [
                 { label: "Hometown", value: athlete.hometown },
-                { label: "Engagement", value: `${athlete.engagementRate}%` },
-                { label: "Instagram", value: compact(athlete.followers.instagram) },
-                { label: "TikTok", value: compact(athlete.followers.tiktok) },
+                { label: "Class", value: athlete.year },
+                ...Object.entries(athlete.careerHighs)
+                  .slice(0, 2)
+                  .map(([event, score]) => ({ label: `${event} high`, value: score })),
               ],
               actions: [
                 { href: `/athletes/${athlete.id}`, label: "View profile" },

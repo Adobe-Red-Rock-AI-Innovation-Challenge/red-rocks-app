@@ -3,7 +3,7 @@ import { athleteShare, findProduct } from "@/lib/gifts";
 import { athletes, quests } from "@/lib/data";
 import type { DemoNotification, DemoState, DemoUser, Purchase, Role } from "@/lib/types";
 
-const STORAGE_KEY = "red-rocks-demo-v3";
+const STORAGE_KEY = "red-rocks-demo-v4";
 
 export const initialState: DemoState = {
   role: "fan",
@@ -15,6 +15,22 @@ export const initialState: DemoState = {
   claimedRewards: [],
   fanCodes: {},
   sales: [],
+  conversations: [
+    {
+      id: "seed-chat-avery",
+      athleteId: "avery-neff",
+      fanName: "Maya (age 11)",
+      messages: [
+        {
+          id: "seed-chat-avery-1",
+          from: "fan",
+          text: "Your vault at the BYU meet was amazing! Any tips for my first level 5 meet?",
+          createdAt: "2026-10-30T18:00:00.000Z",
+        },
+      ],
+    },
+  ],
+  campaigns: [],
   requests: [
     {
       id: "seed-request-switchback",
@@ -27,7 +43,7 @@ export const initialState: DemoState = {
       status: "open",
       responses: [
         {
-          athleteId: "kennedy-okafor",
+          athleteId: "bailey-stroud",
           note: "Free that Saturday morning and I love the trails!",
           createdAt: "2026-10-31T16:00:00.000Z",
         },
@@ -42,7 +58,7 @@ export const initialState: DemoState = {
     {
       id: "seed-second-peak",
       sponsorName: "Second Peak Coffee",
-      athleteId: "mara-ellison",
+      athleteId: "avery-neff",
       title: "Meet-day latte Reel",
       deliverables: "One Instagram Reel and a 3-frame story set at the Second Peak counter.",
       price: 1100,
@@ -50,31 +66,33 @@ export const initialState: DemoState = {
       caption: "Fueling meet day with @secondpeakcoffee. #ad",
       status: "pending",
       createdAt: "2026-10-28T16:00:00.000Z",
-      code: "PEAK-MARA",
+      code: "PEAK-AVERY",
       claims: 0,
       redemptions: 0,
       redeemedCodes: [],
+      sample: true,
     },
     {
-      id: "seed-canyon-spirits",
-      sponsorName: "Canyon Spirits",
-      athleteId: "mara-ellison",
-      title: "Bourbon tasting night",
-      deliverables: "One Instagram post wearing team uniform at a bourbon tasting.",
-      price: 4000,
-      timeline: "Post by Nov 20",
-      caption: "Cheers to the season!",
+      id: "seed-summit-auto",
+      sponsorName: "Summit Auto Group",
+      athleteId: "avery-neff",
+      title: "Win bonus promo",
+      deliverables: "One post per meet in team uniform, plus a $200 bonus per meet win.",
+      price: 1200,
+      timeline: "All season",
+      caption: "Go Utes!",
       status: "pending",
       createdAt: "2026-10-30T16:00:00.000Z",
-      code: "CANYON-MARA",
+      code: "SUMMIT-AVERY",
       claims: 0,
       redemptions: 0,
       redeemedCodes: [],
+      sample: true,
     },
     {
       id: "seed-sego-results",
       sponsorName: "Sego Smoothie Co.",
-      athleteId: "kennedy-okafor",
+      athleteId: "zoe-johnson",
       title: "Post-workout smoothie Reel",
       deliverables: "One Instagram Reel with a member-only smoothie offer.",
       price: 900,
@@ -82,7 +100,7 @@ export const initialState: DemoState = {
       caption: "My post-workout go-to from @segosmoothie. #ad",
       status: "reported",
       createdAt: "2026-09-01T16:00:00.000Z",
-      code: "SEGO-KEN",
+      code: "SEGO-ZOE",
       claims: 162,
       redemptions: 94,
       redeemedCodes: [],
@@ -91,7 +109,7 @@ export const initialState: DemoState = {
     {
       id: "seed-sego-renewal",
       sponsorName: "Sego Smoothie Co.",
-      athleteId: "josie-whitlock",
+      athleteId: "clara-raposo",
       title: "Fall smoothie story set",
       deliverables: "A 3-frame story set with a member-only offer.",
       price: 300,
@@ -99,7 +117,7 @@ export const initialState: DemoState = {
       caption: "Fall flavors from @segosmoothie. #ad",
       status: "reported",
       createdAt: "2026-10-01T16:00:00.000Z",
-      code: "SEGO-JOSIE",
+      code: "SEGO-CLARA",
       claims: 70,
       redemptions: 41,
       redeemedCodes: [],

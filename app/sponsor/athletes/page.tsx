@@ -16,10 +16,6 @@ import { newOffer } from "@/lib/deals";
 import { notification, setDemoState } from "@/lib/demo-store";
 import type { Athlete } from "@/lib/types";
 
-function compact(value: number) {
-  return value >= 1000 ? `${(value / 1000).toFixed(1)}K` : String(value);
-}
-
 export default function SponsorAthletesPage() {
   const router = useRouter();
   const { state } = useDemo();
@@ -82,9 +78,8 @@ export default function SponsorAthletesPage() {
                 src={athlete.image}
                 alt=""
                 width={400}
-                height={400}
-                unoptimized
-                className="aspect-square w-full object-cover"
+                height={500}
+                className="aspect-[4/5] w-full object-cover object-top"
               />
               <div className="flex flex-1 flex-col p-4">
                 <h2 className="text-2xl">{athlete.name}</h2>
@@ -92,8 +87,8 @@ export default function SponsorAthletesPage() {
                   {athlete.event} · {athlete.year}
                 </p>
                 <p className="mt-2 text-sm">
-                  {compact(athlete.followers.instagram + athlete.followers.tiktok)} followers ·{" "}
-                  {athlete.engagementRate}% engagement
+                  {athlete.hometown}
+                  {athlete.instagram && ` · @${athlete.instagram}`}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {[...athlete.vibeTags, ...athlete.interestTags].map((tag) => (

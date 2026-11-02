@@ -106,6 +106,14 @@ export default function AdminPage() {
                 <td className="p-3">
                   <p className="font-semibold">{member.name}</p>
                   <p className="text-muted-foreground">{member.email}</p>
+                  {!member.registered && (
+                    <p className="text-xs text-muted-foreground">Signed in, form not finished</p>
+                  )}
+                  {Object.entries(member.profile ?? {}).map(([key, value]) => (
+                    <p key={key} className="text-xs text-muted-foreground">
+                      <span className="capitalize">{key}</span>: {value}
+                    </p>
+                  ))}
                 </td>
                 <td className="p-3">
                   <Select

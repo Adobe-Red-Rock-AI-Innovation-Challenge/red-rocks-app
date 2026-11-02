@@ -53,7 +53,9 @@ export function newOffer(
     status: "pending",
     createdAt: new Date().toISOString(),
     code: campaignCode(fields.sponsorName),
+    claims: 0,
     redemptions: 0,
+    redeemedCodes: [],
   };
 }
 

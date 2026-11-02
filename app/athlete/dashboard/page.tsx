@@ -19,6 +19,25 @@ const statusStyles: Record<NilStatus, { dot: string; label: string }> = {
   red: { dot: "bg-red-700", label: "Blocked" },
 };
 
+// NIL Go has no public API, so the app prepares the facts the athlete types into the portal.
+async function copyNilGoSummary(offer: Offer, athlete: Athlete) {
+  const summary = [
+    `Athlete: ${athlete.name}`,
+    `Payer: ${offer.sponsorName}`,
+    `Compensation: $${offer.price} (cash)`,
+    `Deliverables: ${offer.deliverables}`,
+    `Timeline: ${offer.timeline}`,
+    `Business purpose: promotes ${offer.sponsorName}'s goods or services sold to the public`,
+    `Disclosure: ${offer.caption}`,
+  ].join("\n");
+  try {
+    await navigator.clipboard.writeText(summary);
+    toast.success("Summary copied. Paste it into NIL Go.");
+  } catch {
+    toast.error("Could not copy the summary");
+  }
+}
+
 function respond(offer: Offer, changes: Partial<Offer>, verb: string) {
   updateOffer(offer.id, changes, `${offer.title}: athlete ${verb}`, "/sponsor/deals");
 }
@@ -127,15 +146,19 @@ function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete;
             Deals of $600 or more with one payer must be submitted to the College Sports
             Commission&apos;s NIL Go portal. Do not create content until it is cleared.
           </p>
-          <Button
-            className="mt-3"
-            onClick={() => {
-              respond(offer, { status: "cleared" }, "got NIL Go clearance");
-              toast.success("Marked as cleared");
-            }}
-          >
-            I got clearance
-          </Button>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => copyNilGoSummary(offer, athlete)}>
+              Copy deal summary for NIL Go
+            </Button>
+            <Button
+              onClick={() => {
+                respond(offer, { status: "cleared" }, "got NIL Go clearance");
+                toast.success("Marked as cleared");
+              }}
+            >
+              I got clearance
+            </Button>
+          </div>
         </div>
       ) : offer.status === "cleared" ? (
         <Button

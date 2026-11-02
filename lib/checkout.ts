@@ -28,7 +28,7 @@ export function purchaseLabel(purchase: Purchase) {
   if (purchase.kind === "membership") {
     return `${plans[purchase.plan].name} membership, $${plans[purchase.plan].price}/month`;
   }
-  if (purchase.kind === "gift") return `One-time gift, $${purchase.amount}`;
+  if (purchase.kind === "gift") return `Season supporter, $${purchase.amount}`;
   if (purchase.kind === "deal") return `NIL deal: ${purchase.title}, $${purchase.amount}`;
   const quest = quests.find((item) => item.id === purchase.questId);
   return `${quest?.title ?? "Quest"} support, $${purchase.amount}`;

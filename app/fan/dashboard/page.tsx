@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { QRCodeSVG } from "qrcode.react";
 import { Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
@@ -9,7 +10,7 @@ import { VipCard } from "@/components/vip-card";
 import { athletes, events, rewards, sponsors } from "@/lib/data";
 import { isLive } from "@/lib/deals";
 import { deleteFanData, setDemoState } from "@/lib/demo-store";
-import type { ThankYou, VipEvent } from "@/lib/types";
+import type { Offer, ThankYou, VipEvent } from "@/lib/types";
 
 function canAttend(event: VipEvent, membership: string) {
   return membership === "family" || event.tier === "Duo";
@@ -33,13 +34,14 @@ async function share(thanks: ThankYou) {
   }
 }
 
-// Claiming is the redemption sponsors pay for, so it is counted on the campaign itself.
-function claimCampaign(offerId: string) {
+// Each fan gets a personal code, so the sponsor's counter can count it once and spot reuse.
+function claimCampaign(offer: Offer) {
+  const code = `${offer.code}-${crypto.randomUUID().slice(0, 4).toUpperCase()}`;
   setDemoState((current) => ({
     ...current,
-    claimedRewards: [...current.claimedRewards, offerId],
-    offers: current.offers.map((offer) =>
-      offer.id === offerId ? { ...offer, redemptions: offer.redemptions + 1 } : offer,
+    fanCodes: { ...current.fanCodes, [offer.id]: code },
+    offers: current.offers.map((item) =>
+      item.id === offer.id ? { ...item, claims: item.claims + 1 } : item,
     ),
   }));
 }
@@ -116,7 +118,8 @@ export default function FanDashboardPage() {
           <h2 className="text-2xl">Sponsor rewards</h2>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {campaigns.map((offer) => {
-              const claimed = state.claimedRewards.includes(offer.id);
+              const code = state.fanCodes[offer.id];
+              const used = code !== undefined && offer.redeemedCodes.includes(code);
               return (
                 <article key={offer.id} className="flex flex-col rounded-lg border p-4">
                   <p className="text-xs font-semibold text-primary">
@@ -126,15 +129,21 @@ export default function FanDashboardPage() {
                   <p className="mt-1 flex-1 text-sm text-muted-foreground">
                     Member offer. Show your code at the counter.
                   </p>
-                  {claimed ? (
-                    <p className="mt-3 rounded bg-neutral-100 px-2 py-1.5 text-center font-mono text-sm">
-                      {offer.code}
-                    </p>
+                  {code ? (
+                    <div className="mt-3 flex items-center gap-3 rounded bg-neutral-100 p-2">
+                      <QRCodeSVG value={code} size={64} title={`Offer code ${code}`} />
+                      <div className="min-w-0">
+                        <p className="font-mono text-sm break-all">{code}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {used ? "Used. Thanks!" : "Show this at the counter"}
+                        </p>
+                      </div>
+                    </div>
                   ) : (
                     <Button
                       className="mt-3"
                       disabled={!membership}
-                      onClick={() => claimCampaign(offer.id)}
+                      onClick={() => claimCampaign(offer)}
                     >
                       Claim
                     </Button>

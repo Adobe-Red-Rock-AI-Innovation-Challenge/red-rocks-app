@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { completeGoogleSignIn, GoogleSignIn } from "@/components/google-sign-in";
+import { RegistrationForm } from "@/components/registration-form";
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/demo-store";
 import { roles } from "@/lib/roles";
-import type { Role } from "@/lib/types";
+import type { DemoUser, Role } from "@/lib/types";
 
 const noSubscription = () => () => {};
 
@@ -32,16 +33,40 @@ export default function LoginPage() {
   const nextParam = new URLSearchParams(search).get("next");
   const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : null;
 
+  const [registering, setRegistering] = useState<DemoUser | null>(null);
+
   useEffect(() => {
     completeGoogleSignIn()
       .then((result) => {
         if (!result) return;
         signIn(result.user, result.role);
+        if (result.needsRegistration) {
+          setRegistering(result.user);
+          return;
+        }
         toast.success(`Welcome, ${result.user.name}`);
         router.push(result.next ?? homeFor(result.role));
       })
       .catch((error: Error) => toast.error(error.message));
   }, [router]);
+
+  if (registering) {
+    return (
+      <div className="mx-auto w-full max-w-md px-4 py-12">
+        <h1 className="text-4xl">Create your account</h1>
+        <p className="mt-2 mb-6 text-sm text-muted-foreground">
+          Tell us who you are. The form changes for sponsors and athletes.
+        </p>
+        <RegistrationForm
+          user={registering}
+          onDone={(role) => {
+            signIn({ ...registering, status: "pending" }, role);
+            router.push(homeFor(role));
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-12">
@@ -54,8 +79,8 @@ export default function LoginPage() {
         <GoogleSignIn next={next} />
       </div>
       <ul className="mt-3 grid gap-1 text-xs text-muted-foreground">
-        <li>Athletes: use the Gmail your team admin added.</li>
-        <li>Sponsors: any Gmail works. New sponsors are approved by an admin.</li>
+        <li>New here? Sign in with Google, then pick sponsor or athlete.</li>
+        <li>An admin approves every new account before deals go out.</li>
       </ul>
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">

@@ -2,7 +2,7 @@ import { purchaseLabel } from "@/lib/checkout";
 import { athletes, quests } from "@/lib/data";
 import type { DemoNotification, DemoState, DemoUser, Purchase, Role } from "@/lib/types";
 
-const STORAGE_KEY = "red-rocks-demo-v2";
+const STORAGE_KEY = "red-rocks-demo-v3";
 
 export const initialState: DemoState = {
   role: "fan",
@@ -12,6 +12,27 @@ export const initialState: DemoState = {
   giftDollars: 0,
   questContributions: {},
   claimedRewards: [],
+  fanCodes: {},
+  requests: [
+    {
+      id: "seed-request-switchback",
+      sponsorName: "Switchback Supply Co.",
+      title: "Trail day at our Park City store",
+      service: "In-person appearance (1 hr)",
+      date: "2026-12-06",
+      budget: 1200,
+      details: "Meet customers, sign posters and post one story from the store.",
+      status: "open",
+      responses: [
+        {
+          athleteId: "kennedy-okafor",
+          note: "Free that Saturday morning and I love the trails!",
+          createdAt: "2026-10-31T16:00:00.000Z",
+        },
+      ],
+      createdAt: "2026-10-29T16:00:00.000Z",
+    },
+  ],
   rsvps: [],
   thanks: [],
   notifications: [],
@@ -28,7 +49,9 @@ export const initialState: DemoState = {
       status: "pending",
       createdAt: "2026-10-28T16:00:00.000Z",
       code: "PEAK-MARA",
+      claims: 0,
       redemptions: 0,
+      redeemedCodes: [],
     },
     {
       id: "seed-canyon-spirits",
@@ -42,7 +65,9 @@ export const initialState: DemoState = {
       status: "pending",
       createdAt: "2026-10-30T16:00:00.000Z",
       code: "CANYON-MARA",
+      claims: 0,
       redemptions: 0,
+      redeemedCodes: [],
     },
     {
       id: "seed-sego-results",
@@ -56,7 +81,9 @@ export const initialState: DemoState = {
       status: "reported",
       createdAt: "2026-09-01T16:00:00.000Z",
       code: "SEGO-KEN",
+      claims: 162,
       redemptions: 94,
+      redeemedCodes: [],
       sample: true,
     },
     {
@@ -71,7 +98,9 @@ export const initialState: DemoState = {
       status: "reported",
       createdAt: "2026-10-01T16:00:00.000Z",
       code: "SEGO-JOSIE",
+      claims: 70,
       redemptions: 41,
+      redeemedCodes: [],
       sample: true,
     },
   ],
@@ -162,6 +191,7 @@ export function deleteFanData() {
     giftDollars: 0,
     questContributions: {},
     claimedRewards: [],
+    fanCodes: {},
     rsvps: [],
     thanks: [],
     notifications: [],
@@ -179,7 +209,7 @@ function thankYouFor(purchase: Exclude<Purchase, { kind: "deal" }>) {
   if (purchase.kind === "gift") {
     return {
       from: "Red Rocks Team",
-      message: `Thank you for your $${purchase.amount} gift. It goes straight to the team.`,
+      message: `Thank you for your $${purchase.amount} season support. You keep the Red Rocks community going!`,
     };
   }
   const quest = quests.find((item) => item.id === purchase.questId);

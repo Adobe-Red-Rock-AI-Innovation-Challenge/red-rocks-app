@@ -2,7 +2,7 @@ import { hasDatabase, listMembers, removeMember, saveMember } from "@/lib/member
 import { readSession } from "@/lib/session";
 import type { Member } from "@/lib/types";
 
-function parseMember(value: unknown): Member | null {
+function parseMember(value: unknown): Pick<Member, "email" | "name" | "role" | "status"> | null {
   if (typeof value !== "object" || value === null) return null;
   const { email, name, role, status } = value as Record<string, unknown>;
   if (typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email)) return null;

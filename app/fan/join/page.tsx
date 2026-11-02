@@ -63,8 +63,10 @@ export default function JoinPage() {
         ))}
 
         <section className="flex flex-col rounded-lg border p-5">
-          <h2 className="text-2xl">One-time gift</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Support the team, no membership.</p>
+          <h2 className="text-2xl">Season supporter</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Pay once, no membership. Includes a digital thank-you card from the team.
+          </p>
           <div className="mt-4 flex gap-2">
             {[10, 25, 50].map((amount) => (
               <Button

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SeasonGoal } from "@/components/season-goal";
 import { buttonVariants } from "@/components/ui/button";
 
 // Set this to a file in /public (e.g. "/media/hero.mp4") to use an Adobe Express video instead.
@@ -98,6 +99,10 @@ export default function Home() {
             </div>
           ))}
         </dl>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 pt-12">
+        <SeasonGoal />
       </section>
 
       <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-12 md:grid-cols-3">

@@ -69,6 +69,8 @@ export type Member = {
   name: string;
   role: Exclude<Role, "fan">;
   status: MemberStatus;
+  registered: boolean;
+  profile: Record<string, string>;
 };
 
 export type Fan = Pick<DemoUser, "name" | "email">;
@@ -114,9 +116,26 @@ export type Offer = {
   counterPrice?: number;
   createdAt: string;
   code: string;
+  claims: number;
   redemptions: number;
+  redeemedCodes: string[];
   packageId?: string;
   sample?: boolean;
+};
+
+export type AthleteResponse = { athleteId: string; note: string; createdAt: string };
+
+export type SponsorRequest = {
+  id: string;
+  sponsorName: string;
+  title: string;
+  service: string;
+  date: string;
+  budget: number;
+  details: string;
+  status: "open" | "filled";
+  responses: AthleteResponse[];
+  createdAt: string;
 };
 
 export type AthleteProfile = { bio: string; tags: string[]; rateCard: RateCardItem[] };
@@ -129,6 +148,8 @@ export type DemoState = {
   giftDollars: number;
   questContributions: Record<string, number>;
   claimedRewards: string[];
+  fanCodes: Record<string, string>;
+  requests: SponsorRequest[];
   rsvps: string[];
   thanks: ThankYou[];
   notifications: DemoNotification[];

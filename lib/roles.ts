@@ -14,19 +14,24 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
   ],
   sponsor: [
     { href: "/sponsor/packages", label: "Packages" },
-    { href: "/sponsor", label: "Find Athletes" },
+    { href: "/sponsor/athletes", label: "Athletes" },
+    { href: "/sponsor/requests", label: "Requests" },
     { href: "/sponsor/deals", label: "Deals" },
     { href: "/sponsor/results", label: "Results" },
+    { href: "/sponsor/redeem", label: "Redeem" },
   ],
   athlete: [
     { href: "/athlete/dashboard", label: "Deals" },
+    { href: "/athlete/opportunities", label: "Opportunities" },
     { href: "/athlete/setup", label: "Profile Setup" },
   ],
 };
 
 // Shared pages such as /impact keep whichever role was last chosen.
 export function roleForPath(pathname: string): Role | null {
-  if (pathname.startsWith("/fan") || pathname.startsWith("/athletes")) return "fan";
+  if (pathname.startsWith("/fan") || pathname.startsWith("/athletes/") || pathname === "/athletes") {
+    return "fan";
+  }
   if (pathname.startsWith("/sponsor")) return "sponsor";
   if (pathname.startsWith("/athlete/")) return "athlete";
   return null;

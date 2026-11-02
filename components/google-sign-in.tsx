@@ -41,7 +41,8 @@ export async function completeGoogleSignIn() {
   if (!response.ok) throw new Error("Google sign-in failed");
 
   // The server decides the role from the member list, so nobody can pick "athlete" for themselves.
-  const result: { user: DemoUser; role: Role } = await response.json();
+  const result: { user: DemoUser; role: Role; needsRegistration: boolean } =
+    await response.json();
   return { ...result, next: pending.next };
 }
 

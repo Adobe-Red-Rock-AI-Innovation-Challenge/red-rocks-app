@@ -27,15 +27,18 @@ export async function POST(request: Request) {
   const isAdmin = adminEmails().includes(email);
 
   try {
-    const member = hasDatabase()
-      ? await findOrCreateMember(email, name)
-      : { role: "sponsor" as const, status: "pending" as const };
-    const access = { role: member.role, status: isAdmin ? ("active" as const) : member.status };
+    // Admins come from ADMIN_EMAILS, so they never need a member row or approval.
+    const member =
+      hasDatabase() && !isAdmin
+        ? await findOrCreateMember(email, name)
+        : { role: "sponsor" as const, status: isAdmin ? ("active" as const) : ("pending" as const), registered: true };
+    const access = { role: member.role, status: member.status };
 
     await createSession({ email, isAdmin, ...access });
     return Response.json({
       user: { name, email, picture: claims.picture, provider: "google", isAdmin, status: access.status },
       role: access.role,
+      needsRegistration: !member.registered,
     });
   } catch (error) {
     console.error("Could not load member", error);

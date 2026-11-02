@@ -16,6 +16,7 @@ export default function SponsorResultsPage() {
   const campaigns = state.offers.filter(isLive);
 
   const spend = campaigns.reduce((sum, offer) => sum + offer.price, 0);
+  const claims = campaigns.reduce((sum, offer) => sum + offer.claims, 0);
   const redemptions = campaigns.reduce((sum, offer) => sum + offer.redemptions, 0);
   const sales = redemptions * (Number.isNaN(averageSale) ? 0 : averageSale);
   const sponsors = new Set(campaigns.map((offer) => offer.sponsorName));
@@ -25,7 +26,8 @@ export default function SponsorResultsPage() {
 
   const tiles = [
     { label: "Spend", value: money(spend) },
-    { label: "Redemptions", value: redemptions.toLocaleString("en-US") },
+    { label: "Fans who claimed", value: claims.toLocaleString("en-US") },
+    { label: "Redeemed in store", value: redemptions.toLocaleString("en-US") },
     { label: "Cost per redemption", value: redemptions ? money(spend / redemptions) : "—" },
     { label: "Estimated sales", value: money(sales) },
     {
@@ -38,11 +40,11 @@ export default function SponsorResultsPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
       <h1 className="text-5xl">Results</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Each campaign has its own offer code. A redemption is a fan claiming that code with their
-        VIP Pass.
+        Fans claim a personal code on their VIP Pass. It counts as redeemed when your staff enter it
+        on the Redeem page, so you pay only for people who walked in.
       </p>
 
-      <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">
+      <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         {tiles.map((tile) => (
           <div key={tile.label} className="rounded-lg border p-4">
             <dd className="font-heading text-3xl font-extrabold text-primary">{tile.value}</dd>
@@ -67,14 +69,15 @@ export default function SponsorResultsPage() {
               <th className="p-3">Campaign</th>
               <th className="p-3">Code</th>
               <th className="p-3 text-right">Spend</th>
-              <th className="p-3 text-right">Redemptions</th>
+              <th className="p-3 text-right">Claimed</th>
+              <th className="p-3 text-right">Redeemed</th>
               <th className="p-3 text-right">Cost each</th>
             </tr>
           </thead>
           <tbody>
             {campaigns.length === 0 && (
               <tr>
-                <td colSpan={5} className="p-3 text-muted-foreground">
+                <td colSpan={6} className="p-3 text-muted-foreground">
                   No live campaigns yet.
                 </td>
               </tr>
@@ -90,6 +93,7 @@ export default function SponsorResultsPage() {
                 </td>
                 <td className="p-3 font-mono">{offer.code}</td>
                 <td className="p-3 text-right">{money(offer.price)}</td>
+                <td className="p-3 text-right">{offer.claims}</td>
                 <td className="p-3 text-right">{offer.redemptions}</td>
                 <td className="p-3 text-right">
                   {offer.redemptions ? money(offer.price / offer.redemptions) : "—"}

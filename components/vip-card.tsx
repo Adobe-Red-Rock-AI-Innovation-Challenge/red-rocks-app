@@ -3,10 +3,10 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { plans } from "@/lib/checkout";
-import type { DemoUser, Membership } from "@/lib/types";
+import type { Fan, Membership } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function VipCard({ user, membership }: { user: DemoUser; membership: Membership }) {
+export function VipCard({ user, membership }: { user: Fan; membership: Membership }) {
   const [flipped, setFlipped] = useState(false);
   const face =
     "absolute inset-0 flex flex-col justify-between rounded-xl p-5 [backface-visibility:hidden]";

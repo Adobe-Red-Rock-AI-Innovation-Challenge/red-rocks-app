@@ -1,62 +1,81 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
-import { GoogleSignIn } from "@/components/google-sign-in";
+import { completeGoogleSignIn, GoogleSignIn } from "@/components/google-sign-in";
 import { Button } from "@/components/ui/button";
-import { Field, Input, Select } from "@/components/ui/input";
+import { Field, Input } from "@/components/ui/input";
 import { signIn } from "@/lib/demo-store";
 import { roles } from "@/lib/roles";
-import type { DemoUser, Role } from "@/lib/types";
+import type { Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-// Only same-site paths are followed, so a crafted ?next= link cannot send people elsewhere.
-function nextPath() {
-  const next = new URLSearchParams(window.location.search).get("next");
-  return next?.startsWith("/") && !next.startsWith("//") ? next : null;
+const noSubscription = () => () => {};
+const accountRoles = roles.filter((role) => role.id !== "fan");
+
+function homeFor(role: Role) {
+  return roles.find((item) => item.id === role)?.home ?? "/";
 }
 
 export default function LoginPage() {
   const router = useRouter();
   const { state } = useDemo();
+  const search = useSyncExternalStore(
+    noSubscription,
+    () => window.location.search,
+    () => "",
+  );
+  const params = new URLSearchParams(search);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [role, setRole] = useState<Role>("fan");
+  const [pickedRole, setPickedRole] = useState<Role | null>(null);
+  const role =
+    pickedRole ??
+    (params.get("role") === "athlete" || state.role === "athlete" ? "athlete" : "sponsor");
 
-  function finish(user: DemoUser, chosenRole?: Role) {
-    signIn(user, chosenRole);
-    toast.success(`Welcome, ${user.name}`);
-    const home = roles.find((item) => item.id === (chosenRole ?? state.role))?.home ?? "/";
-    router.push(nextPath() ?? home);
-  }
+  // Only same-site paths are followed, so a crafted ?next= link cannot send people elsewhere.
+  const nextParam = params.get("next");
+  const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : null;
+
+  useEffect(() => {
+    completeGoogleSignIn()
+      .then((result) => {
+        if (!result) return;
+        signIn(result.user, result.role);
+        toast.success(`Welcome, ${result.user.name}`);
+        router.push(result.next ?? homeFor(result.role));
+      })
+      .catch((error: Error) => toast.error(error.message));
+  }, [router]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email")).trim().toLowerCase();
-
-    if (mode === "signup") {
-      const organization = String(form.get("organization")).trim();
-      finish(
-        {
-          name: String(form.get("name")).trim(),
-          email,
-          organization: organization || undefined,
-          provider: "email",
-        },
-        role,
-      );
-      return;
-    }
-
+    const organization = String(form.get("organization") ?? "").trim();
     const account = state.accounts.find((item) => item.email === email);
-    finish(account ?? { name: email.split("@")[0], email, provider: "email" });
+    const user =
+      mode === "signup"
+        ? {
+            name: String(form.get("name")).trim(),
+            email,
+            organization: organization || undefined,
+            provider: "email" as const,
+          }
+        : (account ?? { name: email.split("@")[0], email, provider: "email" as const });
+
+    signIn(user, role);
+    toast.success(`Welcome, ${user.name}`);
+    router.push(next ?? homeFor(role));
   }
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-12">
-      <h1 className="text-4xl">{mode === "signin" ? "Sign in" : "Create account"}</h1>
+      <h1 className="text-4xl">{mode === "signin" ? "Partner sign in" : "Create account"}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        For sponsors and athletes. Fans do not need an account.
+      </p>
 
       <div role="tablist" aria-label="Account" className="mt-6 flex rounded-lg bg-muted p-1">
         {(
@@ -81,8 +100,23 @@ export default function LoginPage() {
         ))}
       </div>
 
-      <div className="mt-6">
-        <GoogleSignIn onUser={(user) => finish(user, mode === "signup" ? role : undefined)} />
+      <div role="group" aria-label="I am a" className="mt-4 grid grid-cols-2 gap-2">
+        {accountRoles.map((item) => (
+          <Button
+            key={item.id}
+            type="button"
+            variant={role === item.id ? "default" : "outline"}
+            size="lg"
+            aria-pressed={role === item.id}
+            onClick={() => setPickedRole(item.id)}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <GoogleSignIn role={role} next={next} />
       </div>
 
       <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
@@ -96,15 +130,6 @@ export default function LoginPage() {
           <>
             <Field label="Full name">
               <Input name="name" required autoComplete="name" />
-            </Field>
-            <Field label="I am a">
-              <Select value={role} onChange={(event) => setRole(event.target.value as Role)}>
-                {roles.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.label}
-                  </option>
-                ))}
-              </Select>
             </Field>
             <Field label="Organization (optional)">
               <Input name="organization" autoComplete="organization" />
@@ -129,8 +154,8 @@ export default function LoginPage() {
       </form>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Prototype only: accounts stay in this browser and passwords are never checked or saved.
-        Use a made-up password.
+        Prototype only: email accounts stay in this browser and passwords are never checked or
+        saved. Use a made-up password.
       </p>
     </div>
   );

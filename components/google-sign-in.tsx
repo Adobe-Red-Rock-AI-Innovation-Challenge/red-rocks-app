@@ -1,32 +1,14 @@
 "use client";
 
-import Script from "next/script";
-import { useRef } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { DemoUser } from "@/lib/types";
+import type { DemoUser, Role } from "@/lib/types";
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+const PENDING_KEY = "red-rocks-google-sign-in";
 
-type GoogleIdentity = {
-  initialize: (config: {
-    client_id: string;
-    callback: (response: { credential: string }) => void;
-  }) => void;
-  renderButton: (parent: HTMLElement, options: Record<string, string | number>) => void;
-};
-
-declare global {
-  interface Window {
-    google?: { accounts: { id: GoogleIdentity } };
-  }
-}
-
-function userFromCredential(credential: string): DemoUser {
-  const payload = credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-  const bytes = Uint8Array.from(atob(payload), (char) => char.charCodeAt(0));
-  const claims = JSON.parse(new TextDecoder().decode(bytes));
-  return { name: claims.name, email: claims.email, picture: claims.picture, provider: "google" };
-}
+type PendingSignIn = { nonce: string; role: Role; next: string | null };
 
 function GoogleLogo() {
   return (
@@ -39,48 +21,68 @@ function GoogleLogo() {
   );
 }
 
-// Google Identity Services runs once a client ID is set; until then the button signs in a demo user.
-export function GoogleSignIn({ onUser }: { onUser: (user: DemoUser) => void }) {
-  const slot = useRef<HTMLDivElement>(null);
+// Reads the token Google sends back to /login in the URL fragment and has the server verify it.
+export async function completeGoogleSignIn() {
+  const fragment = new URLSearchParams(window.location.hash.slice(1));
+  const credential = fragment.get("id_token");
+  if (!credential && !fragment.has("error")) return null;
 
-  if (!clientId) {
-    return (
-      <Button
-        type="button"
-        variant="outline"
-        size="lg"
-        className="w-full"
-        onClick={() =>
-          onUser({ name: "Demo Fan", email: "demo.fan@gmail.com", provider: "google" })
-        }
-      >
-        <GoogleLogo />
-        Sign in with Google (demo)
-      </Button>
-    );
+  window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  const saved = window.sessionStorage.getItem(PENDING_KEY);
+  window.sessionStorage.removeItem(PENDING_KEY);
+  if (!credential || !saved) throw new Error("Google sign-in was cancelled");
+
+  const pending: PendingSignIn = JSON.parse(saved);
+  const response = await fetch("/api/auth/google", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential, nonce: pending.nonce }),
+  });
+  if (!response.ok) throw new Error("Google sign-in failed");
+
+  const user: DemoUser = await response.json();
+  return { user, role: pending.role, next: pending.next };
+}
+
+// prompt=select_account makes Google show its account chooser on every sign-in.
+export function GoogleSignIn({ role, next }: { role: Role; next: string | null }) {
+  const [busy, setBusy] = useState(false);
+
+  function start() {
+    if (!clientId) return;
+    setBusy(true);
+    const nonce = crypto.randomUUID();
+    try {
+      const pending: PendingSignIn = { nonce, role, next };
+      window.sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+    } catch {
+      setBusy(false);
+      toast.error("Allow site storage in your browser to use Google sign-in.");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: `${window.location.origin}/login`,
+      response_type: "id_token",
+      scope: "openid email profile",
+      prompt: "select_account",
+      nonce,
+    });
+    window.location.assign(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
   }
 
   return (
-    <>
-      <Script
-        src="https://accounts.google.com/gsi/client"
-        strategy="afterInteractive"
-        onReady={() => {
-          const identity = window.google?.accounts.id;
-          if (!identity || !slot.current) return;
-          identity.initialize({
-            client_id: clientId,
-            callback: ({ credential }) => onUser(userFromCredential(credential)),
-          });
-          identity.renderButton(slot.current, {
-            theme: "outline",
-            size: "large",
-            text: "signin_with",
-            width: 320,
-          });
-        }}
-      />
-      <div ref={slot} className="flex min-h-10 justify-center" />
-    </>
+    <Button
+      type="button"
+      variant="outline"
+      size="lg"
+      className="w-full"
+      disabled={!clientId || busy}
+      onClick={start}
+    >
+      <GoogleLogo />
+      {clientId ? "Sign in with Google" : "Google sign-in is not set up yet"}
+    </Button>
   );
 }

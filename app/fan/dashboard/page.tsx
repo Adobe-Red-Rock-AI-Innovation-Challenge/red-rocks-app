@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
-import { SignInPrompt } from "@/components/sign-in-prompt";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { VipCard } from "@/components/vip-card";
 import { events, rewards, sponsors } from "@/lib/data";
@@ -35,16 +34,7 @@ async function share(thanks: ThankYou) {
 
 export default function FanDashboardPage() {
   const { state } = useDemo();
-  const { user, membership } = state;
-
-  if (!user) {
-    return (
-      <div className="mx-auto w-full max-w-md px-4 py-12">
-        <h1 className="mb-6 text-4xl">My VIP Pass</h1>
-        <SignInPrompt next="/fan/dashboard" message="Sign in to see your VIP Pass." />
-      </div>
-    );
-  }
+  const { fan, membership } = state;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -52,8 +42,8 @@ export default function FanDashboardPage() {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[24rem_1fr]">
         <div>
-          {membership ? (
-            <VipCard user={user} membership={membership} />
+          {fan && membership ? (
+            <VipCard user={fan} membership={membership} />
           ) : (
             <div className="rounded-lg border p-6 text-center">
               <p className="text-muted-foreground">Join to get your VIP Pass and rewards.</p>

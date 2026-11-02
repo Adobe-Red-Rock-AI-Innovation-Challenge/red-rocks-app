@@ -70,6 +70,8 @@ export type DemoUser = {
   picture?: string;
 };
 
+export type Fan = Pick<DemoUser, "name" | "email">;
+
 export type Membership = "duo" | "family";
 
 export type Purchase =
@@ -109,6 +111,7 @@ export type DemoState = {
   role: Role;
   user: DemoUser | null;
   accounts: DemoUser[];
+  fan: Fan | null;
   membership: Membership | null;
   giftDollars: number;
   questContributions: Record<string, number>;

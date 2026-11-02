@@ -8,6 +8,7 @@ export const initialState: DemoState = {
   role: "fan",
   user: null,
   accounts: [],
+  fan: null,
   membership: null,
   giftDollars: 0,
   questContributions: {},

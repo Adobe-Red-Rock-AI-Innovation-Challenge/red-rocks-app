@@ -28,7 +28,7 @@ export function AccountMenu() {
   if (!user) {
     return (
       <Link href="/login" className={buttonVariants({ className: "px-4" })}>
-        Sign in
+        Partner sign in
       </Link>
     );
   }

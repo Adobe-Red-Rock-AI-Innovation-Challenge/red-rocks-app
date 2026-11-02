@@ -15,11 +15,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Optional services
 
-Everything runs without keys, using simulated sign-in, checkout and sample AI output. Set these in `.env.local` or in Vercel to switch on the real services:
+The app runs without keys, using email sign-in, simulated checkout and sample AI output. Fans never need an account. Set these in `.env.local` or in Vercel to switch on the real services:
 
 | Variable | Turns on |
 | --- | --- |
-| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Real Google sign-in. Add your site URL to the client's authorized JavaScript origins. |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google sign-in for sponsors and athletes. Add `<site URL>/login` to the client's authorized redirect URIs. Google's button stays off until this is set. |
 | `STRIPE_SECRET_KEY` | Stripe Checkout. Only `sk_test_` keys are accepted. |
 | `ANTHROPIC_API_KEY` | Claude for matching, drafts, bios and message polish. |
 

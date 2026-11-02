@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Red Rocks Fan Hub
 
-## Getting Started
+**Live demo: [red-rocks-app.vercel.app](https://red-rocks-app.vercel.app)**
 
-First, run the development server:
+A prototype for the Adobe Red Rock AI Innovation Challenge. One hub connects fans, sponsors and athletes, using AI to grow fan engagement and sponsorship revenue. Athletes, sponsors and figures are fictional.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Optional services
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Everything runs without keys, using simulated sign-in, checkout and sample AI output. Set these in `.env.local` or in Vercel to switch on the real services:
 
-## Learn More
+| Variable | Turns on |
+| --- | --- |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Real Google sign-in. Add your site URL to the client's authorized JavaScript origins. |
+| `STRIPE_SECRET_KEY` | Stripe Checkout. Only `sk_test_` keys are accepted. |
+| `ANTHROPIC_API_KEY` | Claude for matching, drafts, bios and message polish. |
 
-To learn more about Next.js, take a look at the following resources:
+## Prototype limits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Demo data, including accounts, lives in each visitor's browser. There is no database or server session, passwords are never checked, and payments are recorded by the browser. Do not use it with real customer data or live payments.

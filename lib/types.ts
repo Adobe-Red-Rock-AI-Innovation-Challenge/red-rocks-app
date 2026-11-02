@@ -62,14 +62,62 @@ export type ImpactBaseline = {
   sponsorDealDollars: number;
 };
 
-export type DemoUser = { name: string; email: string };
+export type DemoUser = {
+  name: string;
+  email: string;
+  organization?: string;
+  provider: "google" | "email";
+  picture?: string;
+};
+
+export type Membership = "duo" | "family";
+
+export type Purchase =
+  | { kind: "membership"; plan: Membership }
+  | { kind: "gift"; amount: number }
+  | { kind: "quest"; questId: string; amount: number; message?: string };
+
+export type ThankYou = { id: string; from: string; message: string; createdAt: string };
+
+export type DemoNotification = {
+  id: string;
+  text: string;
+  href: string;
+  read: boolean;
+  createdAt: string;
+};
+
+export type OfferStatus = "pending" | "accepted" | "negotiating" | "declined";
+
+export type Offer = {
+  id: string;
+  sponsorName: string;
+  athleteId: string;
+  title: string;
+  deliverables: string;
+  price: number;
+  timeline: string;
+  caption: string;
+  status: OfferStatus;
+  counterPrice?: number;
+  createdAt: string;
+};
+
+export type AthleteProfile = { bio: string; tags: string[]; rateCard: RateCardItem[] };
 
 export type DemoState = {
   role: Role;
   user: DemoUser | null;
-  membership: "duo" | "family" | null;
+  accounts: DemoUser[];
+  membership: Membership | null;
   giftDollars: number;
   questContributions: Record<string, number>;
   claimedRewards: string[];
   rsvps: string[];
+  thanks: ThankYou[];
+  notifications: DemoNotification[];
+  offers: Offer[];
+  activeAthleteId: string;
+  athleteProfiles: Record<string, AthleteProfile>;
+  paidSessions: string[];
 };

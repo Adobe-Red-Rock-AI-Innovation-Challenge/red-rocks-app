@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { AccountMenu } from "@/components/account-menu";
 import { useDemo } from "@/components/demo-provider";
 import { navByRole, roleForPath, roles } from "@/lib/roles";
 import { cn } from "@/lib/utils";
@@ -65,14 +66,17 @@ export function SiteHeader() {
       </div>
 
       <div className="border-b bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-0.5 px-4 py-2 sm:h-14 sm:flex-row sm:items-center sm:gap-6 sm:py-0">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-0.5 px-4 py-2">
           <Link
             href="/"
             className="font-heading text-2xl font-extrabold tracking-tight whitespace-nowrap uppercase"
           >
             <span className="text-primary">Red Rocks</span> Fan Hub
           </Link>
-          <nav aria-label="Main" className="flex min-w-0 gap-5 overflow-x-auto">
+          <nav
+            aria-label="Main"
+            className="order-last flex w-full min-w-0 gap-5 overflow-x-auto sm:order-none sm:w-auto"
+          >
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -87,6 +91,9 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
+          <div className="ml-auto">
+            <AccountMenu />
+          </div>
         </div>
       </div>
     </header>

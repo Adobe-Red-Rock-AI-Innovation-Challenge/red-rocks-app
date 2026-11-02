@@ -76,7 +76,7 @@ function Table({ rows, head }: { rows: string[][]; head: [string, string] }) {
 export default function FeasibilityPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Business plan</h1>
+      <h1 className="text-4xl sm:text-5xl">Business plan</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Who runs the hub, what it costs and how it grows. Costs are planning estimates.
       </p>

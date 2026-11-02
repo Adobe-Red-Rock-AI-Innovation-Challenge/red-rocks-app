@@ -38,7 +38,7 @@ export default function SponsorResultsPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Results</h1>
+      <h1 className="text-4xl sm:text-5xl">Results</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Fans claim a personal code on their VIP Pass. It counts as redeemed when your staff enter it
         on the Redeem page, so you pay only for people who walked in.

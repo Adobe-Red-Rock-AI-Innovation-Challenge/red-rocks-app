@@ -13,7 +13,7 @@ import { deleteFanData, setDemoState } from "@/lib/demo-store";
 import type { Offer, ThankYou, VipEvent } from "@/lib/types";
 
 function canAttend(event: VipEvent, membership: string) {
-  return membership === "family" || event.tier === "Duo";
+  return membership !== "duo" || event.tier === "Duo";
 }
 
 async function share(thanks: ThankYou) {
@@ -195,7 +195,7 @@ export default function FanDashboardPage() {
                   <div className="min-w-0 flex-1 basis-64">
                     <p className="font-semibold">{event.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {event.date} · {event.location} · {event.tier} tier
+                      {event.date} · {event.location} · {event.tier === "Duo" ? "Insider" : "All-Access"} tier
                     </p>
                   </div>
                   <Button

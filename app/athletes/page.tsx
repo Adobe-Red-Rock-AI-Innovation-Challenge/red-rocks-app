@@ -5,7 +5,7 @@ import { athletes } from "@/lib/data";
 export default function AthletesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Athletes</h1>
+      <h1 className="text-4xl sm:text-5xl">Athletes</h1>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {athletes.map((athlete) => (
           <Link

@@ -98,7 +98,7 @@ export default function SponsorPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Find athletes</h1>
+      <h1 className="text-4xl sm:text-5xl">Find athletes</h1>
       <p className="mt-2 text-muted-foreground">
         Tell us what you need. AI picks your best three matches.
       </p>

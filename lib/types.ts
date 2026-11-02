@@ -75,7 +75,7 @@ export type Member = {
 
 export type Fan = Pick<DemoUser, "name" | "email">;
 
-export type Membership = "duo" | "family";
+export type Membership = "duo" | "family" | "inner";
 
 export type Purchase =
   | { kind: "membership"; plan: Membership }

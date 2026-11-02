@@ -89,7 +89,7 @@ export default function ProfileSetupPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-12">
-      <h1 className="text-5xl">Profile co-pilot</h1>
+      <h1 className="text-4xl sm:text-5xl">Profile co-pilot</h1>
       <p className="mt-2 mb-6 text-muted-foreground">
         Answer three questions. AI drafts your bio, tags and rate card.
       </p>

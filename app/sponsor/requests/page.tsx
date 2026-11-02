@@ -71,7 +71,7 @@ export default function SponsorRequestsPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-5xl">Requests</h1>
+      <h1 className="text-4xl sm:text-5xl">Requests</h1>
       <p className="mt-2 text-muted-foreground">
         Post what you need. Athletes who are free and interested raise their hand.
       </p>

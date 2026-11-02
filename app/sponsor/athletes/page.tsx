@@ -59,7 +59,7 @@ export default function SponsorAthletesPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-5xl">Athletes</h1>
+          <h1 className="text-4xl sm:text-5xl">Athletes</h1>
           <p className="mt-2 text-muted-foreground">Pick who you want to work with.</p>
         </div>
         <div className="flex flex-wrap gap-2">

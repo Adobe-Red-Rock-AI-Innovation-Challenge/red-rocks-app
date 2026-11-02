@@ -191,7 +191,7 @@ export default function AthleteDashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-5xl">My deals</h1>
+      <h1 className="text-4xl sm:text-5xl">My deals</h1>
       <p className="mt-2 mb-6 text-muted-foreground">
         Every offer gets an automatic NIL check. This is a screening aid, not legal advice.
       </p>

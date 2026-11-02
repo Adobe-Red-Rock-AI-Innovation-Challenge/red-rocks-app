@@ -74,7 +74,7 @@ export default function OpportunitiesPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-5xl">Opportunities</h1>
+      <h1 className="text-4xl sm:text-5xl">Opportunities</h1>
       <p className="mt-2 mb-6 text-muted-foreground">
         Sponsors posted these. Raise your hand if you&apos;re free and interested.
       </p>

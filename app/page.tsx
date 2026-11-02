@@ -1,143 +1,205 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { AthleteCarousel } from "@/components/home/athlete-carousel";
+import { JoinForm } from "@/components/home/join-form";
+import { ReachSection } from "@/components/home/reach-section";
 import { SeasonGoal } from "@/components/season-goal";
-import { buttonVariants } from "@/components/ui/button";
+import { plans } from "@/lib/checkout";
+import type { Membership } from "@/lib/types";
 
-// Set this to a file in /public (e.g. "/media/hero.mp4") to use an Adobe Express video instead.
-const HERO_VIDEO: string | null = null;
-const HERO_IMAGE = "/images/hero.svg";
+// Drop Dawn's exported photos into public/images/home/ and point these at them.
+// Each stays a red gradient until a photo is set.
+const photos = {
+  hero: "/images/hero.svg",
+  insider: null as string | null,
+  allAccess: null as string | null,
+  innerCircle: null as string | null,
+};
 
-const proof = [
-  { value: "10", label: "National titles" },
-  { value: "12,207", label: "Fans per meet, 2025 average" },
-  { value: "16,019", label: "NCAA record crowd, 2015" },
+const heroLinks = [
+  { href: "#about", label: "About Red Rocks" },
+  { href: "#athletes", label: "Meet the Athletes" },
+  { href: "#partners", label: "Brand Partnerships" },
+  { href: "#fan-club", label: "Fan Club" },
 ];
 
-const audiences = [
+// Every figure below is sourced: Utah Athletics (titles, attendance, home streak) and the
+// team's program history brief (Final Fours).
+const stats = [
   {
-    title: "Sponsors",
-    text: "Reach one of the most loyal crowds in college sports with a tracked offer, and see every redemption.",
-    href: "/sponsor/packages",
-    cta: "See packages",
+    title: "10 National Championships",
+    text: "9 NCAA titles and 1 AIAW crown, including six straight from 1981 to 1986.",
   },
   {
-    title: "Athletes",
-    text: "Get matched with local brands, check every offer against NIL rules and get paid in one place.",
-    href: "/athlete/dashboard",
-    cta: "Athlete sign in",
+    title: "#1 Nationally in Attendance",
+    text: "Led the nation in gymnastics attendance in 36 of 39 seasons. NCAA record crowd: 16,019.",
   },
   {
-    title: "Fans",
-    text: "Get a VIP Pass with sponsor rewards and back the gymnasts you love. No account needed.",
-    href: "/fan/join",
-    cta: "Join the community",
+    title: "5 Straight Final Fours",
+    text: "In the NCAA team final every year from 2021 to 2025.",
+  },
+  {
+    title: "170 Home Wins in a Row",
+    text: "The longest home win streak in any NCAA sport, from 1979 to 2002.",
   },
 ];
 
-const steps = [
-  "A sponsor picks a package and AI finds the right athletes.",
-  "Athletes accept, clear the deal with NIL Go and post.",
-  "Fans redeem the offer with their VIP Pass.",
-  "The sponsor sees results and books again.",
+const clubs: { plan: Membership; badge: string; photo: string | null }[] = [
+  { plan: "duo", badge: "Most popular", photo: photos.insider },
+  { plan: "family", badge: "Premium", photo: photos.allAccess },
+  { plan: "inner", badge: "VIP", photo: photos.innerCircle },
 ];
 
 export default function Home() {
   return (
-    <>
-      <section className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-12 md:grid-cols-2">
-        <div>
-          <p className="font-semibold text-primary">Red Rocks NIL Hub</p>
-          <h1 className="mt-1 text-5xl sm:text-6xl">Turn Red Rocks fans into NIL dollars</h1>
-          <p className="mt-4 max-w-md text-lg text-muted-foreground">
-            One place where local businesses sponsor every gymnast, fans redeem the offers and
-            everyone sees what it earned.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/sponsor/packages"
-              className={buttonVariants({ size: "lg", className: "px-5" })}
+    <div className="mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1fr)] gap-16 px-4 py-8">
+      <section
+        className="relative overflow-hidden rounded-3xl bg-neutral-900 bg-cover bg-center text-white"
+        style={{ backgroundImage: `url(${photos.hero})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+        <div className="absolute top-0 left-1/2 flex h-12 w-28 -translate-x-1/2 items-center justify-center rounded-b-3xl bg-primary font-heading text-xl font-extrabold">
+          RR
+        </div>
+        <div className="relative flex min-h-[32rem] flex-col p-5 pt-16 sm:p-8 sm:pt-16">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <nav aria-label="Home sections" className="flex flex-wrap gap-2">
+              {heroLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full border border-white/70 px-3 py-1 text-xs font-medium hover:bg-white/15"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <a
+              href="#join"
+              className="flex items-center gap-1.5 rounded-full bg-primary py-1 pr-1 pl-3 text-xs font-semibold"
             >
-              Become a sponsor
-            </Link>
+              Get Involved
+              <ArrowUpRight className="size-5 rounded-full bg-white p-1 text-primary" />
+            </a>
+          </div>
+
+          <h1 className="mt-6 text-3xl font-extrabold sm:text-6xl">
+            UTAH GYMNASTICS
+            <span className="mt-1 block text-2xl font-bold text-white/70 sm:text-5xl">
+              The <span className="text-primary">Red</span> Rocks
+            </span>
+          </h1>
+
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-16">
+            <p className="max-w-md text-sm font-medium sm:text-base">
+              Meet the women behind Utah Gymnastics. Discover their stories, connect with their
+              community, and explore partnerships that bring their impact beyond the arena.
+            </p>
             <Link
-              href="/athletes"
-              className={buttonVariants({ variant: "outline", size: "lg", className: "px-5" })}
+              href="/fan/join"
+              className="rounded-2xl bg-white/90 p-4 text-xs text-foreground backdrop-blur"
             >
-              Explore Athletes
+              <span className="block">Join the</span>
+              <span className="block font-semibold text-primary">Red Rocks Fan Club</span>
+              <span className="mt-2 flex items-center gap-1 rounded-full border px-3 py-1 font-semibold">
+                Get your VIP Pass <ArrowUpRight className="size-3.5" />
+              </span>
             </Link>
           </div>
         </div>
-        <div className="overflow-hidden rounded-lg bg-neutral-950">
-          {HERO_VIDEO ? (
-            <video
-              src={HERO_VIDEO}
-              poster={HERO_IMAGE}
-              controls
-              playsInline
-              className="aspect-video w-full object-cover"
-            />
-          ) : (
-            <Image
-              src={HERO_IMAGE}
-              alt="Red Rocks hero artwork"
-              width={1600}
-              height={900}
-              unoptimized
-              priority
-              className="aspect-video w-full object-cover"
-            />
-          )}
+      </section>
+
+      <SeasonGoal />
+
+      <section id="about" className="grid scroll-mt-28 gap-6 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <h2 className="text-2xl text-primary sm:text-3xl">
+            More Than a Team.
+            <br />A Utah Tradition.
+          </h2>
+          <p className="mt-4 text-sm">
+            The Red Rocks bring strength, creativity and connection to every performance.
+          </p>
+          <p className="mt-3 text-sm">
+            Get to know the athletes behind the routines and the community cheering them on.
+          </p>
+          <Link
+            href="/how-it-works"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-950 py-2 pr-2 pl-4 text-sm font-semibold text-white"
+          >
+            Discover Our Story
+            <ArrowRight className="size-5 rounded-full bg-white p-1 text-neutral-950" />
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {stats.map((stat, index) => (
+            <article
+              key={stat.title}
+              className="flex min-h-44 flex-col justify-end rounded-2xl p-5 text-white"
+              style={{
+                background: `linear-gradient(${135 + index * 30}deg, #141414 0%, #7a0000 55%, #be0000 100%)`,
+              }}
+            >
+              <h3 className="text-xl">{stat.title}</h3>
+              <p className="mt-1 text-xs text-white/85">{stat.text}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="bg-neutral-950 text-white">
-        <dl className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 sm:grid-cols-3">
-          {proof.map((item) => (
-            <div key={item.label}>
-              <dd className="font-heading text-5xl font-extrabold text-primary">{item.value}</dd>
-              <dt className="text-sm text-neutral-300">{item.label}</dt>
-            </div>
-          ))}
-        </dl>
-      </section>
+      <AthleteCarousel />
 
-      <section className="mx-auto w-full max-w-6xl px-4 pt-12">
-        <SeasonGoal />
-      </section>
+      <ReachSection />
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-12 md:grid-cols-3">
-        {audiences.map((item) => (
-          <article key={item.title} className="flex flex-col rounded-lg border p-5">
-            <h2 className="text-2xl text-primary">{item.title}</h2>
-            <p className="mt-2 flex-1 text-sm text-muted-foreground">{item.text}</p>
+      <section id="fan-club" className="scroll-mt-28 rounded-3xl bg-primary p-5 text-white sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-primary">
+              Fan Club Membership
+            </span>
+            <h2 className="text-lg font-medium">A closer look at the team you love</h2>
+          </div>
+          <Link
+            href="/fan/join"
+            className="flex h-9 items-center gap-1 rounded-full bg-neutral-950 px-4 text-sm font-semibold"
+          >
+            View All <ArrowUpRight className="size-4" />
+          </Link>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {clubs.map((club) => (
             <Link
-              href={item.href}
-              className={buttonVariants({ variant: "outline", className: "mt-4 self-start px-4" })}
+              key={club.plan}
+              href="/fan/join"
+              className="relative flex min-h-48 flex-col justify-end overflow-hidden rounded-2xl bg-neutral-900 bg-cover bg-center p-4"
+              style={
+                club.photo
+                  ? { backgroundImage: `url(${club.photo})` }
+                  : { background: "radial-gradient(circle at 70% 20%, #be0000, #1a0000 75%)" }
+              }
             >
-              {item.cta}
+              <span className="absolute top-3 right-3 rounded-full border border-white/80 px-3 py-0.5 text-xs">
+                {club.badge}
+              </span>
+              <span className="font-heading text-3xl leading-none font-extrabold uppercase">
+                {plans[club.plan].name}
+              </span>
+              <span className="mt-1 text-sm text-white/85">${plans[club.plan].price}/month</span>
             </Link>
-          </article>
-        ))}
-      </section>
-
-      <section className="border-t bg-neutral-50">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12">
-          <h2 className="text-3xl">How the money flows</h2>
-          <ol className="mt-6 grid gap-4 md:grid-cols-4">
-            {steps.map((step, index) => (
-              <li key={step} className="rounded-lg bg-white p-4">
-                <span className="font-heading text-3xl font-extrabold text-primary">
-                  {index + 1}
-                </span>
-                <p className="mt-1 text-sm">{step}</p>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-4 text-xs text-muted-foreground">
-            Sources: Utah Athletics (titles, 2015 record), Salt Lake Tribune (2025 average).
+          ))}
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex gap-2" aria-hidden="true">
+            <ArrowLeft className="size-8 rounded-full border border-white/60 p-2" />
+            <ArrowRight className="size-8 rounded-full bg-white p-2 text-primary" />
+          </div>
+          <p className="max-w-sm text-right text-xs text-red-100">
+            Perks change by season. Sponsor offers come from local partners.
           </p>
         </div>
       </section>
-    </>
+
+      <JoinForm />
+    </div>
   );
 }

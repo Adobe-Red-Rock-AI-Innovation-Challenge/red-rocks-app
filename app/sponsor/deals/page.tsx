@@ -32,7 +32,7 @@ export default function SponsorDealsPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-5xl">Deals</h1>
+      <h1 className="text-4xl sm:text-5xl">Deals</h1>
       <p className="mt-2 text-muted-foreground">Every offer, from first message to results.</p>
 
       <div className="mt-6 grid gap-4">

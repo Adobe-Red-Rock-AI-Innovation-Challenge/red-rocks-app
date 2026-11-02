@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Barlow, Barlow_Condensed } from "next/font/google";
+import { Barlow_Condensed, Poppins } from "next/font/google";
 import Link from "next/link";
 import { DemoProvider } from "@/components/demo-provider";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const barlow = Barlow({
+const poppins = Poppins({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const barlowCondensed = Barlow_Condensed({
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${barlow.variable} ${barlowCondensed.variable} h-full antialiased`}
+      className={`${poppins.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <DemoProvider>

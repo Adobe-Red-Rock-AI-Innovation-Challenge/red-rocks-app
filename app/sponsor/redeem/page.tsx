@@ -46,7 +46,7 @@ export default function RedeemPage() {
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-12">
-      <h1 className="text-5xl">Redeem</h1>
+      <h1 className="text-4xl sm:text-5xl">Redeem</h1>
       <p className="mt-2 text-muted-foreground">
         For your counter staff. Enter the code on the fan&apos;s VIP Pass.
       </p>

@@ -18,7 +18,7 @@ export default function JoinPage() {
   if (paid) {
     return (
       <div className="mx-auto w-full max-w-md px-4 py-16 text-center">
-        <h1 className="text-5xl">You&apos;re in!</h1>
+        <h1 className="text-4xl sm:text-5xl">You&apos;re in!</h1>
         <p className="mt-2 text-muted-foreground">Thank you for supporting Red Rocks.</p>
         <Link
           href="/fan/dashboard"
@@ -32,10 +32,10 @@ export default function JoinPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Join the community</h1>
+      <h1 className="text-4xl sm:text-5xl">Join the community</h1>
       <p className="mt-2 text-muted-foreground">Pick a plan or give once. Cancel anytime.</p>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {(Object.entries(plans) as [Membership, (typeof plans)[Membership]][]).map(([id, plan]) => (
           <section key={id} className="flex flex-col rounded-lg border p-5">
             <h2 className="text-2xl">{plan.name}</h2>

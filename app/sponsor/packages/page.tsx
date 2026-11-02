@@ -52,7 +52,7 @@ export default function PackagesPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Sponsor packages</h1>
+      <h1 className="text-4xl sm:text-5xl">Sponsor packages</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Reach Red Rocks fans with a tracked offer. You see every redemption, so you know what
         your money brought in.

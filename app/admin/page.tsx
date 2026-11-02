@@ -6,6 +6,7 @@ import { useDemo } from "@/components/demo-provider";
 import { SignInPrompt } from "@/components/sign-in-prompt";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/input";
+import type { Lead } from "@/lib/leads";
 import type { Member } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -35,11 +36,17 @@ export default function AdminPage() {
     }
   }, []);
 
+  const [leads, setLeads] = useState<Lead[]>([]);
+
   useEffect(() => {
     if (!isAdmin) return;
     send("GET")
       .then(setMembers)
       .catch((caught: Error) => setError(caught.message));
+    fetch("/api/admin/leads")
+      .then((response) => (response.ok ? response.json() : { leads: [] }))
+      .then((data) => setLeads(data.leads))
+      .catch(() => setLeads([]));
   }, [isAdmin]);
 
   if (!isAdmin) {
@@ -160,6 +167,37 @@ export default function AdminPage() {
                     Remove
                   </Button>
                 </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 className="mt-10 text-2xl">Leads from Join Us Now</h2>
+      <div className="mt-3 overflow-x-auto rounded-lg border">
+        <table className="w-full min-w-[36rem] text-sm">
+          <thead className="text-left text-xs text-muted-foreground uppercase">
+            <tr>
+              <th className="p-3">Type</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Company</th>
+              <th className="p-3">Interest</th>
+            </tr>
+          </thead>
+          <tbody>
+            {leads.length === 0 && (
+              <tr>
+                <td colSpan={4} className="p-3 text-muted-foreground">
+                  No leads yet.
+                </td>
+              </tr>
+            )}
+            {leads.map((lead) => (
+              <tr key={lead.id} className="border-t">
+                <td className="p-3">{lead.kind === "partner" ? "Brand partner" : "Fan"}</td>
+                <td className="p-3">{lead.email}</td>
+                <td className="p-3">{lead.company}</td>
+                <td className="p-3">{lead.interest}</td>
               </tr>
             ))}
           </tbody>

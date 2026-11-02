@@ -3,14 +3,19 @@ import type { Membership, Purchase } from "@/lib/types";
 
 export const plans: Record<Membership, { name: string; price: number; perks: string[] }> = {
   duo: {
-    name: "Duo",
+    name: "Red Rocks Insider",
     price: 10,
-    perks: ["Digital VIP Pass", "Sponsor rewards", "Duo-tier events"],
+    perks: ["Digital VIP Pass", "Sponsor rewards", "Insider events"],
   },
   family: {
-    name: "Family",
+    name: "Red Rocks All-Access",
     price: 25,
-    perks: ["Everything in Duo", "Family-tier events", "Passes for up to 4 fans"],
+    perks: ["Everything in Insider", "All-Access events", "Passes for up to 4 fans"],
+  },
+  inner: {
+    name: "Red Rocks Inner Circle",
+    price: 50,
+    perks: ["Everything in All-Access", "Post-meet athlete meet and greet", "Signed season poster"],
   },
 };
 
@@ -49,7 +54,7 @@ export function parsePurchase(value: unknown): Purchase | null {
   const purchase = value as Record<string, unknown>;
 
   if (purchase.kind === "membership") {
-    return purchase.plan === "duo" || purchase.plan === "family"
+    return purchase.plan === "duo" || purchase.plan === "family" || purchase.plan === "inner"
       ? { kind: "membership", plan: purchase.plan }
       : null;
   }

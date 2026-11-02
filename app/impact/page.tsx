@@ -39,7 +39,7 @@ export default function ImpactPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-5xl">Revenue model</h1>
+      <h1 className="text-4xl sm:text-5xl">Revenue model</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         How much new NIL money the hub could bring in per year. Every input is either sourced or
         marked as an assumption. Change any of them.

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { DealSteps } from "@/components/deal-steps";
 import { athletes } from "@/lib/data";
 import { needsNilGo, updateOffer } from "@/lib/deals";
+import { PLATFORM_FEE_PERCENT } from "@/lib/packages";
 import { checkOffer, worstStatus, type NilStatus } from "@/lib/nil";
 import type { Athlete, Offer } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -188,6 +189,11 @@ export default function AthleteDashboardPage() {
   const { state } = useDemo();
   const athlete = athletes.find((item) => item.id === state.activeAthleteId) ?? athletes[0];
   const offers = state.offers.filter((offer) => offer.athleteId === athlete.id);
+  const sales = state.sales.filter((sale) => sale.athleteId === athlete.id);
+  const dealPay = offers
+    .filter((offer) => offer.status === "paid" || offer.status === "reported")
+    .reduce((sum, offer) => sum + offer.price * (1 - PLATFORM_FEE_PERCENT / 100), 0);
+  const giftPay = sales.reduce((sum, sale) => sum + sale.athleteShare, 0);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
@@ -196,6 +202,21 @@ export default function AthleteDashboardPage() {
         Every offer gets an automatic NIL check. This is a screening aid, not legal advice.
       </p>
       <AthletePicker />
+      <section aria-label="Payouts" className="mt-6 grid gap-3 rounded-2xl bg-neutral-950 p-5 text-white sm:grid-cols-3">
+        {[
+          ["Paid deals", dealPay],
+          [`Gift sales (${sales.length})`, giftPay],
+          ["Total payouts", dealPay + giftPay],
+        ].map(([label, value]) => (
+          <div key={label as string}>
+            <p className="text-sm text-neutral-300">{label}</p>
+            <p className="text-2xl font-bold">${(value as number).toLocaleString("en-US", { maximumFractionDigits: 2 })}</p>
+          </div>
+        ))}
+        <p className="text-xs text-neutral-400 sm:col-span-3">
+          Paid to your bank through Stripe Connect. Simulated in this demo.
+        </p>
+      </section>
       <div className="mt-6 grid gap-4">
         {offers.length === 0 && (
           <p className="text-sm text-muted-foreground">No offers yet for {athlete.name}.</p>

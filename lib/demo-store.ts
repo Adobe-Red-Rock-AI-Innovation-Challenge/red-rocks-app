@@ -1,4 +1,5 @@
-import { purchaseLabel } from "@/lib/checkout";
+import { purchaseAmount, purchaseLabel } from "@/lib/checkout";
+import { athleteShare, findProduct } from "@/lib/gifts";
 import { athletes, quests } from "@/lib/data";
 import type { DemoNotification, DemoState, DemoUser, Purchase, Role } from "@/lib/types";
 
@@ -13,6 +14,7 @@ export const initialState: DemoState = {
   questContributions: {},
   claimedRewards: [],
   fanCodes: {},
+  sales: [],
   requests: [
     {
       id: "seed-request-switchback",
@@ -196,6 +198,7 @@ export function deleteFanData() {
     thanks: [],
     notifications: [],
     paidSessions: [],
+    sales: [],
   }));
 }
 
@@ -210,6 +213,13 @@ function thankYouFor(purchase: Exclude<Purchase, { kind: "deal" }>) {
     return {
       from: "Red Rocks Team",
       message: `Thank you for your $${purchase.amount} season support. You keep the Red Rocks community going!`,
+    };
+  }
+  if (purchase.kind === "product") {
+    const athlete = athletes.find((item) => item.id === purchase.athleteId);
+    return {
+      from: athlete?.name ?? "Red Rocks Team",
+      message: `Thank you for your ${findProduct(purchase.productId)?.name.toLowerCase()} order! I'll get it to you soon.`,
     };
   }
   const quest = quests.find((item) => item.id === purchase.questId);
@@ -242,9 +252,24 @@ export function applyPurchase(purchase: Purchase, sessionId?: string) {
       };
     }
 
+    const amount = purchaseAmount(purchase);
     return {
       ...state,
       paidSessions,
+      sales:
+        purchase.kind === "product"
+          ? [
+              {
+                id: crypto.randomUUID(),
+                productId: purchase.productId,
+                athleteId: purchase.athleteId,
+                amount,
+                athleteShare: athleteShare(amount),
+                createdAt: new Date().toISOString(),
+              },
+              ...state.sales,
+            ]
+          : state.sales,
       membership: purchase.kind === "membership" ? purchase.plan : state.membership,
       giftDollars: state.giftDollars + (purchase.kind === "gift" ? purchase.amount : 0),
       questContributions:

@@ -81,7 +81,17 @@ export type Purchase =
   | { kind: "membership"; plan: Membership }
   | { kind: "gift"; amount: number }
   | { kind: "quest"; questId: string; amount: number; message?: string }
-  | { kind: "deal"; offerId: string; title: string; amount: number };
+  | { kind: "deal"; offerId: string; title: string; amount: number }
+  | { kind: "product"; productId: string; athleteId: string };
+
+export type Sale = {
+  id: string;
+  productId: string;
+  athleteId: string;
+  amount: number;
+  athleteShare: number;
+  createdAt: string;
+};
 
 export type ThankYou = { id: string; from: string; message: string; createdAt: string };
 
@@ -149,6 +159,7 @@ export type DemoState = {
   questContributions: Record<string, number>;
   claimedRewards: string[];
   fanCodes: Record<string, string>;
+  sales: Sale[];
   requests: SponsorRequest[];
   rsvps: string[];
   thanks: ThankYou[];

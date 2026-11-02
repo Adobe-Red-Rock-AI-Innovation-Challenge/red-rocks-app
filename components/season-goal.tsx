@@ -20,7 +20,8 @@ export function SeasonGoal() {
     (state.membership ? plans[state.membership].price : 0) +
     state.giftDollars +
     Object.values(state.questContributions).reduce((sum, amount) => sum + amount, 0);
-  const raised = Math.round(sponsorDollars + fanPayments * FAN_SHARE);
+  const giftShares = state.sales.reduce((sum, sale) => sum + sale.athleteShare, 0);
+  const raised = Math.round(sponsorDollars + fanPayments * FAN_SHARE + giftShares);
   const percent = Math.min(100, (raised / GOAL) * 100);
   const liveCampaigns = state.offers.filter(isLive).length;
 
@@ -47,7 +48,7 @@ export function SeasonGoal() {
         <div className="h-full bg-primary transition-[width] duration-700" style={{ width: `${percent}%` }} />
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
-        Counts paid sponsor deals and the athletes&apos; share of fan payments. Goal comes from the
+        Counts paid sponsor deals, the athletes&apos; share of fan payments and gift sales. Goal comes from the
         Base revenue model. Demo counter: it starts from sample deals and grows with each payment
         in this browser.
       </p>

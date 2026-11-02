@@ -1,4 +1,5 @@
-import { quests } from "@/lib/data";
+import { athletes, quests } from "@/lib/data";
+import { findProduct } from "@/lib/gifts";
 import type { Membership, Purchase } from "@/lib/types";
 
 export const plans: Record<Membership, { name: string; price: number; perks: string[] }> = {
@@ -25,13 +26,20 @@ export const MAX_SUPPORT = 500;
 const MIN_DEAL = 100;
 const MAX_DEAL = 50000;
 
+// Product prices always come from the catalog, never from what the browser sent.
 export function purchaseAmount(purchase: Purchase) {
-  return purchase.kind === "membership" ? plans[purchase.plan].price : purchase.amount;
+  if (purchase.kind === "membership") return plans[purchase.plan].price;
+  if (purchase.kind === "product") return findProduct(purchase.productId)?.price ?? 0;
+  return purchase.amount;
 }
 
 export function purchaseLabel(purchase: Purchase) {
   if (purchase.kind === "membership") {
     return `${plans[purchase.plan].name} membership, $${plans[purchase.plan].price}/month`;
+  }
+  if (purchase.kind === "product") {
+    const athlete = athletes.find((item) => item.id === purchase.athleteId);
+    return `${findProduct(purchase.productId)?.name} from ${athlete?.name}, $${purchaseAmount(purchase)}`;
   }
   if (purchase.kind === "gift") return `Season supporter, $${purchase.amount}`;
   if (purchase.kind === "deal") return `NIL deal: ${purchase.title}, $${purchase.amount}`;
@@ -57,6 +65,18 @@ export function parsePurchase(value: unknown): Purchase | null {
     return purchase.plan === "duo" || purchase.plan === "family" || purchase.plan === "inner"
       ? { kind: "membership", plan: purchase.plan }
       : null;
+  }
+  if (
+    purchase.kind === "product" &&
+    typeof purchase.productId === "string" &&
+    findProduct(purchase.productId) &&
+    athletes.some((athlete) => athlete.id === purchase.athleteId)
+  ) {
+    return {
+      kind: "product",
+      productId: purchase.productId,
+      athleteId: purchase.athleteId as string,
+    };
   }
   if (purchase.kind === "gift" && validAmount(purchase.amount)) {
     return { kind: "gift", amount: purchase.amount };

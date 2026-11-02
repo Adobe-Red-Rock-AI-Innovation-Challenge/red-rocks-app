@@ -14,7 +14,11 @@ export function SiteHeader() {
   const router = useRouter();
   const { state, setRole, reset } = useDemo();
   const activeRole = roleForPath(pathname) ?? state.role;
-  const links = [...navByRole[activeRole], { href: "/impact", label: "Impact" }];
+  const links = [
+    ...navByRole[activeRole],
+    { href: "/gifts", label: "Gifts" },
+    { href: "/impact", label: "Impact" },
+  ];
 
   function handleReset() {
     if (!window.confirm("Clear everything done in this demo?")) return;

@@ -2,12 +2,11 @@ import { purchaseLabel } from "@/lib/checkout";
 import { athletes, quests } from "@/lib/data";
 import type { DemoNotification, DemoState, DemoUser, Purchase, Role } from "@/lib/types";
 
-const STORAGE_KEY = "red-rocks-demo-v1";
+const STORAGE_KEY = "red-rocks-demo-v2";
 
 export const initialState: DemoState = {
   role: "fan",
   user: null,
-  accounts: [],
   fan: null,
   membership: null,
   giftDollars: 0,
@@ -28,6 +27,8 @@ export const initialState: DemoState = {
       caption: "Fueling meet day with @secondpeakcoffee. #ad",
       status: "pending",
       createdAt: "2026-10-28T16:00:00.000Z",
+      code: "PEAK-MARA",
+      redemptions: 0,
     },
     {
       id: "seed-canyon-spirits",
@@ -40,6 +41,38 @@ export const initialState: DemoState = {
       caption: "Cheers to the season!",
       status: "pending",
       createdAt: "2026-10-30T16:00:00.000Z",
+      code: "CANYON-MARA",
+      redemptions: 0,
+    },
+    {
+      id: "seed-sego-results",
+      sponsorName: "Sego Smoothie Co.",
+      athleteId: "kennedy-okafor",
+      title: "Post-workout smoothie Reel",
+      deliverables: "One Instagram Reel with a member-only smoothie offer.",
+      price: 900,
+      timeline: "Ran Sept 8 to Sept 22",
+      caption: "My post-workout go-to from @segosmoothie. #ad",
+      status: "reported",
+      createdAt: "2026-09-01T16:00:00.000Z",
+      code: "SEGO-KEN",
+      redemptions: 94,
+      sample: true,
+    },
+    {
+      id: "seed-sego-renewal",
+      sponsorName: "Sego Smoothie Co.",
+      athleteId: "josie-whitlock",
+      title: "Fall smoothie story set",
+      deliverables: "A 3-frame story set with a member-only offer.",
+      price: 300,
+      timeline: "Ran Oct 6 to Oct 13",
+      caption: "Fall flavors from @segosmoothie. #ad",
+      status: "reported",
+      createdAt: "2026-10-01T16:00:00.000Z",
+      code: "SEGO-JOSIE",
+      redemptions: 41,
+      sample: true,
     },
   ],
   activeAthleteId: athletes[0].id,
@@ -113,19 +146,30 @@ export function notification(text: string, href: string): DemoNotification {
 }
 
 export function signIn(user: DemoUser, role?: Role) {
+  setDemoState((state) => ({ ...state, user, role: role ?? state.role }));
+}
+
+export async function signOut() {
+  setDemoState((state) => ({ ...state, user: null }));
+  await fetch("/api/auth/logout", { method: "POST" }).catch(() => null);
+}
+
+export function deleteFanData() {
   setDemoState((state) => ({
     ...state,
-    user,
-    role: role ?? state.role,
-    accounts: [...state.accounts.filter((account) => account.email !== user.email), user],
+    fan: null,
+    membership: null,
+    giftDollars: 0,
+    questContributions: {},
+    claimedRewards: [],
+    rsvps: [],
+    thanks: [],
+    notifications: [],
+    paidSessions: [],
   }));
 }
 
-export function signOut() {
-  setDemoState((state) => ({ ...state, user: null }));
-}
-
-function thankYouFor(purchase: Purchase) {
+function thankYouFor(purchase: Exclude<Purchase, { kind: "deal" }>) {
   if (purchase.kind === "membership") {
     return {
       from: "Red Rocks Team",
@@ -152,10 +196,25 @@ function thankYouFor(purchase: Purchase) {
 export function applyPurchase(purchase: Purchase, sessionId?: string) {
   setDemoState((state) => {
     if (sessionId && state.paidSessions.includes(sessionId)) return state;
+    const paidSessions = sessionId ? [...state.paidSessions, sessionId] : state.paidSessions;
+
+    if (purchase.kind === "deal") {
+      return {
+        ...state,
+        paidSessions,
+        offers: state.offers.map((offer) =>
+          offer.id === purchase.offerId ? { ...offer, status: "paid" } : offer,
+        ),
+        notifications: [
+          notification(`Payment sent for "${purchase.title}"`, "/athlete/dashboard"),
+          ...state.notifications,
+        ],
+      };
+    }
 
     return {
       ...state,
-      paidSessions: sessionId ? [...state.paidSessions, sessionId] : state.paidSessions,
+      paidSessions,
       membership: purchase.kind === "membership" ? purchase.plan : state.membership,
       giftDollars: state.giftDollars + (purchase.kind === "gift" ? purchase.amount : 0),
       questContributions:

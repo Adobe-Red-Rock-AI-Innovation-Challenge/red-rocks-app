@@ -6,8 +6,9 @@ import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { VipCard } from "@/components/vip-card";
-import { events, rewards, sponsors } from "@/lib/data";
-import { setDemoState } from "@/lib/demo-store";
+import { athletes, events, rewards, sponsors } from "@/lib/data";
+import { isLive } from "@/lib/deals";
+import { deleteFanData, setDemoState } from "@/lib/demo-store";
 import type { ThankYou, VipEvent } from "@/lib/types";
 
 function canAttend(event: VipEvent, membership: string) {
@@ -32,9 +33,21 @@ async function share(thanks: ThankYou) {
   }
 }
 
+// Claiming is the redemption sponsors pay for, so it is counted on the campaign itself.
+function claimCampaign(offerId: string) {
+  setDemoState((current) => ({
+    ...current,
+    claimedRewards: [...current.claimedRewards, offerId],
+    offers: current.offers.map((offer) =>
+      offer.id === offerId ? { ...offer, redemptions: offer.redemptions + 1 } : offer,
+    ),
+  }));
+}
+
 export default function FanDashboardPage() {
   const { state } = useDemo();
   const { fan, membership } = state;
+  const campaigns = state.offers.filter((offer) => isLive(offer) && offer.status !== "reported");
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -74,11 +87,61 @@ export default function FanDashboardPage() {
               </article>
             ))}
           </div>
+
+          {fan && (
+            <div className="mt-8 rounded-lg bg-neutral-50 p-4 text-sm">
+              <p className="font-semibold">Your data</p>
+              <p className="mt-1 text-muted-foreground">
+                Saved for {fan.name} ({fan.email}).{" "}
+                <Link href="/privacy" className="underline">
+                  Privacy notice
+                </Link>
+              </p>
+              <Button
+                variant="outline"
+                className="mt-3"
+                onClick={() => {
+                  if (!window.confirm("Delete your pass, rewards and messages?")) return;
+                  deleteFanData();
+                  toast.success("Your data was deleted");
+                }}
+              >
+                Delete my data
+              </Button>
+            </div>
+          )}
         </div>
 
         <div>
           <h2 className="text-2xl">Sponsor rewards</h2>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {campaigns.map((offer) => {
+              const claimed = state.claimedRewards.includes(offer.id);
+              return (
+                <article key={offer.id} className="flex flex-col rounded-lg border p-4">
+                  <p className="text-xs font-semibold text-primary">
+                    {offer.sponsorName} · with {athletes.find((a) => a.id === offer.athleteId)?.name}
+                  </p>
+                  <p className="font-semibold">{offer.title}</p>
+                  <p className="mt-1 flex-1 text-sm text-muted-foreground">
+                    Member offer. Show your code at the counter.
+                  </p>
+                  {claimed ? (
+                    <p className="mt-3 rounded bg-neutral-100 px-2 py-1.5 text-center font-mono text-sm">
+                      {offer.code}
+                    </p>
+                  ) : (
+                    <Button
+                      className="mt-3"
+                      disabled={!membership}
+                      onClick={() => claimCampaign(offer.id)}
+                    >
+                      Claim
+                    </Button>
+                  )}
+                </article>
+              );
+            })}
             {rewards.map((reward) => {
               const claimed = state.claimedRewards.includes(reward.id);
               const sponsor = sponsors.find((item) => item.id === reward.sponsorId);

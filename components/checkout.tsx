@@ -1,25 +1,29 @@
 "use client";
 
 import { Dialog } from "@base-ui/react/dialog";
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import { Lock } from "lucide-react";
 import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { celebrate } from "@/lib/celebrate";
-import { purchaseLabel } from "@/lib/checkout";
+import { purchaseAmount, purchaseLabel } from "@/lib/checkout";
 import { applyPurchase, setDemoState } from "@/lib/demo-store";
 import type { Purchase } from "@/lib/types";
 
-// Fans check out as guests. With STRIPE_SECRET_KEY set they go to Stripe's test checkout;
-// otherwise the simulated card step stands in.
+type Pending = { purchase: Purchase; stripeUrl: string | null };
+
+// One form, like a hosted payment page. With STRIPE_SECRET_KEY set, card details are typed on
+// Stripe's own page and never reach this app; without it the card fields are a labeled test stand-in.
 export function useCheckout(onPaid?: () => void) {
   const { state } = useDemo();
-  const [details, setDetails] = useState<Purchase | null>(null);
-  const [simulated, setSimulated] = useState<Purchase | null>(null);
+  const [pending, setPending] = useState<Pending | null>(null);
   const [busy, setBusy] = useState(false);
+  const needsDetails = !state.fan && pending?.purchase.kind !== "deal";
 
-  async function start(purchase: Purchase) {
+  async function pay(purchase: Purchase) {
     setBusy(true);
     try {
       const response = await fetch("/api/checkout", {
@@ -29,11 +33,7 @@ export function useCheckout(onPaid?: () => void) {
       });
       if (!response.ok) throw new Error("Checkout failed");
       const { url } = await response.json();
-      if (url) {
-        window.location.assign(url);
-        return;
-      }
-      setSimulated(purchase);
+      setPending({ purchase, stripeUrl: url });
     } catch {
       toast.error("Could not start checkout. Please try again.");
     } finally {
@@ -41,87 +41,100 @@ export function useCheckout(onPaid?: () => void) {
     }
   }
 
-  function pay(purchase: Purchase) {
-    if (state.fan) start(purchase);
-    else setDetails(purchase);
-  }
-
-  function submitDetails(event: FormEvent<HTMLFormElement>) {
+  function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!details) return;
-    const form = new FormData(event.currentTarget);
-    const fan = {
-      name: String(form.get("name")).trim(),
-      email: String(form.get("email")).trim().toLowerCase(),
-    };
-    setDemoState((current) => ({ ...current, fan }));
-    setDetails(null);
-    start(details);
-  }
+    if (!pending) return;
 
-  function confirmSimulated() {
-    if (!simulated) return;
-    applyPurchase(simulated);
-    setSimulated(null);
+    if (needsDetails) {
+      const form = new FormData(event.currentTarget);
+      const fan = {
+        name: String(form.get("name")).trim(),
+        email: String(form.get("email")).trim().toLowerCase(),
+      };
+      setDemoState((current) => ({ ...current, fan }));
+    }
+    if (pending.stripeUrl) {
+      window.location.assign(pending.stripeUrl);
+      return;
+    }
+
+    applyPurchase(pending.purchase);
+    setPending(null);
     celebrate();
     toast.success("Payment complete");
     onPaid?.();
   }
 
-  function close() {
-    setDetails(null);
-    setSimulated(null);
-  }
-
-  const active = details ?? simulated;
   const dialog = (
-    <Dialog.Root open={active !== null} onOpenChange={(open) => !open && close()}>
+    <Dialog.Root open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
-        <Dialog.Popup className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-background p-6 shadow-lg">
-          {details ? (
+        <Dialog.Popup className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100%-2rem)] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-background shadow-lg">
+          {pending && (
             <>
-              <Dialog.Title className="text-2xl">Your details</Dialog.Title>
-              <Dialog.Description className="mt-1 text-sm text-muted-foreground">
-                {purchaseLabel(details)}. No account needed.
-              </Dialog.Description>
-              <form onSubmit={submitDetails} className="mt-4 grid gap-3">
-                <Field label="Name on your VIP Pass">
-                  <Input name="name" required autoComplete="name" />
-                </Field>
-                <Field label="Email for your receipt">
-                  <Input name="email" type="email" required autoComplete="email" />
-                </Field>
-                <Button type="submit" size="lg">
-                  Continue to payment
-                </Button>
-                <Dialog.Close render={<Button variant="ghost" size="lg" />}>Cancel</Dialog.Close>
-              </form>
-            </>
-          ) : (
-            <>
-              <Dialog.Title className="text-2xl">Test checkout</Dialog.Title>
-              <Dialog.Description className="mt-1 text-sm text-muted-foreground">
-                {simulated && purchaseLabel(simulated)}. Simulated Stripe test mode: no card is
-                charged.
-              </Dialog.Description>
-              <div className="mt-4 grid gap-3">
-                <Field label="Test card">
-                  <Input value="4242 4242 4242 4242" readOnly />
-                </Field>
-                <div className="grid grid-cols-2 gap-3">
-                  <Field label="Expiry">
-                    <Input value="12 / 34" readOnly />
-                  </Field>
-                  <Field label="CVC">
-                    <Input value="123" readOnly />
-                  </Field>
-                </div>
-                <Button size="lg" onClick={confirmSimulated}>
-                  Pay
-                </Button>
-                <Dialog.Close render={<Button variant="ghost" size="lg" />}>Cancel</Dialog.Close>
+              <div className="border-b bg-neutral-50 p-5">
+                <Dialog.Title className="text-sm font-normal text-muted-foreground normal-case">
+                  Make a payment to
+                </Dialog.Title>
+                <p className="font-heading text-xl font-extrabold uppercase">Red Rocks Fan Hub</p>
+                <Dialog.Description className="text-sm">
+                  {purchaseLabel(pending.purchase)}
+                </Dialog.Description>
               </div>
+              <form onSubmit={submit} className="grid gap-3 p-5">
+                <Field label="Amount to pay">
+                  <Input value={`${purchaseAmount(pending.purchase).toFixed(2)} USD`} readOnly />
+                </Field>
+                {needsDetails && (
+                  <>
+                    <Field label="Name on your VIP Pass">
+                      <Input name="name" required autoComplete="name" />
+                    </Field>
+                    <Field label="Email for your receipt">
+                      <Input name="email" type="email" required autoComplete="email" />
+                    </Field>
+                  </>
+                )}
+                {pending.stripeUrl ? (
+                  <p className="text-xs text-muted-foreground">
+                    You enter your card on Stripe&apos;s secure page next. We never see or store
+                    card numbers.
+                  </p>
+                ) : (
+                  <>
+                    <Field label="Card number (test)">
+                      <Input value="4242 4242 4242 4242" readOnly />
+                    </Field>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Field label="Expiry">
+                        <Input value="12 / 34" readOnly />
+                      </Field>
+                      <Field label="CVC">
+                        <Input value="123" readOnly />
+                      </Field>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Test mode: no real card is charged.
+                    </p>
+                  </>
+                )}
+                {needsDetails && (
+                  <p className="text-xs text-muted-foreground">
+                    We use your name and email only for your pass and receipt. See our{" "}
+                    <Link href="/privacy" className="underline">
+                      privacy notice
+                    </Link>
+                    .
+                  </p>
+                )}
+                <Button type="submit" size="lg" className="h-11">
+                  <Lock />
+                  {pending.stripeUrl ? "Continue to secure payment" : "Pay now"}
+                </Button>
+                <Dialog.Close render={<Button type="button" variant="ghost" size="lg" />}>
+                  Cancel
+                </Dialog.Close>
+              </form>
             </>
           )}
         </Dialog.Popup>

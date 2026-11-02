@@ -8,7 +8,7 @@ import type { DemoUser, Role } from "@/lib/types";
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 const PENDING_KEY = "red-rocks-google-sign-in";
 
-type PendingSignIn = { nonce: string; role: Role; next: string | null };
+type PendingSignIn = { nonce: string; next: string | null };
 
 function GoogleLogo() {
   return (
@@ -40,12 +40,13 @@ export async function completeGoogleSignIn() {
   });
   if (!response.ok) throw new Error("Google sign-in failed");
 
-  const user: DemoUser = await response.json();
-  return { user, role: pending.role, next: pending.next };
+  // The server decides the role from the member list, so nobody can pick "athlete" for themselves.
+  const result: { user: DemoUser; role: Role } = await response.json();
+  return { ...result, next: pending.next };
 }
 
 // prompt=select_account makes Google show its account chooser on every sign-in.
-export function GoogleSignIn({ role, next }: { role: Role; next: string | null }) {
+export function GoogleSignIn({ next }: { next: string | null }) {
   const [busy, setBusy] = useState(false);
 
   function start() {
@@ -53,7 +54,7 @@ export function GoogleSignIn({ role, next }: { role: Role; next: string | null }
     setBusy(true);
     const nonce = crypto.randomUUID();
     try {
-      const pending: PendingSignIn = { nonce, role, next };
+      const pending: PendingSignIn = { nonce, next };
       window.sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending));
     } catch {
       setBusy(false);

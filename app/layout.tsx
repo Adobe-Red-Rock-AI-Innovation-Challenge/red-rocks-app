@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
+import Link from "next/link";
 import { DemoProvider } from "@/components/demo-provider";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
@@ -33,6 +34,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <footer className="border-t px-4 py-4 text-center text-xs text-muted-foreground">
+            <nav aria-label="Footer" className="mb-2 flex justify-center gap-4">
+              <Link href="/how-it-works">How it works</Link>
+              <Link href="/feasibility">Business plan</Link>
+              <Link href="/privacy">Privacy</Link>
+            </nav>
             Student competition prototype. Athletes, sponsors and figures are fictional. Not
             affiliated with or endorsed by the University of Utah.
           </footer>

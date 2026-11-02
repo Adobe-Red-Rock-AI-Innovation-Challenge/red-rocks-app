@@ -52,22 +52,23 @@ export type Reward = {
   code: string;
 };
 
-export type ImpactBaseline = {
-  goal: number;
-  fans: number;
-  subscribers: { duo: number; family: number };
-  pastQuestDollars: number;
-  giftDollars: number;
-  sponsorDeals: number;
-  sponsorDealDollars: number;
-};
-
 export type DemoUser = {
   name: string;
   email: string;
   organization?: string;
-  provider: "google" | "email";
+  provider: "google" | "demo";
   picture?: string;
+  isAdmin?: boolean;
+  status?: MemberStatus;
+};
+
+export type MemberStatus = "pending" | "active";
+
+export type Member = {
+  email: string;
+  name: string;
+  role: Exclude<Role, "fan">;
+  status: MemberStatus;
 };
 
 export type Fan = Pick<DemoUser, "name" | "email">;
@@ -77,7 +78,8 @@ export type Membership = "duo" | "family";
 export type Purchase =
   | { kind: "membership"; plan: Membership }
   | { kind: "gift"; amount: number }
-  | { kind: "quest"; questId: string; amount: number; message?: string };
+  | { kind: "quest"; questId: string; amount: number; message?: string }
+  | { kind: "deal"; offerId: string; title: string; amount: number };
 
 export type ThankYou = { id: string; from: string; message: string; createdAt: string };
 
@@ -89,7 +91,15 @@ export type DemoNotification = {
   createdAt: string;
 };
 
-export type OfferStatus = "pending" | "accepted" | "negotiating" | "declined";
+export type OfferStatus =
+  | "pending"
+  | "negotiating"
+  | "accepted"
+  | "cleared"
+  | "delivered"
+  | "paid"
+  | "reported"
+  | "declined";
 
 export type Offer = {
   id: string;
@@ -103,6 +113,10 @@ export type Offer = {
   status: OfferStatus;
   counterPrice?: number;
   createdAt: string;
+  code: string;
+  redemptions: number;
+  packageId?: string;
+  sample?: boolean;
 };
 
 export type AthleteProfile = { bio: string; tags: string[]; rateCard: RateCardItem[] };
@@ -110,7 +124,6 @@ export type AthleteProfile = { bio: string; tags: string[]; rateCard: RateCardIt
 export type DemoState = {
   role: Role;
   user: DemoUser | null;
-  accounts: DemoUser[];
   fan: Fan | null;
   membership: Membership | null;
   giftDollars: number;

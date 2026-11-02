@@ -1,3 +1,4 @@
+import { NIL_GO_THRESHOLD } from "@/lib/deals";
 import type { Athlete, Offer } from "@/lib/types";
 
 export type NilStatus = "green" | "yellow" | "red";
@@ -42,6 +43,13 @@ export function checkOffer(offer: Offer, athlete: Athlete): NilCheck[] {
           detail: "Uniforms, logos and campus settings need compliance approval.",
         }
       : { label: "School marks", status: "green", detail: "No school marks mentioned." },
+    offer.price >= NIL_GO_THRESHOLD
+      ? {
+          label: "NIL Go",
+          status: "yellow",
+          detail: "$600 or more: submit to NIL Go and get clearance before work starts.",
+        }
+      : { label: "NIL Go", status: "green", detail: "Under $600 unless deals with this payer add up." },
     offer.price > rateTotal * 1.5
       ? {
           label: "Fair market value",

@@ -93,13 +93,16 @@ export function AccountMenu() {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push("/settings")}>Settings</DropdownMenuItem>
+          {user.isAdmin && (
+            <DropdownMenuItem onClick={() => router.push("/admin")}>Team access</DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => router.push("/how-it-works")}>
             How it works
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-primary"
-            onClick={() => {
-              signOut();
+            onClick={async () => {
+              await signOut();
               router.push("/");
             }}
           >

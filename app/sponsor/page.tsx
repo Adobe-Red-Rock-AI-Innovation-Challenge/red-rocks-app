@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { AiSource } from "@/components/ai-source";
@@ -9,11 +10,13 @@ import { Field, Input, Select, Textarea } from "@/components/ui/input";
 import type { AiOutput, AiSource as Source } from "@/lib/ai";
 import { askAi } from "@/lib/ai-client";
 import { athletes, sponsors } from "@/lib/data";
+import { newOffer } from "@/lib/deals";
 import { notification, setDemoState } from "@/lib/demo-store";
 
 type Draft = AiOutput<"campaign"> & { athleteId: string };
 
 export default function SponsorPage() {
+  const router = useRouter();
   const { state } = useDemo();
   const [sponsorName, setSponsorName] = useState(sponsors[0].name);
   const [need, setNeed] = useState("");
@@ -63,20 +66,25 @@ export default function SponsorPage() {
     }
   }
 
+  // Adobe's embedded editor needs business approval, so the brief travels by clipboard instead.
+  async function openInAdobeExpress() {
+    if (!draft) return;
+    const brief = `${draft.title}\n\n${draft.deliverables}\n\nCaption: ${draft.caption}`;
+    try {
+      await navigator.clipboard.writeText(brief);
+      toast.success("Brief copied. Paste it into Adobe Express.");
+    } catch {
+      toast("Copy the brief by hand, then design it in Adobe Express.");
+    }
+    window.open("https://new.express.adobe.com/", "_blank", "noopener");
+  }
+
   function sendOffer() {
     if (!draft) return;
+    const { athleteId, ...fields } = draft;
     setDemoState((current) => ({
       ...current,
-      offers: [
-        {
-          ...draft,
-          id: crypto.randomUUID(),
-          sponsorName,
-          status: "pending",
-          createdAt: new Date().toISOString(),
-        },
-        ...current.offers,
-      ],
+      offers: [newOffer({ ...fields, athleteId, sponsorName }), ...current.offers],
       activeAthleteId: draft.athleteId,
       notifications: [
         notification(`New offer from ${sponsorName}`, "/athlete/dashboard"),
@@ -85,6 +93,7 @@ export default function SponsorPage() {
     }));
     setDraft(null);
     toast.success("Offer sent to the athlete's inbox");
+    router.push("/sponsor/deals");
   }
 
   return (
@@ -193,9 +202,23 @@ export default function SponsorPage() {
               onChange={(event) => setDraft({ ...draft, caption: event.target.value })}
             />
           </Field>
-          <Button size="lg" disabled={Number.isNaN(draft.price)} onClick={sendOffer}>
-            Send offer
-          </Button>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Button variant="outline" size="lg" onClick={openInAdobeExpress}>
+              Design the post in Adobe Express
+            </Button>
+            <Button
+              size="lg"
+              disabled={Number.isNaN(draft.price) || state.user?.status === "pending"}
+              onClick={sendOffer}
+            >
+              Send offer
+            </Button>
+          </div>
+          {state.user?.status === "pending" && (
+            <p className="text-sm text-muted-foreground">
+              You can send offers once an admin approves your account.
+            </p>
+          )}
         </section>
       )}
     </div>

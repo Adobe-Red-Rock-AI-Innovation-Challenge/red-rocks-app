@@ -20,6 +20,9 @@ The app runs without keys, using email sign-in, simulated checkout and sample AI
 | Variable | Turns on |
 | --- | --- |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google sign-in for sponsors and athletes. Add `<site URL>/login` to the client's authorized redirect URIs. Google's button stays off until this is set. |
+| `ADMIN_EMAILS` | Comma-separated Gmail addresses that can open Team access at `/admin`. |
+| `SESSION_SECRET` | A long random string that signs sign-in cookies. Required for admins. |
+| `DATABASE_URL` | Postgres (for example Neon from the Vercel Marketplace) that stores who is an athlete or sponsor. |
 | `STRIPE_SECRET_KEY` | Stripe Checkout. Only `sk_test_` keys are accepted. |
 | `ANTHROPIC_API_KEY` | Claude for matching, drafts, bios and message polish. |
 

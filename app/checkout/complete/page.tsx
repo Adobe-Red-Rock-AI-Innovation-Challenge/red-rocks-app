@@ -28,6 +28,7 @@ export default function CheckoutCompletePage() {
     () => null,
   );
   const failed = search !== null && readReturn(search) === null;
+  const isDeal = search !== null && readReturn(search)?.purchase.kind === "deal";
 
   useEffect(() => {
     const result = search === null ? null : readReturn(search);
@@ -42,8 +43,11 @@ export default function CheckoutCompletePage() {
       <p className="mt-2 text-muted-foreground">
         {failed ? "We could not read this payment." : "Thank you for supporting Red Rocks."}
       </p>
-      <Link href="/fan/dashboard" className={buttonVariants({ size: "lg", className: "mt-6 px-4" })}>
-        Go to My Pass
+      <Link
+        href={isDeal ? "/sponsor/deals" : "/fan/dashboard"}
+        className={buttonVariants({ size: "lg", className: "mt-6 px-4" })}
+      >
+        {isDeal ? "Back to deals" : "Go to My Pass"}
       </Link>
     </div>
   );

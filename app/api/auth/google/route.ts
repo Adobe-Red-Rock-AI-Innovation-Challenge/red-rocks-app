@@ -1,3 +1,6 @@
+import { findOrCreateMember, hasDatabase } from "@/lib/members";
+import { adminEmails, createSession } from "@/lib/session";
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -19,10 +22,23 @@ export async function POST(request: Request) {
     claims?.email_verified === "true";
   if (!valid) return Response.json({ error: "Invalid sign-in" }, { status: 401 });
 
-  return Response.json({
-    name: claims.name ?? claims.email,
-    email: claims.email,
-    picture: claims.picture,
-    provider: "google",
-  });
+  const email = String(claims.email).toLowerCase();
+  const name = claims.name ?? email;
+  const isAdmin = adminEmails().includes(email);
+
+  try {
+    const member = hasDatabase()
+      ? await findOrCreateMember(email, name)
+      : { role: "sponsor" as const, status: "pending" as const };
+    const access = { role: member.role, status: isAdmin ? ("active" as const) : member.status };
+
+    await createSession({ email, isAdmin, ...access });
+    return Response.json({
+      user: { name, email, picture: claims.picture, provider: "google", isAdmin, status: access.status },
+      role: access.role,
+    });
+  } catch (error) {
+    console.error("Could not load member", error);
+    return Response.json({ error: "Sign-in is unavailable" }, { status: 503 });
+  }
 }

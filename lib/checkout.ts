@@ -17,6 +17,9 @@ export const plans: Record<Membership, { name: string; price: number; perks: str
 export const MIN_SUPPORT = 5;
 export const MAX_SUPPORT = 500;
 
+const MIN_DEAL = 100;
+const MAX_DEAL = 50000;
+
 export function purchaseAmount(purchase: Purchase) {
   return purchase.kind === "membership" ? plans[purchase.plan].price : purchase.amount;
 }
@@ -26,6 +29,7 @@ export function purchaseLabel(purchase: Purchase) {
     return `${plans[purchase.plan].name} membership, $${plans[purchase.plan].price}/month`;
   }
   if (purchase.kind === "gift") return `One-time gift, $${purchase.amount}`;
+  if (purchase.kind === "deal") return `NIL deal: ${purchase.title}, $${purchase.amount}`;
   const quest = quests.find((item) => item.id === purchase.questId);
   return `${quest?.title ?? "Quest"} support, $${purchase.amount}`;
 }
@@ -51,6 +55,22 @@ export function parsePurchase(value: unknown): Purchase | null {
   }
   if (purchase.kind === "gift" && validAmount(purchase.amount)) {
     return { kind: "gift", amount: purchase.amount };
+  }
+  if (
+    purchase.kind === "deal" &&
+    typeof purchase.offerId === "string" &&
+    typeof purchase.title === "string" &&
+    typeof purchase.amount === "number" &&
+    Number.isInteger(purchase.amount) &&
+    purchase.amount >= MIN_DEAL &&
+    purchase.amount <= MAX_DEAL
+  ) {
+    return {
+      kind: "deal",
+      offerId: purchase.offerId,
+      title: purchase.title.slice(0, 120),
+      amount: purchase.amount,
+    };
   }
   if (
     purchase.kind === "quest" &&

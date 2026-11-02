@@ -6,10 +6,11 @@ import { AthletePicker } from "@/components/athlete-picker";
 import { useDemo } from "@/components/demo-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DealSteps } from "@/components/deal-steps";
 import { athletes } from "@/lib/data";
-import { notification, setDemoState } from "@/lib/demo-store";
+import { needsNilGo, updateOffer } from "@/lib/deals";
 import { checkOffer, worstStatus, type NilStatus } from "@/lib/nil";
-import type { Athlete, Offer, OfferStatus } from "@/lib/types";
+import type { Athlete, Offer } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const statusStyles: Record<NilStatus, { dot: string; label: string }> = {
@@ -18,29 +19,17 @@ const statusStyles: Record<NilStatus, { dot: string; label: string }> = {
   red: { dot: "bg-red-700", label: "Blocked" },
 };
 
-function respond(offer: Offer, status: OfferStatus, counterPrice?: number) {
-  const verbs = { accepted: "accepted", negotiating: "countered", declined: "declined" };
-  setDemoState((current) => ({
-    ...current,
-    offers: current.offers.map((item) =>
-      item.id === offer.id ? { ...item, status, counterPrice } : item,
-    ),
-    notifications: [
-      notification(
-        `Your offer "${offer.title}" was ${verbs[status as keyof typeof verbs]}`,
-        "/sponsor",
-      ),
-      ...current.notifications,
-    ],
-  }));
+function respond(offer: Offer, changes: Partial<Offer>, verb: string) {
+  updateOffer(offer.id, changes, `${offer.title}: athlete ${verb}`, "/sponsor/deals");
 }
 
-function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
+function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete; offers: Offer[] }) {
   const [negotiating, setNegotiating] = useState(false);
   const [counter, setCounter] = useState(offer.price);
   const checks = checkOffer(offer, athlete);
   const overall = worstStatus(checks);
   const open = offer.status === "pending";
+  const reportable = needsNilGo(offer, offers);
 
   return (
     <article className="rounded-lg border p-5">
@@ -56,6 +45,9 @@ function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
       <p className="mt-2 text-sm">{offer.deliverables}</p>
       <p className="mt-1 text-sm text-muted-foreground">{offer.timeline}</p>
       <p className="mt-1 text-sm text-muted-foreground">Caption: {offer.caption}</p>
+      <div className="mt-3">
+        <DealSteps status={offer.status} />
+      </div>
 
       <table className="mt-4 w-full text-sm">
         <caption className="mb-1 flex items-center gap-2 text-left font-semibold">
@@ -82,7 +74,8 @@ function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
           <Button
             disabled={overall === "red"}
             onClick={() => {
-              respond(offer, "accepted");
+              // Deals under the threshold need no clearance, so they skip straight past NIL Go.
+              respond(offer, { status: reportable ? "accepted" : "cleared" }, "accepted");
               toast.success("Offer accepted");
             }}
           >
@@ -94,7 +87,7 @@ function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
           <Button
             variant="ghost"
             onClick={() => {
-              respond(offer, "declined");
+              respond(offer, { status: "declined" }, "declined");
               toast("Offer declined");
             }}
           >
@@ -113,7 +106,7 @@ function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
               <Button
                 disabled={Number.isNaN(counter)}
                 onClick={() => {
-                  respond(offer, "negotiating", counter);
+                  respond(offer, { status: "negotiating", counterPrice: counter }, "countered");
                   toast.success("Counteroffer sent");
                 }}
               >
@@ -127,11 +120,41 @@ function OfferCard({ offer, athlete }: { offer: Offer; athlete: Athlete }) {
             </p>
           )}
         </div>
+      ) : offer.status === "accepted" ? (
+        <div className="mt-4 rounded-lg bg-yellow-50 p-4 text-sm text-yellow-950">
+          <p className="font-semibold">Report to NIL Go before you start</p>
+          <p className="mt-1">
+            Deals of $600 or more with one payer must be submitted to the College Sports
+            Commission&apos;s NIL Go portal. Do not create content until it is cleared.
+          </p>
+          <Button
+            className="mt-3"
+            onClick={() => {
+              respond(offer, { status: "cleared" }, "got NIL Go clearance");
+              toast.success("Marked as cleared");
+            }}
+          >
+            I got clearance
+          </Button>
+        </div>
+      ) : offer.status === "cleared" ? (
+        <Button
+          className="mt-4"
+          onClick={() => {
+            respond(offer, { status: "delivered" }, "posted the content");
+            toast.success("Sponsor notified to pay");
+          }}
+        >
+          Mark content delivered
+        </Button>
       ) : (
-        <p className="mt-4 text-sm font-semibold capitalize">
-          {offer.status}
-          {offer.counterPrice !== undefined &&
-            `: countered at $${offer.counterPrice.toLocaleString("en-US")}`}
+        <p className="mt-4 text-sm text-muted-foreground">
+          {offer.status === "negotiating" &&
+            `You countered at $${offer.counterPrice?.toLocaleString("en-US")}. Waiting for the sponsor.`}
+          {offer.status === "delivered" && "Waiting for the sponsor to pay."}
+          {offer.status === "paid" && "Paid. Thank you!"}
+          {offer.status === "reported" && `Complete. ${offer.redemptions} fans redeemed the offer.`}
+          {offer.status === "declined" && "Declined."}
         </p>
       )}
     </article>
@@ -145,7 +168,7 @@ export default function AthleteDashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-5xl">Offer inbox</h1>
+      <h1 className="text-5xl">My deals</h1>
       <p className="mt-2 mb-6 text-muted-foreground">
         Every offer gets an automatic NIL check. This is a screening aid, not legal advice.
       </p>
@@ -155,7 +178,7 @@ export default function AthleteDashboardPage() {
           <p className="text-sm text-muted-foreground">No offers yet for {athlete.name}.</p>
         )}
         {offers.map((offer) => (
-          <OfferCard key={offer.id} offer={offer} athlete={athlete} />
+          <OfferCard key={offer.id} offer={offer} athlete={athlete} offers={state.offers} />
         ))}
       </div>
     </div>

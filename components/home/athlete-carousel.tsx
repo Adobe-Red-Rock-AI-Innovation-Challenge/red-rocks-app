@@ -1,21 +1,20 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Search } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, Search } from "lucide-react";
+import { SpotlightShowcase } from "@/components/spotlight-showcase";
 import { athletes } from "@/lib/data";
+
+function compact(value: number) {
+  return value >= 1000 ? `${(value / 1000).toFixed(1)}K` : String(value);
+}
 
 export function AthleteCarousel() {
   const [query, setQuery] = useState("");
-  const track = useRef<HTMLDivElement>(null);
   const shown = athletes.filter((athlete) =>
     `${athlete.name} ${athlete.event}`.toLowerCase().includes(query.trim().toLowerCase()),
   );
-
-  function scroll(direction: 1 | -1) {
-    track.current?.scrollBy({ left: direction * 300, behavior: "smooth" });
-  }
 
   return (
     <section id="athletes" className="scroll-mt-28 rounded-3xl bg-primary p-5 text-white sm:p-8">
@@ -41,53 +40,36 @@ export function AthleteCarousel() {
         </div>
       </div>
 
-      <div ref={track} className="mt-6 flex snap-x gap-4 overflow-x-auto pb-2 [scrollbar-width:none]">
-        {shown.map((athlete) => (
-          <Link
-            key={athlete.id}
-            href={`/athletes/${athlete.id}`}
-            className="group relative w-44 shrink-0 snap-start overflow-hidden rounded-2xl bg-white sm:w-52"
-          >
-            <Image
-              src={athlete.image}
-              alt={athlete.name}
-              width={400}
-              height={480}
-              unoptimized
-              className="aspect-[5/6] w-full object-cover transition-transform group-hover:scale-105"
-            />
-            <span className="absolute inset-x-0 bottom-0 bg-neutral-800/90 py-2 text-center text-sm font-medium">
-              {athlete.name}
-            </span>
-          </Link>
-        ))}
-        {shown.length === 0 && <p className="py-10 text-sm">No athlete matches “{query}”.</p>}
+      <div className="mt-6">
+        {shown.length === 0 ? (
+          <p className="py-10 text-sm">No athlete matches “{query}”.</p>
+        ) : (
+          <SpotlightShowcase
+            label="Athletes"
+            items={shown.map((athlete) => ({
+              id: athlete.id,
+              image: athlete.image,
+              alt: athlete.name,
+              title: athlete.name,
+              subtitle: `${athlete.event} · ${athlete.year}`,
+              details: [
+                { label: "Hometown", value: athlete.hometown },
+                { label: "Engagement", value: `${athlete.engagementRate}%` },
+                { label: "Instagram", value: compact(athlete.followers.instagram) },
+                { label: "TikTok", value: compact(athlete.followers.tiktok) },
+              ],
+              actions: [
+                { href: `/athletes/${athlete.id}`, label: "View profile" },
+                { href: "/gifts", label: "Support" },
+              ],
+            }))}
+          />
+        )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            aria-label="Previous athletes"
-            onClick={() => scroll(-1)}
-            className="flex size-8 items-center justify-center rounded-full border border-white/60 hover:bg-white/10"
-          >
-            <ArrowLeft className="size-4" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next athletes"
-            onClick={() => scroll(1)}
-            className="flex size-8 items-center justify-center rounded-full bg-white text-primary"
-          >
-            <ArrowRight className="size-4" />
-          </button>
-        </div>
-        <p className="max-w-sm text-right text-xs text-red-100">
-          Meet the faces behind every victory: their journeys, career highlights and proudest
-          achievements.
-        </p>
-      </div>
+      <p className="mt-4 text-right text-xs text-red-100">
+        Hover to light up an athlete. Click to step into the spotlight.
+      </p>
     </section>
   );
 }

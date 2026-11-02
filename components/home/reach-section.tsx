@@ -26,7 +26,10 @@ export function ReachSection() {
           <br />
           <span className="text-primary">Unrivaled</span> Loyalty.
         </h2>
-        <div className="flex min-h-56 flex-1 flex-col justify-end rounded-3xl bg-[radial-gradient(circle_at_30%_20%,#e11d1d,#5a0000_70%)] p-6 text-white">
+        <div
+          className="flex min-h-56 flex-1 flex-col justify-end rounded-3xl bg-cover bg-center p-6 text-white"
+          style={{ backgroundImage: "linear-gradient(to top, rgba(0,0,0,0.85), rgba(90,0,0,0.3) 60%, transparent), url(/images/home/exposure.webp)" }}
+        >
           <h3 className="text-2xl">Massive Exposure</h3>
           <p className="mt-1 text-sm text-red-50">
             12,207 fans per meet in 2025, and the nation&apos;s gymnastics attendance leader in 36
@@ -77,16 +80,14 @@ export function ReachSection() {
 
       <div className="grid gap-4">
         {[
-          { title: "NIL & Influencer Deals", href: "/sponsor/athletes", tone: "from-neutral-900 to-primary" },
-          { title: "Tracked Fan Offers", href: "/sponsor/packages", tone: "from-primary to-neutral-900" },
+          { title: "NIL & Influencer Deals", href: "/sponsor/athletes", photo: "/images/home/sponsor-board.webp" },
+          { title: "Tracked Fan Offers", href: "/sponsor/packages", photo: "/images/home/fans.webp" },
         ].map((card) => (
           <Link
             key={card.title}
             href={card.href}
-            className={cn(
-              "relative flex min-h-36 flex-col justify-end rounded-3xl bg-gradient-to-br p-5 text-white",
-              card.tone,
-            )}
+            className="relative flex min-h-36 flex-col justify-end rounded-3xl bg-cover bg-center p-5 text-white"
+            style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.1)), url(${card.photo})` }}
           >
             <Plus className="absolute top-4 left-4 size-7 rounded-full bg-white/20 p-1.5" />
             <span className="text-xl font-semibold">{card.title}</span>

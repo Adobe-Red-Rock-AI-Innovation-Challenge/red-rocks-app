@@ -1,20 +1,37 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { AthleteCarousel } from "@/components/home/athlete-carousel";
+import { SpotlightShowcase, type ShowcaseItem } from "@/components/spotlight-showcase";
 import { JoinForm } from "@/components/home/join-form";
 import { ReachSection } from "@/components/home/reach-section";
 import { SeasonGoal } from "@/components/season-goal";
 import { plans } from "@/lib/checkout";
 import type { Membership } from "@/lib/types";
 
-// Drop Dawn's exported photos into public/images/home/ and point these at them.
-// Each stays a red gradient until a photo is set.
+// Photos come from the Red Rocks digital assets the course shared for this challenge.
 const photos = {
-  hero: "/images/hero.svg",
-  insider: null as string | null,
-  allAccess: null as string | null,
-  innerCircle: null as string | null,
+  hero: "/images/home/hero.webp",
+  insider: "/images/home/insider.webp",
+  allAccess: "/images/home/all-access.webp",
+  innerCircle: "/images/home/inner-circle.webp",
 };
+
+// Real gymnasts appear here without names, because the athlete profiles in this demo are fictional.
+const moments: ShowcaseItem[] = [
+  { id: "floor-home", image: "/images/moments/floor-home.webp", alt: "A Red Rocks gymnast finishing a floor routine at home", title: "Floor finish", subtitle: "Huntsman Center" },
+  { id: "salt-flats", image: "/images/moments/salt-flats.webp", alt: "A gymnast in a red leotard leaping on the Bonneville Salt Flats", title: "Salt Flats leap", subtitle: "Season photo shoot" },
+  { id: "beam", image: "/images/moments/beam.webp", alt: "A Red Rocks gymnast posing on the balance beam", title: "Beam poise", subtitle: "Huntsman Center" },
+  { id: "floor-cal", image: "/images/moments/floor-cal.webp", alt: "A Red Rocks gymnast smiling during a road floor routine", title: "Road floor routine", subtitle: "Away meet" },
+  { id: "floor-pose", image: "/images/moments/floor-pose.webp", alt: "A Red Rocks gymnast in a black leotard holding a floor pose", title: "Floor pose", subtitle: "Away meet" },
+  { id: "floor-road", image: "/images/moments/floor-road.webp", alt: "Red Rocks gymnasts celebrating on the floor", title: "Team energy", subtitle: "Away meet" },
+].map((moment) => ({
+  ...moment,
+  actions: [
+    { href: "#athletes", label: "Meet the athletes" },
+    { href: "/fan/join", label: "Join the Fan Club" },
+  ],
+}));
 
 const heroLinks = [
   { href: "#about", label: "About Red Rocks" },
@@ -29,22 +46,26 @@ const stats = [
   {
     title: "10 National Championships",
     text: "9 NCAA titles and 1 AIAW crown, including six straight from 1981 to 1986.",
+    photo: "/images/home/titles.webp",
   },
   {
     title: "#1 Nationally in Attendance",
     text: "Led the nation in gymnastics attendance in 36 of 39 seasons. NCAA record crowd: 16,019.",
+    photo: "/images/home/attendance.webp",
   },
   {
     title: "5 Straight Final Fours",
     text: "In the NCAA team final every year from 2021 to 2025.",
+    photo: "/images/home/final-fours.webp",
   },
   {
     title: "170 Home Wins in a Row",
     text: "The longest home win streak in any NCAA sport, from 1979 to 2002.",
+    photo: "/images/home/home-wins.webp",
   },
 ];
 
-const clubs: { plan: Membership; badge: string; photo: string | null }[] = [
+const clubs: { plan: Membership; badge: string; photo: string }[] = [
   { plan: "duo", badge: "Most popular", photo: photos.insider },
   { plan: "family", badge: "Premium", photo: photos.allAccess },
   { plan: "inner", badge: "VIP", photo: photos.innerCircle },
@@ -54,12 +75,12 @@ export default function Home() {
   return (
     <div className="mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1fr)] gap-16 px-4 py-8">
       <section
-        className="relative overflow-hidden rounded-3xl bg-neutral-900 bg-cover bg-center text-white"
-        style={{ backgroundImage: `url(${photos.hero})` }}
+        className="relative overflow-hidden rounded-3xl bg-neutral-900 bg-cover text-white"
+        style={{ backgroundImage: `url(${photos.hero})`, backgroundPosition: "50% 38%" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
-        <div className="absolute top-0 left-1/2 flex h-12 w-28 -translate-x-1/2 items-center justify-center rounded-b-3xl bg-primary font-heading text-xl font-extrabold">
-          RR
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/30" />
+        <div className="absolute top-0 left-1/2 flex h-14 w-28 -translate-x-1/2 items-center justify-center rounded-b-3xl bg-primary">
+          <Image src="/images/home/u-hands.png" alt="" width={44} height={44} className="size-11 object-contain" />
         </div>
         <div className="relative flex min-h-[32rem] flex-col p-5 pt-16 sm:p-8 sm:pt-16">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -132,19 +153,28 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          {stats.map((stat, index) => (
+          {stats.map((stat) => (
             <article
               key={stat.title}
-              className="flex min-h-44 flex-col justify-end rounded-2xl p-5 text-white"
-              style={{
-                background: `linear-gradient(${135 + index * 30}deg, #141414 0%, #7a0000 55%, #be0000 100%)`,
-              }}
+              className="relative flex min-h-48 flex-col justify-end overflow-hidden rounded-2xl p-5 text-white"
             >
-              <h3 className="text-xl">{stat.title}</h3>
-              <p className="mt-1 text-xs text-white/85">{stat.text}</p>
+              <Image src={stat.photo} alt="" fill sizes="(min-width: 1024px) 380px, 100vw" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-[#5a0000]/55 to-black/10" />
+              <h3 className="relative text-xl">{stat.title}</h3>
+              <p className="relative mt-1 text-xs text-white/90">{stat.text}</p>
             </article>
           ))}
         </div>
+      </section>
+
+      <section aria-labelledby="moments-title">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+          <h2 id="moments-title" className="text-2xl sm:text-3xl">
+            Red Rocks <span className="text-primary">Moments</span>
+          </h2>
+          <p className="text-sm text-muted-foreground">Hover to light one up. Click to zoom in.</p>
+        </div>
+        <SpotlightShowcase label="Red Rocks moments" items={moments} />
       </section>
 
       <AthleteCarousel />
@@ -172,11 +202,9 @@ export default function Home() {
               key={club.plan}
               href="/fan/join"
               className="relative flex min-h-48 flex-col justify-end overflow-hidden rounded-2xl bg-neutral-900 bg-cover bg-center p-4"
-              style={
-                club.photo
-                  ? { backgroundImage: `url(${club.photo})` }
-                  : { background: "radial-gradient(circle at 70% 20%, #be0000, #1a0000 75%)" }
-              }
+              style={{
+                backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.85), rgba(90,0,0,0.35) 55%, rgba(0,0,0,0.15)), url(${club.photo})`,
+              }}
             >
               <span className="absolute top-3 right-3 rounded-full border border-white/80 px-3 py-0.5 text-xs">
                 {club.badge}

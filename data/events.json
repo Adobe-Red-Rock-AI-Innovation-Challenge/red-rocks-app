@@ -1,0 +1,26 @@
+[
+  {
+    "id": "season-preview-night",
+    "title": "Season Preview Night",
+    "date": "2026-12-12",
+    "location": "Salt Lake City, UT",
+    "description": "Watch the team's first intrasquad and meet the athletes afterward.",
+    "tier": "Duo"
+  },
+  {
+    "id": "practice-gym-tour",
+    "title": "Practice Gym Tour",
+    "date": "2027-01-16",
+    "location": "Salt Lake City, UT",
+    "description": "A guided look at a live practice with a coach-led Q&A.",
+    "tier": "Family"
+  },
+  {
+    "id": "virtual-team-qa",
+    "title": "Virtual Team Q&A",
+    "date": "2027-02-04",
+    "location": "Online",
+    "description": "A live video chat with the seniors before the conference stretch.",
+    "tier": "Duo"
+  }
+]

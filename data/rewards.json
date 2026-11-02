@@ -1,0 +1,23 @@
+[
+  {
+    "id": "free-latte",
+    "sponsorId": "second-peak-coffee",
+    "title": "Free latte on meet days",
+    "description": "Show your VIP Pass at the counter.",
+    "code": "REDROCKS-LATTE"
+  },
+  {
+    "id": "smoothie-bogo",
+    "sponsorId": "sego-smoothie-co",
+    "title": "Buy one, get one smoothie",
+    "description": "Valid at the Sugar House location.",
+    "code": "REDROCKS-BOGO"
+  },
+  {
+    "id": "gear-discount",
+    "sponsorId": "switchback-supply",
+    "title": "15% off trail gear",
+    "description": "One use, in store or online.",
+    "code": "REDROCKS-15"
+  }
+]

@@ -1,0 +1,94 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import { useDemo } from "@/components/demo-provider";
+import { navByRole, roleForPath, roles } from "@/lib/roles";
+import { cn } from "@/lib/utils";
+
+export function SiteHeader() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { state, setRole, reset } = useDemo();
+  const activeRole = roleForPath(pathname) ?? state.role;
+  const links = [...navByRole[activeRole], { href: "/impact", label: "Impact" }];
+
+  function handleReset() {
+    if (!window.confirm("Clear everything done in this demo?")) return;
+    reset();
+    toast.success("Demo reset");
+    router.push("/");
+  }
+
+  return (
+    <header className="sticky top-0 z-40">
+      <div className="bg-neutral-950 text-white">
+        <div className="mx-auto flex h-11 max-w-6xl items-center justify-between gap-3 px-4">
+          <div className="flex items-center gap-2">
+            <span className="font-heading text-sm font-bold tracking-wider uppercase text-neutral-400">
+              Demo as:
+            </span>
+            <div role="group" aria-label="Demo role" className="flex rounded-md bg-neutral-800 p-0.5">
+              {roles.map((role) => (
+                <button
+                  key={role.id}
+                  type="button"
+                  aria-pressed={activeRole === role.id}
+                  onClick={() => {
+                    setRole(role.id);
+                    router.push(role.home);
+                  }}
+                  className={cn(
+                    "rounded px-2.5 py-1 text-sm font-semibold transition-colors",
+                    activeRole === role.id
+                      ? "bg-primary text-primary-foreground"
+                      : "text-neutral-300 hover:text-white",
+                  )}
+                >
+                  {role.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleReset}
+            aria-label="Reset demo"
+            className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white"
+          >
+            <RotateCcw className="size-3.5" />
+            <span className="hidden sm:inline">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="border-b bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-0.5 px-4 py-2 sm:h-14 sm:flex-row sm:items-center sm:gap-6 sm:py-0">
+          <Link
+            href="/"
+            className="font-heading text-2xl font-extrabold tracking-tight whitespace-nowrap uppercase"
+          >
+            <span className="text-primary">Red Rocks</span> Fan Hub
+          </Link>
+          <nav aria-label="Main" className="flex min-w-0 gap-5 overflow-x-auto">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={pathname === link.href ? "page" : undefined}
+                className={cn(
+                  "py-1 text-sm font-semibold whitespace-nowrap hover:text-primary",
+                  pathname === link.href ? "text-primary" : "text-neutral-600",
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+}

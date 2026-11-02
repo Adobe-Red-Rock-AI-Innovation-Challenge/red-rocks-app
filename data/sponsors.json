@@ -1,0 +1,42 @@
+[
+  {
+    "id": "second-peak-coffee",
+    "name": "Second Peak Coffee",
+    "category": "Coffee shop",
+    "location": "Salt Lake City, UT",
+    "audience": "College students and young professionals",
+    "description": "Neighborhood roaster a few blocks from campus."
+  },
+  {
+    "id": "sego-smoothie-co",
+    "name": "Sego Smoothie Co.",
+    "category": "Health food",
+    "location": "Sugar House, UT",
+    "audience": "Active adults and families",
+    "description": "Post-workout smoothies and acai bowls."
+  },
+  {
+    "id": "switchback-supply",
+    "name": "Switchback Supply Co.",
+    "category": "Outdoor retail",
+    "location": "Park City, UT",
+    "audience": "Hikers, trail runners and skiers",
+    "description": "Local gear shop for Wasatch adventures."
+  },
+  {
+    "id": "foothill-stride-physio",
+    "name": "Foothill Stride Physio",
+    "category": "Sports medicine",
+    "location": "Holladay, UT",
+    "audience": "Youth athletes and their parents",
+    "description": "Physical therapy clinic for active families."
+  },
+  {
+    "id": "alpenglow-skin-studio",
+    "name": "Alpenglow Skin Studio",
+    "category": "Beauty & skincare",
+    "location": "Provo, UT",
+    "audience": "Women aged 18-35",
+    "description": "Clean skincare studio built for dry mountain climates."
+  }
+]

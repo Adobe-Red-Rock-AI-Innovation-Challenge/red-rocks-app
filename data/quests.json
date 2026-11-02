@@ -1,0 +1,26 @@
+[
+  {
+    "id": "josie-dance-challenge",
+    "athleteId": "josie-whitlock",
+    "title": "Josie's Dance Challenge",
+    "description": "Raise $500 to unlock Josie's dance challenge video, choreographed with the team.",
+    "goal": 500,
+    "raised": 365
+  },
+  {
+    "id": "talia-beam-masterclass",
+    "athleteId": "talia-reyes",
+    "title": "Talia's Beam Masterclass",
+    "description": "Raise $750 to unlock a behind-the-scenes beam masterclass filmed at practice.",
+    "goal": 750,
+    "raised": 410
+  },
+  {
+    "id": "mara-comeback-film",
+    "athleteId": "mara-ellison",
+    "title": "Mara's Comeback Story",
+    "description": "Raise $1,000 to unlock a short film on Mara's road back from injury.",
+    "goal": 1000,
+    "raised": 720
+  }
+]

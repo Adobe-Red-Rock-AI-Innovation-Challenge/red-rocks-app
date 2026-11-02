@@ -1,0 +1,78 @@
+[
+  {
+    "id": "mara-ellison",
+    "name": "Mara Ellison",
+    "event": "All-Around",
+    "year": "Senior",
+    "hometown": "Boise, ID",
+    "story": "Mara tore her Achilles as a sophomore and came back a year later to post a career-best all-around score. She now spends her Sundays coaching kids with disabilities at a Salt Lake City gym and talks openly about the mental side of recovery.",
+    "vibeTags": ["Fitness Expert"],
+    "interestTags": ["#MentalHealthAdvocate", "#OutdoorAdventures"],
+    "followers": { "instagram": 48200, "tiktok": 31500 },
+    "engagementRate": 6.8,
+    "image": "/images/athletes/mara-ellison.svg",
+    "rateCard": [
+      { "deliverable": "Instagram post", "price": 650 },
+      { "deliverable": "Instagram Reel", "price": 900 },
+      { "deliverable": "Story set (3 frames)", "price": 300 },
+      { "deliverable": "In-person appearance (1 hr)", "price": 1200 }
+    ]
+  },
+  {
+    "id": "talia-reyes",
+    "name": "Talia Reyes",
+    "event": "Balance Beam",
+    "year": "Junior",
+    "hometown": "Albuquerque, NM",
+    "story": "Talia learned beam on a chalk line her dad painted across the family garage. A first-generation college student, she studies dance alongside nutrition and is known for the quietest, cleanest routine on the team.",
+    "vibeTags": ["Elegant"],
+    "interestTags": ["#SkincareRoutine", "#MentalHealthAdvocate"],
+    "followers": { "instagram": 36700, "tiktok": 52400 },
+    "engagementRate": 7.4,
+    "image": "/images/athletes/talia-reyes.svg",
+    "rateCard": [
+      { "deliverable": "Instagram post", "price": 500 },
+      { "deliverable": "Instagram Reel", "price": 750 },
+      { "deliverable": "Story set (3 frames)", "price": 250 },
+      { "deliverable": "In-person appearance (1 hr)", "price": 900 }
+    ]
+  },
+  {
+    "id": "josie-whitlock",
+    "name": "Josie Whitlock",
+    "event": "Floor Exercise",
+    "year": "Sophomore",
+    "hometown": "Ogden, UT",
+    "story": "Josie grew up in the stands as a Utah kid and now choreographs the team's viral warm-up dances. Her floor routines end with a grin and her off-day videos rank every taco truck in the valley.",
+    "vibeTags": ["Energetic", "Humorous"],
+    "interestTags": ["#LocalFoodie"],
+    "followers": { "instagram": 29800, "tiktok": 88100 },
+    "engagementRate": 11.2,
+    "image": "/images/athletes/josie-whitlock.svg",
+    "rateCard": [
+      { "deliverable": "Instagram post", "price": 400 },
+      { "deliverable": "Instagram Reel", "price": 700 },
+      { "deliverable": "Story set (3 frames)", "price": 200 },
+      { "deliverable": "In-person appearance (1 hr)", "price": 800 }
+    ]
+  },
+  {
+    "id": "kennedy-okafor",
+    "name": "Kennedy Okafor",
+    "event": "Vault & Uneven Bars",
+    "year": "Freshman",
+    "hometown": "Tulsa, OK",
+    "story": "Kennedy arrived on campus with a vault that made the coaches stop practice to watch. Between meets she trail-runs the Wasatch foothills and films honest first-year vlogs for student-athletes learning to balance it all.",
+    "vibeTags": ["Energetic", "Fitness Expert"],
+    "interestTags": ["#OutdoorAdventures", "#LocalFoodie"],
+    "followers": { "instagram": 14300, "tiktok": 21900 },
+    "engagementRate": 9.1,
+    "image": "/images/athletes/kennedy-okafor.svg",
+    "rateCard": [
+      { "deliverable": "Instagram post", "price": 250 },
+      { "deliverable": "Instagram Reel", "price": 400 },
+      { "deliverable": "Story set (3 frames)", "price": 125 },
+      { "deliverable": "In-person appearance (1 hr)", "price": 500 }
+    ]
+  }
+]

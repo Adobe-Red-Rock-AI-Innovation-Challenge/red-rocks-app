@@ -60,7 +60,7 @@ export type DemoUser = {
   name: string;
   email: string;
   organization?: string;
-  provider: "google" | "demo";
+  provider: "google" | "password" | "demo";
   picture?: string;
   isAdmin?: boolean;
   status?: MemberStatus;
@@ -68,10 +68,12 @@ export type DemoUser = {
 
 export type MemberStatus = "pending" | "active";
 
+export type PartnerRole = Exclude<Role, "fan">;
+
 export type Member = {
   email: string;
   name: string;
-  role: Exclude<Role, "fan">;
+  role: Role;
   status: MemberStatus;
   registered: boolean;
   profile: Record<string, string>;

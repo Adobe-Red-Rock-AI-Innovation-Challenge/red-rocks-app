@@ -9,6 +9,15 @@ import { cn } from "@/lib/utils";
 const fieldClass =
   "h-10 w-full rounded-full bg-white px-4 text-sm outline-none ring-1 ring-neutral-200 focus:ring-2 focus:ring-primary";
 
+function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="grid gap-1 text-left text-xs">
+      <span className="pl-3">{label}</span>
+      {children}
+    </label>
+  );
+}
+
 export function JoinForm() {
   const [kind, setKind] = useState<"partner" | "fan">("partner");
   const [busy, setBusy] = useState(false);
@@ -22,12 +31,7 @@ export function JoinForm() {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          kind,
-          email: form.get("email"),
-          company: form.get("company"),
-          interest: form.get("interest"),
-        }),
+        body: JSON.stringify({ kind, ...Object.fromEntries(form) }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
@@ -60,7 +64,7 @@ export function JoinForm() {
               setSent(false);
             }}
             className={cn(
-              "rounded-full py-1.5 text-sm font-semibold",
+              "rounded-full py-1.5 text-sm",
               kind === id ? "bg-primary text-white" : "bg-white text-muted-foreground ring-1 ring-neutral-200",
             )}
           >
@@ -73,52 +77,60 @@ export function JoinForm() {
         <div className="mt-6 grid gap-3 text-sm">
           <p>Got it. Want to start right away?</p>
           <Link
-            href={kind === "partner" ? "/sponsor/packages" : "/fan/join"}
-            className="rounded-full bg-neutral-950 py-2.5 font-semibold text-white"
+            href={kind === "partner" ? "/sponsor/packages" : "/fan-club"}
+            className="rounded-full bg-black py-2.5 text-white"
           >
-            {kind === "partner" ? "See sponsor packages" : "Get your VIP Pass"}
+            {kind === "partner" ? "See sponsor packages" : "Visit the Fan Club"}
           </Link>
         </div>
       ) : (
-        <form key={kind} onSubmit={submit} className="mt-4 grid gap-3 text-left">
-          <input
-            name="email"
-            type="email"
-            required
-            aria-label={kind === "partner" ? "Work email address" : "Email address"}
-            placeholder={kind === "partner" ? "Work Email Address" : "Email Address"}
-            className={fieldClass}
-          />
-          {kind === "partner" && (
-            <input
-              name="company"
-              required
-              aria-label="Company or brand name"
-              placeholder="Company / Brand name"
-              className={fieldClass}
-            />
+        <form key={kind} onSubmit={submit} className="mt-4 grid gap-3">
+          {kind === "partner" ? (
+            <>
+              <Labeled label="Work email address">
+                <input name="email" type="email" required autoComplete="email" placeholder="you@company.com" className={fieldClass} />
+              </Labeled>
+              <Labeled label="Company / brand name">
+                <input name="company" required autoComplete="organization" maxLength={200} className={fieldClass} />
+              </Labeled>
+              <Labeled label="Partnership interest">
+                <select name="interest" defaultValue="" className={fieldClass}>
+                  <option value="" disabled>
+                    Choose one
+                  </option>
+                  {["NIL & influencer deals", "In-arena branding", "Team package", "Not sure yet"].map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </Labeled>
+            </>
+          ) : (
+            <>
+              <Labeled label="Full name">
+                <input name="name" required autoComplete="name" maxLength={120} className={fieldClass} />
+              </Labeled>
+              <Labeled label="Date of birth">
+                <input name="birthDate" type="date" required autoComplete="bday" className={fieldClass} />
+              </Labeled>
+              <Labeled label="Email">
+                <input name="email" type="email" required autoComplete="email" className={fieldClass} />
+              </Labeled>
+              <Labeled label="Phone (optional)">
+                <input name="phone" type="tel" autoComplete="tel" maxLength={30} className={fieldClass} />
+              </Labeled>
+            </>
           )}
-          <select name="interest" aria-label="What are you interested in?" defaultValue="" className={fieldClass}>
-            <option value="" disabled>
-              {kind === "partner" ? "Partnership Interest" : "What do you want most?"}
-            </option>
-            {(kind === "partner"
-              ? ["Athlete Spotlight", "Meet Night", "Team Package", "Not sure yet"]
-              : ["Meet updates", "Athlete content", "Sponsor rewards", "VIP events"]
-            ).map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
           <button
             type="submit"
             disabled={busy}
-            className="flex h-10 items-center justify-between rounded-full bg-neutral-950 pr-1.5 pl-4 text-sm font-semibold text-white disabled:opacity-60"
+            className="flex h-10 items-center justify-between rounded-full bg-black pr-1.5 pl-4 text-sm text-white disabled:opacity-60"
           >
             {busy ? "Sending..." : "Here we go!"}
-            <ArrowUpRight className="size-7 rounded-full bg-white p-1.5 text-neutral-950" />
+            <ArrowUpRight className="size-7 rounded-full bg-white p-1.5 text-black" />
           </button>
-          <p className="text-center text-xs text-muted-foreground">
-            We only use your email to follow up. See our{" "}
+          <p className="text-xs text-muted-foreground">
+            {kind === "fan" && "Fans under 13 need a parent to sign up. "}
+            We only use your details to follow up. See our{" "}
             <Link href="/privacy" className="underline">
               privacy notice
             </Link>

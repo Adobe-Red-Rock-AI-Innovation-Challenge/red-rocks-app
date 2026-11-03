@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/input";
 import { registrationForms } from "@/lib/registration";
-import type { DemoUser, Member } from "@/lib/types";
+import type { DemoUser, PartnerRole } from "@/lib/types";
 
 // Shown once after a new Gmail signs in: the form changes with the role they pick.
 export function RegistrationForm({
@@ -13,9 +13,9 @@ export function RegistrationForm({
   onDone,
 }: {
   user: DemoUser;
-  onDone: (role: Member["role"]) => void;
+  onDone: (role: PartnerRole) => void;
 }) {
-  const [role, setRole] = useState<Member["role"]>("sponsor");
+  const [role, setRole] = useState<PartnerRole>("sponsor");
   const [busy, setBusy] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {

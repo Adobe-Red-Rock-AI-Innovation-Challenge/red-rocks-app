@@ -133,6 +133,7 @@ export default function AdminPage() {
                   >
                     <option value="athlete">Athlete</option>
                     <option value="sponsor">Sponsor</option>
+                    <option value="fan">Fan</option>
                   </Select>
                 </td>
                 <td className="p-3">
@@ -182,12 +183,13 @@ export default function AdminPage() {
               <th className="p-3">Email</th>
               <th className="p-3">Company</th>
               <th className="p-3">Interest</th>
+              <th className="p-3">Name / phone</th>
             </tr>
           </thead>
           <tbody>
             {leads.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-3 text-muted-foreground">
+                <td colSpan={5} className="p-3 text-muted-foreground">
                   No leads yet.
                 </td>
               </tr>
@@ -198,6 +200,10 @@ export default function AdminPage() {
                 <td className="p-3">{lead.email}</td>
                 <td className="p-3">{lead.company}</td>
                 <td className="p-3">{lead.interest}</td>
+                <td className="p-3">
+                  {lead.name}
+                  {lead.phone && <span className="block text-muted-foreground">{lead.phone}</span>}
+                </td>
               </tr>
             ))}
           </tbody>

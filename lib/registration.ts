@@ -1,4 +1,4 @@
-import type { Member } from "@/lib/types";
+import type { PartnerRole } from "@/lib/types";
 
 export type RegistrationField = {
   key: string;
@@ -10,7 +10,7 @@ export type RegistrationField = {
 };
 
 // Each role gets its own form; the server only accepts these keys.
-export const registrationForms: Record<Member["role"], RegistrationField[]> = {
+export const registrationForms: Record<PartnerRole, RegistrationField[]> = {
   sponsor: [
     { key: "organization", label: "Organization or company", required: true },
     { key: "phone", label: "Phone number", type: "tel", placeholder: "801 555 0123" },
@@ -51,7 +51,7 @@ export function parseRegistration(value: unknown) {
   if (role !== "sponsor" && role !== "athlete") return null;
   if (typeof name !== "string" || !name.trim()) return null;
   if (typeof profile !== "object" || profile === null) return null;
-  const memberRole: Member["role"] = role;
+  const memberRole: PartnerRole = role;
 
   const clean: Record<string, string> = {};
   for (const field of registrationForms[memberRole]) {

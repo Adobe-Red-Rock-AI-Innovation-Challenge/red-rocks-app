@@ -7,7 +7,7 @@ function parseMember(value: unknown): Pick<Member, "email" | "name" | "role" | "
   const { email, name, role, status } = value as Record<string, unknown>;
   if (typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email)) return null;
   if (typeof name !== "string" || !name.trim()) return null;
-  if (role !== "sponsor" && role !== "athlete") return null;
+  if (role !== "sponsor" && role !== "athlete" && role !== "fan") return null;
   if (status !== "pending" && status !== "active") return null;
   return { email: email.trim().toLowerCase(), name: name.trim().slice(0, 120), role, status };
 }

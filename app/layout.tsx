@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Poppins } from "next/font/google";
+import { Manrope } from "next/font/google";
 import Link from "next/link";
 import { DemoProvider } from "@/components/demo-provider";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const poppins = Poppins({
+// The brand uses Manrope in two weights: ExtraBold for section titles, SemiBold for everything else.
+const manrope = Manrope({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const barlowCondensed = Barlow_Condensed({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["600", "800"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${barlowCondensed.variable} h-full antialiased`}
+      className={`${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <DemoProvider>

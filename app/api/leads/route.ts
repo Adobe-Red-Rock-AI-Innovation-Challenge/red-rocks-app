@@ -2,14 +2,14 @@ import { hasDatabase } from "@/lib/db";
 import { parseLead, saveLead } from "@/lib/leads";
 
 export async function POST(request: Request) {
-  const lead = parseLead(await request.json().catch(() => null));
-  if (!lead) return Response.json({ error: "Please check your details" }, { status: 400 });
+  const parsed = parseLead(await request.json().catch(() => null));
+  if (parsed.error !== undefined) return Response.json({ error: parsed.error }, { status: 400 });
 
   // Without a database the demo still answers, but nothing is stored.
   if (!hasDatabase()) return Response.json({ saved: false });
 
   try {
-    await saveLead(lead);
+    await saveLead(parsed.lead);
     return Response.json({ saved: true });
   } catch (error) {
     console.error("Could not save lead", error);

@@ -22,6 +22,10 @@ export function database() {
     );
     ALTER TABLE members ADD COLUMN IF NOT EXISTS registered BOOLEAN NOT NULL DEFAULT true;
     ALTER TABLE members ADD COLUMN IF NOT EXISTS profile JSONB NOT NULL DEFAULT '{}';
+    ALTER TABLE members ADD COLUMN IF NOT EXISTS password_hash TEXT;
+    ALTER TABLE members
+      DROP CONSTRAINT IF EXISTS members_role_check,
+      ADD CONSTRAINT members_role_check CHECK (role IN ('sponsor', 'athlete', 'fan'));
     CREATE TABLE IF NOT EXISTS leads (
       id SERIAL PRIMARY KEY,
       kind TEXT NOT NULL CHECK (kind IN ('partner', 'fan')),
@@ -30,6 +34,9 @@ export function database() {
       interest TEXT NOT NULL DEFAULT '',
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS name TEXT NOT NULL DEFAULT '';
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS phone TEXT NOT NULL DEFAULT '';
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS birth_date DATE;
   `);
   return ready.then(() => pool);
 }

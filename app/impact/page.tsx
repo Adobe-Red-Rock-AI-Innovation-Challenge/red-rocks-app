@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SeasonGoal } from "@/components/season-goal";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { sponsorPackages } from "@/lib/packages";
@@ -39,6 +40,9 @@ export default function ImpactPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
+      <div className="mb-10">
+        <SeasonGoal />
+      </div>
       <h1 className="text-4xl sm:text-5xl">Revenue model</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         How much new NIL money the hub could bring in per year. Every input is either sourced or

@@ -1,6 +1,6 @@
 export async function celebrate() {
   const { default: confetti } = await import("canvas-confetti");
-  const colors = ["#be0000", "#141414", "#ffffff"];
+  const colors = ["#c20202", "#141414", "#ffffff"];
 
   [0.2, 0.5, 0.8].forEach((x, index) => {
     window.setTimeout(() => {

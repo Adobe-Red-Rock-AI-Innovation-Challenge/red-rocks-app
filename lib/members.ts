@@ -35,6 +35,38 @@ export async function registerMember(
   return rows[0] ?? null;
 }
 
+export async function findPasswordMember(email: string) {
+  const db = await database();
+  const { rows } = await db.query<Member & { password_hash: string | null }>(
+    `SELECT ${COLUMNS}, password_hash FROM members WHERE email = $1`,
+    [email],
+  );
+  return rows[0] ?? null;
+}
+
+// Fans are active at once. Sponsors and athletes wait for an admin, even when an admin added
+// their email earlier, because nothing here proves the person owns the address.
+export async function createPasswordMember(
+  email: string,
+  name: string,
+  role: Member["role"],
+  passwordHash: string,
+) {
+  const db = await database();
+  const status = role === "fan" ? "active" : "pending";
+  const { rows } = await db.query<Member>(
+    `INSERT INTO members (email, name, role, status, registered, password_hash)
+     VALUES ($1, $2, $3, $4, true, $5)
+     ON CONFLICT (email) DO UPDATE
+     SET name = EXCLUDED.name, role = EXCLUDED.role, status = EXCLUDED.status,
+         registered = true, password_hash = EXCLUDED.password_hash
+     WHERE members.password_hash IS NULL
+     RETURNING ${COLUMNS}`,
+    [email, name, role, status, passwordHash],
+  );
+  return rows[0] ?? null;
+}
+
 export async function listMembers() {
   const db = await database();
   const { rows } = await db.query<Member>(

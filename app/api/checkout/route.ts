@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   const form = new URLSearchParams({
     mode: purchase.kind === "membership" ? "subscription" : "payment",
     success_url: `${origin}/checkout/complete?session_id={CHECKOUT_SESSION_ID}&purchase=${returnData}`,
-    cancel_url: `${origin}${purchase.kind === "deal" ? "/sponsor/deals" : "/fan/join"}`,
+    cancel_url: `${origin}${purchase.kind === "deal" ? "/business/projects" : "/fan/join"}`,
     "line_items[0][quantity]": "1",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": String(purchaseAmount(purchase) * 100),

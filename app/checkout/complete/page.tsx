@@ -44,10 +44,10 @@ export default function CheckoutCompletePage() {
         {failed ? "We could not read this payment." : "Thank you for supporting Red Rocks."}
       </p>
       <Link
-        href={isDeal ? "/sponsor/deals" : "/fan/dashboard"}
+        href={isDeal ? "/business/projects" : "/fan/dashboard"}
         className={buttonVariants({ size: "lg", className: "mt-6 px-4" })}
       >
-        {isDeal ? "Back to deals" : "Go to My Pass"}
+        {isDeal ? "Back to projects" : "Go to My Pass"}
       </Link>
     </div>
   );

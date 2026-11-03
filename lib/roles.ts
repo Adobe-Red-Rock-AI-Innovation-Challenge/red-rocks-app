@@ -2,7 +2,7 @@ import type { Role } from "@/lib/types";
 
 export const roles: { id: Role; label: string; home: string }[] = [
   { id: "fan", label: "Fan", home: "/" },
-  { id: "sponsor", label: "Sponsor", home: "/sponsor/packages" },
+  { id: "sponsor", label: "Sponsor", home: "/business/assistant" },
   { id: "athlete", label: "Athlete", home: "/athlete/tasks" },
 ];
 
@@ -13,11 +13,10 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
     { href: "/fan/dashboard", label: "My Pass" },
   ],
   sponsor: [
-    { href: "/sponsor/packages", label: "Packages" },
+    { href: "/business/projects", label: "Business Hub" },
     { href: "/sponsor/athletes", label: "Athletes" },
+    { href: "/sponsor/packages", label: "Packages" },
     { href: "/sponsor/planner", label: "Planner" },
-    { href: "/sponsor/requests", label: "Requests" },
-    { href: "/sponsor/deals", label: "Deals" },
     { href: "/sponsor/results", label: "Results" },
     { href: "/sponsor/redeem", label: "Redeem" },
   ],
@@ -35,7 +34,7 @@ export function roleForPath(pathname: string): Role | null {
   if (pathname.startsWith("/fan") || pathname.startsWith("/athletes/") || pathname === "/athletes") {
     return "fan";
   }
-  if (pathname.startsWith("/sponsor")) return "sponsor";
+  if (pathname.startsWith("/sponsor") || pathname.startsWith("/business")) return "sponsor";
   if (pathname.startsWith("/athlete/")) return "athlete";
   return null;
 }

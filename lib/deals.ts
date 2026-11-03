@@ -1,9 +1,10 @@
 import { notification, setDemoState } from "@/lib/demo-store";
-import type { Offer, OfferStatus } from "@/lib/types";
+import type { DealMessage, Offer, OfferStatus, ProjectTask } from "@/lib/types";
 
 export const NIL_GO_THRESHOLD = 600;
 
 export const dealSteps: { status: OfferStatus; label: string }[] = [
+  { status: "inquiry", label: "Request" },
   { status: "pending", label: "Offer" },
   { status: "negotiating", label: "Negotiate" },
   { status: "accepted", label: "Accepted" },
@@ -67,9 +68,67 @@ export function updateOffer(
 ) {
   setDemoState((state) => ({
     ...state,
-    offers: state.offers.map((offer) =>
-      offer.id === offerId ? { ...offer, ...changes } : offer,
-    ),
+    offers: state.offers.map((offer) => {
+      if (offer.id !== offerId) return offer;
+      const next = { ...offer, ...changes };
+      // A deal becomes a project once accepted, so it gets a starter task list.
+      const started = next.status === "accepted" || next.status === "cleared";
+      return started && !next.tasks ? { ...next, tasks: starterTasks() } : next;
+    }),
     notifications: [notification(message, href), ...state.notifications],
+  }));
+}
+
+function starterTasks(): ProjectTask[] {
+  return ["Share a content draft for review", "Post the approved content", "Send a results screenshot"].map(
+    (title) => ({ id: crypto.randomUUID(), title, due: null, status: "todo", comments: [] }),
+  );
+}
+
+export function dealMessage(from: DealMessage["from"], text: string): DealMessage {
+  return { id: crypto.randomUUID(), from, text: text.trim(), createdAt: new Date().toISOString() };
+}
+
+export function sendDealMessage(offer: Offer, from: DealMessage["from"], text: string) {
+  setDemoState((state) => ({
+    ...state,
+    offers: state.offers.map((item) =>
+      item.id === offer.id ? { ...item, messages: [...(item.messages ?? []), dealMessage(from, text)] } : item,
+    ),
+    notifications: [
+      notification(
+        from === "sponsor" ? `New message from ${offer.sponsorName}` : `An athlete replied about "${offer.title}"`,
+        from === "sponsor" ? "/athlete/dashboard" : "/business/requests",
+      ),
+      ...state.notifications,
+    ],
+  }));
+}
+
+export function updateTask(offerId: string, taskId: string, change: (task: ProjectTask) => ProjectTask) {
+  setDemoState((state) => ({
+    ...state,
+    offers: state.offers.map((offer) =>
+      offer.id === offerId
+        ? { ...offer, tasks: (offer.tasks ?? []).map((task) => (task.id === taskId ? change(task) : task)) }
+        : offer,
+    ),
+  }));
+}
+
+export function addTask(offerId: string, title: string, due: string | null) {
+  setDemoState((state) => ({
+    ...state,
+    offers: state.offers.map((offer) =>
+      offer.id === offerId
+        ? {
+            ...offer,
+            tasks: [
+              ...(offer.tasks ?? []),
+              { id: crypto.randomUUID(), title: title.trim(), due, status: "todo", comments: [] },
+            ],
+          }
+        : offer,
+    ),
   }));
 }

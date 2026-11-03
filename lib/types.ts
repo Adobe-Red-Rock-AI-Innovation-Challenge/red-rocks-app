@@ -147,6 +147,7 @@ export type DemoNotification = {
 };
 
 export type OfferStatus =
+  | "inquiry"
   | "pending"
   | "negotiating"
   | "accepted"
@@ -174,6 +175,51 @@ export type Offer = {
   redeemedCodes: string[];
   packageId?: string;
   sample?: boolean;
+  messages?: DealMessage[];
+  tasks?: ProjectTask[];
+};
+
+export type DealMessage = {
+  id: string;
+  from: "sponsor" | "athlete";
+  text: string;
+  createdAt: string;
+};
+
+export type ProjectTask = {
+  id: string;
+  title: string;
+  due: string | null;
+  status: "todo" | "submitted" | "approved" | "changes";
+  comments: DealMessage[];
+};
+
+export type AiFile = { id: string; name: string; content: string };
+
+export type AiChatMessage = {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+  athleteIds?: string[];
+  files?: AiFile[];
+  source?: "claude" | "demo";
+};
+
+export type AiChat = {
+  id: string;
+  mode: "athlete" | "campaign" | "budget" | "free";
+  title: string;
+  createdAt: string;
+  messages: AiChatMessage[];
+};
+
+export type BusinessProfile = {
+  company: string;
+  contact: string;
+  phone: string;
+  website: string;
+  industry: string;
+  about: string;
 };
 
 export type AthleteResponse = { athleteId: string; note: string; createdAt: string };
@@ -205,6 +251,8 @@ export type DemoState = {
   sales: Sale[];
   conversations: Conversation[];
   campaigns: SavedCampaign[];
+  aiChats: AiChat[];
+  businessProfile: BusinessProfile | null;
   requests: SponsorRequest[];
   rsvps: string[];
   thanks: ThankYou[];

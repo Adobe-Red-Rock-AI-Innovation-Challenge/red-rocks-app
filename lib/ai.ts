@@ -25,7 +25,23 @@ export type AiTasks = {
   plan: { input: PlanInput; output: CampaignPlan };
   refine: { input: { plan: CampaignPlan; instruction: string }; output: CampaignPlan };
   reply: { input: { athleteName: string; fanName: string; message: string }; output: { text: string } };
+  assistant: {
+    input: { mode: AssistantMode; messages: { role: "user" | "assistant"; text: string }[] };
+    output: { reply: string; athleteIds: string[]; files: { name: string; content: string }[] };
+  };
 };
+
+export type AssistantMode = "athlete" | "campaign" | "budget" | "free";
+
+export const RATE_RULE =
+  "I don't estimate any athlete's personal rate. Use Request rate on an athlete card to ask them directly; they reply with their own quote in Requests.";
+
+function budgetFrom(text: string) {
+  const match = /\$?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|thousand)?/i.exec(text);
+  if (!match) return null;
+  const value = Number(match[1].replace(/,/g, "")) * (match[2] ? 1000 : 1);
+  return value >= 100 ? value : null;
+}
 
 export type PlanInput = {
   sponsorName: string;
@@ -241,6 +257,108 @@ export const fallbacks: { [T in AiTask]: (input: AiInput<T>) => AiOutput<T> } = 
     }
     next.research.assumptions = [...next.research.assumptions, `Refined for: "${instruction}"`];
     return next;
+  },
+
+  assistant: ({ mode, messages }) => {
+    const ask = messages.filter((item) => item.role === "user").at(-1)?.text ?? "";
+    const lower = ask.toLowerCase();
+    const named = athletes.filter((athlete) => lower.includes(athlete.name.split(" ")[0].toLowerCase()));
+    const budget = budgetFrom(ask);
+    const picks = named.length
+      ? named.slice(0, 3)
+      : fallbacks.match({ need: ask, budget: budget ?? 5000 }).matches
+          .map((match) => athletes.find((athlete) => athlete.id === match.athleteId))
+          .filter((athlete): athlete is (typeof athletes)[number] => Boolean(athlete));
+    const facts = (athlete: (typeof athletes)[number]) =>
+      `${athlete.name}: ${athlete.year.toLowerCase()} from ${athlete.hometown}${athlete.event !== "Red Rocks gymnast" ? `, ${athlete.event}` : ""}${
+        Object.keys(athlete.careerHighs).length
+          ? `, career highs ${Object.entries(athlete.careerHighs).map(([event, score]) => `${score} ${event}`).join(", ")}`
+          : ""
+      }.`;
+    const list = picks.map((athlete) => `• ${facts(athlete)}`).join("\n");
+
+    // A follow-up about a named athlete gets roster facts, whatever mode the chat started in.
+    const askingAbout = named.length > 0 && !budget;
+
+    if (!askingAbout && (mode === "budget" || (mode === "free" && budget))) {
+      const amount = budget ?? 5000;
+      const shape =
+        amount < 2000
+          ? "One athlete, one story: an intro Reel plus a member-only offer code."
+          : amount < 10000
+            ? "Meet Night: a few athletes promote one meet-week offer with a QR code for VIP Pass members."
+            : "Season partner: the whole roster rotates monthly posts, with a tracked offer all season.";
+      const plan = [
+        `# Budget plan: $${amount.toLocaleString("en-US")}`,
+        "",
+        `Campaign type: ${shape}`,
+        "",
+        "Suggested split (planning guide, not athlete prices):",
+        `- Athlete fees, to be quoted by each athlete: about 70% ($${Math.round(amount * 0.7).toLocaleString("en-US")})`,
+        `- Creative and Adobe Express content: about 15% ($${Math.round(amount * 0.15).toLocaleString("en-US")})`,
+        `- Fan offer and meet-day activation: about 15% ($${Math.round(amount * 0.15).toLocaleString("en-US")})`,
+        "",
+        "Big idea: Cheer them on, then come see us. Every VIP Pass member gets an offer they redeem in person.",
+        "Key message: Local and proud, like the Red Rocks.",
+        "",
+        "Athletes to ask:",
+        list,
+        "",
+        RATE_RULE,
+      ].join("\n");
+      return {
+        reply: `With about $${amount.toLocaleString("en-US")}, I'd suggest: ${shape}
+
+Big idea: "Cheer them on, then come see us."
+Key message: "Local and proud, like the Red Rocks."
+
+Athletes worth asking:
+${list}
+
+The split above is a planning guide, not athlete pricing. ${RATE_RULE}`,
+        athleteIds: picks.map((athlete) => athlete.id),
+        files: [{ name: "Budget plan.md", content: plan }],
+      };
+    }
+
+    if (!askingAbout && mode === "campaign") {
+      const concept = [
+        "# Campaign concept",
+        "",
+        `Brief: ${ask}`,
+        "",
+        "Big idea: Turn meet nights into store visits.",
+        "Key message: Fuel the cheer.",
+        "Phases: athlete intro posts → fan challenge at a home meet → member-only offer with a tracked code.",
+        "",
+        "Athletes who fit:",
+        list,
+        "",
+        RATE_RULE,
+      ].join("\n");
+      return {
+        reply: `Here's a starting concept for your idea.
+
+Big idea: "Turn meet nights into store visits."
+Key message: "Fuel the cheer."
+
+Athletes who fit, based on published roster facts:
+${list}
+
+Want me to adjust the tone, timing or audience? ${RATE_RULE}`,
+        athleteIds: picks.map((athlete) => athlete.id),
+        files: [{ name: "Campaign concept.md", content: concept }],
+      };
+    }
+
+    return {
+      reply: `${named.length ? "Here's what the official roster says:" : "Here are athletes worth a look:"}
+${list}
+
+Ask me about any athlete, or tell me what you want to promote. ${RATE_RULE}`,
+      athleteIds: picks.map((athlete) => athlete.id),
+      files: [],
+    };
   },
 
   reply: ({ athleteName, fanName, message }) => ({

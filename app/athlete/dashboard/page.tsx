@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DealSteps } from "@/components/deal-steps";
 import { athletes } from "@/lib/data";
-import { needsNilGo, updateOffer } from "@/lib/deals";
+import { needsNilGo, sendDealMessage, updateOffer } from "@/lib/deals";
 import { PLATFORM_FEE_PERCENT } from "@/lib/packages";
 import { checkOffer, worstStatus, type NilStatus } from "@/lib/nil";
 import type { Athlete, Offer } from "@/lib/types";
@@ -40,7 +40,97 @@ async function copyNilGoSummary(offer: Offer, athlete: Athlete) {
 }
 
 function respond(offer: Offer, changes: Partial<Offer>, verb: string) {
-  updateOffer(offer.id, changes, `${offer.title}: athlete ${verb}`, "/sponsor/deals");
+  updateOffer(offer.id, changes, `${offer.title}: athlete ${verb}`, "/business/requests");
+}
+
+// Businesses ask for a rate instead of guessing one; the athlete sets the price here.
+function QuoteForm({ offer }: { offer: Offer }) {
+  const [quote, setQuote] = useState(500);
+  const [note, setNote] = useState("");
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        updateOffer(
+          offer.id,
+          { status: "negotiating", counterPrice: quote },
+          `${offer.title}: athlete quoted $${quote}`,
+          "/business/requests",
+        );
+        if (note.trim()) sendDealMessage(offer, "athlete", note);
+        toast.success("Quote sent");
+      }}
+      className="mt-4 grid gap-2 rounded-lg bg-neutral-50 p-4"
+    >
+      <p className="text-sm font-semibold">{offer.sponsorName} asked for your rate.</p>
+      <div className="flex flex-wrap gap-2">
+        <Input
+          type="number"
+          min={50}
+          required
+          aria-label="Your quote in USD"
+          className="w-32"
+          value={Number.isNaN(quote) ? "" : quote}
+          onChange={(event) => setQuote(event.target.valueAsNumber)}
+        />
+        <Input
+          aria-label="Note to the business"
+          className="min-w-0 flex-1 basis-48"
+          maxLength={500}
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+          placeholder="What this includes and when you're free"
+        />
+        <Button type="submit" disabled={Number.isNaN(quote)}>
+          Send quote
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function DealThread({ offer }: { offer: Offer }) {
+  const [reply, setReply] = useState("");
+  const messages = offer.messages ?? [];
+  if (messages.length === 0) return null;
+
+  return (
+    <div className="mt-4 grid gap-2">
+      <p className="text-sm font-semibold">Messages with {offer.sponsorName}</p>
+      {messages.map((message) => (
+        <p
+          key={message.id}
+          className={cn(
+            "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
+            message.from === "athlete" ? "justify-self-end bg-primary text-white" : "justify-self-start bg-neutral-100",
+          )}
+        >
+          {message.text}
+        </p>
+      ))}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!reply.trim()) return;
+          sendDealMessage(offer, "athlete", reply);
+          setReply("");
+        }}
+        className="flex gap-2"
+      >
+        <Input
+          aria-label={`Reply to ${offer.sponsorName}`}
+          value={reply}
+          maxLength={1000}
+          onChange={(event) => setReply(event.target.value)}
+          placeholder="Reply"
+        />
+        <Button type="submit" variant="outline" disabled={!reply.trim()}>
+          Send
+        </Button>
+      </form>
+    </div>
+  );
 }
 
 function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete; offers: Offer[] }) {
@@ -59,7 +149,7 @@ function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete;
           <h2 className="text-2xl">{offer.title}</h2>
         </div>
         <p className="font-heading text-3xl font-extrabold">
-          ${offer.price.toLocaleString("en-US")}
+          {offer.status === "inquiry" ? "Your quote" : `$${offer.price.toLocaleString("en-US")}`}
         </p>
       </div>
       <p className="mt-2 text-sm">{offer.deliverables}</p>
@@ -89,7 +179,11 @@ function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete;
         </tbody>
       </table>
 
-      {open ? (
+      <DealThread offer={offer} />
+
+      {offer.status === "inquiry" ? (
+        <QuoteForm offer={offer} />
+      ) : open ? (
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Button
             disabled={overall === "red"}

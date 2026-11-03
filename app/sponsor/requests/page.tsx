@@ -66,7 +66,7 @@ export default function SponsorRequestsPage() {
       ],
     }));
     toast.success("Offer sent");
-    router.push("/sponsor/deals");
+    router.push("/business/requests");
   }
 
   return (

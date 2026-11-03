@@ -31,6 +31,8 @@ export const initialState: DemoState = {
     },
   ],
   campaigns: [],
+  aiChats: [],
+  businessProfile: null,
   requests: [
     {
       id: "seed-request-switchback",

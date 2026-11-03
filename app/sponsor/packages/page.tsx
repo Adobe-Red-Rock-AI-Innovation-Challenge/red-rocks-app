@@ -42,12 +42,12 @@ export default function PackagesPage() {
       ...current,
       offers: [...offers, ...current.offers],
       notifications: [
-        notification(`${item.name} offers sent to ${roster.length} athletes`, "/sponsor/deals"),
+        notification(`${item.name} offers sent to ${roster.length} athletes`, "/business/requests"),
         ...current.notifications,
       ],
     }));
     toast.success(`Offers sent to ${roster.length} athletes`);
-    router.push("/sponsor/deals");
+    router.push("/business/requests");
   }
 
   return (

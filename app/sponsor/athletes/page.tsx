@@ -48,7 +48,7 @@ export default function SponsorAthletesPage() {
     }));
     setHiring(null);
     toast.success(`Offer sent to ${hiring.name}`);
-    router.push("/sponsor/deals");
+    router.push("/business/requests");
   }
 
   return (

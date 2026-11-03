@@ -93,7 +93,7 @@ export default function SponsorPage() {
     }));
     setDraft(null);
     toast.success("Offer sent to the athlete's inbox");
-    router.push("/sponsor/deals");
+    router.push("/business/requests");
   }
 
   return (

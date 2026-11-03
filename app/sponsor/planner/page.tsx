@@ -151,12 +151,12 @@ export default function CampaignPlannerPage() {
         ...current.campaigns,
       ],
       notifications: [
-        notification(`Campaign offers sent to ${team.length} athletes`, "/sponsor/deals"),
+        notification(`Campaign offers sent to ${team.length} athletes`, "/business/requests"),
         ...current.notifications,
       ],
     }));
     toast.success(`Offers sent to ${team.length} athletes`);
-    router.push("/sponsor/deals");
+    router.push("/business/requests");
   }
 
   return (

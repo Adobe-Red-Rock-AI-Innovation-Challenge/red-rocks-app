@@ -24,6 +24,8 @@ const roster = JSON.stringify(
     year: athlete.year,
     hometown: athlete.hometown,
     careerHighs: athlete.careerHighs,
+    highlights: athlete.highlights,
+    interests: athlete.interests,
     rateCard: athlete.rateCard,
   })),
 );

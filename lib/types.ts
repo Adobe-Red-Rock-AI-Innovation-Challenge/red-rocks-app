@@ -18,6 +18,9 @@ export type Athlete = {
   instagram: string | null;
   careerHighs: Record<string, string>;
   bioUrl: string;
+  // Both come from the official roster bio; empty when the bio doesn't list them.
+  highlights: string[];
+  interests: string | null;
   rateCard: RateCardItem[];
 };
 

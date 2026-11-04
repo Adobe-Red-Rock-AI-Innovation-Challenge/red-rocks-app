@@ -146,7 +146,7 @@ export const fallbacks: { [T in AiTask]: (input: AiInput<T>) => AiOutput<T> } = 
   match: ({ need, budget }) => {
     const needWords = words(need);
     const matches = athletes.map((athlete) => {
-      const profile = `${athlete.story} ${athlete.event} ${athlete.hometown} ${athlete.interestTags.join(" ")}`;
+      const profile = `${athlete.story} ${athlete.event} ${athlete.hometown} ${athlete.interestTags.join(" ")} ${athlete.highlights.join(" ")} ${athlete.interests ?? ""}`;
       const shared = [...words(profile)].filter((word) => needWords.has(word));
       const lowestPrice = Math.min(...athlete.rateCard.map((item) => item.price));
       const affordable = lowestPrice <= budget;
@@ -326,7 +326,7 @@ export const fallbacks: { [T in AiTask]: (input: AiInput<T>) => AiOutput<T> } = 
         Object.keys(athlete.careerHighs).length
           ? `, career highs ${Object.entries(athlete.careerHighs).map(([event, score]) => `${score} ${event}`).join(", ")}`
           : ""
-      }.`;
+      }.${athlete.highlights[0] ? ` ${athlete.highlights[0]}.` : ""}${athlete.interests ? ` ${athlete.interests}.` : ""}`;
     const list = picks.map((athlete) => `• ${facts(athlete)}`).join("\n");
 
     // A follow-up about a named athlete gets roster facts, whatever mode the chat started in.

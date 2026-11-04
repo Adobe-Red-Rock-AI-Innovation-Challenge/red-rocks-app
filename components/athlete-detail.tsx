@@ -94,6 +94,26 @@ export function AthleteDetail({ athlete, quest }: { athlete: Athlete; quest: Que
           {athlete.event} · {athlete.year} · {athlete.hometown}
         </p>
         <p className="mt-4">{profile?.bio ?? athlete.story}</p>
+        {athlete.highlights.length > 0 && (
+          <section className="mt-5">
+            <h2 className="text-lg">Accomplishments</h2>
+            <ul className="mt-2 grid gap-1.5">
+              {athlete.highlights.map((item) => (
+                <li key={item} className="flex gap-2 text-sm">
+                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {athlete.interests && (
+          <p className="mt-4 text-sm">
+            <span className="text-muted-foreground">Off the floor: </span>
+            {athlete.interests.replace(/^Enjoys /, "Enjoys ")}
+          </p>
+        )}
+        <p className="mt-2 text-xs text-muted-foreground">Source: official Utah Athletics roster bio.</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {tags.map((tag) => (
             <Badge key={tag} variant="secondary">

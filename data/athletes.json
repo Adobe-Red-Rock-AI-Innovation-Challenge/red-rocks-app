@@ -44,7 +44,16 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "11x All-American (six NCAA, five regular season)",
+      "Career-highs of 10.0 on vault, 10.0 on bars, 9.95 on beam, 9.975 on floor, and 39.700 in the all-around",
+      "35 career wins (10 beam, eight all-around, eight bars, six vault, three floor)",
+      "Hit 100-of-104 career routines",
+      "Currently tied 4th in program history with Grace McCallum and MyKayla Skinner for all-around wins in a season (7)",
+      "Placed 4th on floor and 7th in the all-around at the 2026 NCAA Championships"
+    ],
+    "interests": null
   },
   {
     "id": "zoe-johnson",
@@ -86,7 +95,13 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "Hit 28-32 routines as a Red Rock",
+      "Earned two career wins, both on vault",
+      "Career-high scores of 9.95 on vault and 9.90 on floor"
+    ],
+    "interests": null
   },
   {
     "id": "clara-raposo",
@@ -128,7 +143,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "abbi-ryssman",
@@ -170,7 +187,16 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "Hit 24-26 routines in first year as a Red Rock",
+      "2026 Big 12 All-Freshman Team",
+      "2026 All-Big 12 Team, bars, and beam",
+      "Named Big 12 Newcomer of the week three times",
+      "Posted 3 career victories in debut season, all on beam",
+      "Set career-highs of 9.925 on bars and 9.95 on beam"
+    ],
+    "interests": null
   },
   {
     "id": "sage-curtis",
@@ -210,7 +236,15 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "Hit 8-9 routines in first year as a Red Rock",
+      "Earned career-high 9.95 at Big 12 Championships (3/21)",
+      "Big 12 Newcomer of the Week (3/3) after posting a 9.925 on floor at Denver",
+      "Debuted on floor with a 9.80 against Arizona State (1/30)",
+      "Recorded six scores of 9.90 or higher on floor in freshman season"
+    ],
+    "interests": null
   },
   {
     "id": "bailey-stroud",
@@ -250,7 +284,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "norah-christian",
@@ -286,7 +322,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "elizabeth-gantner",
@@ -322,7 +360,12 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "Hit 30-of-31 career routines",
+      "Posted a career-high 9.90 on beam against Arizona in 2025"
+    ],
+    "interests": "Enjoys cooking, arts and crafts, listening to music, and hanging out with family and friends"
   },
   {
     "id": "lonie-gervais",
@@ -358,7 +401,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "ayla-miller",
@@ -394,7 +439,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "poppygrace-stickler",
@@ -430,7 +477,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "lilly-tubbs",
@@ -466,7 +515,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "arielle-ward",
@@ -502,7 +553,9 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [],
+    "interests": null
   },
   {
     "id": "camie-winger",
@@ -538,7 +591,16 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "WGCA All-American on beam",
+      "Hit 65-71 career routines",
+      "Seven career wins (2 vault, 4 beam, 1 floor)",
+      "2026 Big 12 beam champion",
+      "2026 All-Big 12 Team (beam)",
+      "2025 All-Big 12 Team (beam)"
+    ],
+    "interests": "Enjoys drawing, singing, hiking, biking, and camping"
   },
   {
     "id": "ella-zirbes",
@@ -574,6 +636,15 @@
         "deliverable": "In-person appearance (1 hr)",
         "price": 800
       }
-    ]
+    ],
+    "highlights": [
+      "7x All-American (4 NCAA, 3 regular season)",
+      "Hit 124-131 career routines",
+      "20 career wins (6 floor, 6 vault, 5 bars, 2 all-around, 1 beam)",
+      "Competed in the 2026 NCAA Championship on floor (9.925) as an individual (4/16)",
+      "2026 All-Big 12 Team (vault, bars, floor)",
+      "2025 All-Big 12 Team (vault and bars)"
+    ],
+    "interests": "Enjoys singing, reading, traveling, and hanging out with friends and family"
   }
 ]

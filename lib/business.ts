@@ -14,6 +14,14 @@ export function saveChat(chat: AiChat) {
   }));
 }
 
+// Deleting a chat also removes the files it generated; requests already sent stay.
+export function deleteChats(ids: string[] | "all") {
+  setDemoState((state) => ({
+    ...state,
+    aiChats: ids === "all" ? [] : state.aiChats.filter((chat) => !ids.includes(chat.id)),
+  }));
+}
+
 // The assistant never prices athletes, so a business asks the athlete for a quote instead.
 export function requestRate(sponsorName: string, athleteId: string, context: string) {
   const athlete = athletes.find((item) => item.id === athleteId);

@@ -37,10 +37,17 @@ const operators = [
 
 const costs = [
   ["Hosting (Vercel Pro)", "About $20 a month per team member"],
-  ["Database (Neon or similar)", "Free tier to start"],
+  ["Database (Neon on Vercel)", "Free tier to start"],
   ["Payments (Stripe)", "Per transaction; check Stripe's current pricing"],
   ["AI (Claude API)", "Usage based; cap it with a monthly spending limit"],
   ["Adobe Express", "Through the University's software program"],
+];
+
+const feeModel = [
+  ["Fan memberships, gifts and Quests", "100% to athletes, minus card processing, matching WRTH's promise"],
+  ["Sponsor deals", "Athletes keep 100% of the price they quote"],
+  ["Service fee", "Sponsors add 15% on top; it pays for hosting, payments, AI and staff time"],
+  ["Athlete gifts (shout-outs, signed cards)", "Athletes receive 70%; 30% covers production and shipping"],
 ];
 
 const risks = [
@@ -80,6 +87,15 @@ export default function FeasibilityPage() {
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Who runs the hub, what it costs and how it grows. Costs are planning estimates.
       </p>
+
+      <section className="mt-10">
+        <h2 className="text-3xl">How the hub pays for itself</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          Fans give the way WRTH already promises: every contribution goes to athletes. The hub runs
+          on a service fee sponsors pay on top of what athletes earn.
+        </p>
+        <Table rows={feeModel} head={["Money in", "Where it goes"]} />
+      </section>
 
       <h2 className="mt-10 text-3xl">Roadmap</h2>
       <div className="mt-3 grid gap-4 md:grid-cols-3">

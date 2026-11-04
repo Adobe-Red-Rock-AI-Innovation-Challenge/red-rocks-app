@@ -21,6 +21,8 @@ export type Athlete = {
   // Both come from the official roster bio; empty when the bio doesn't list them.
   highlights: string[];
   interests: string | null;
+  // Sample personal-brand tags for the demo; athletes replace them in Profile.
+  personalityTags: string[];
   rateCard: RateCardItem[];
 };
 
@@ -197,7 +199,7 @@ export type ProjectTask = {
   comments: DealMessage[];
 };
 
-export type AiFile = { id: string; name: string; content: string };
+export type AiFile = { id: string; name: string; content: string; url?: string };
 
 export type AiChatMessage = {
   id: string;
@@ -206,11 +208,14 @@ export type AiChatMessage = {
   athleteIds?: string[];
   files?: AiFile[];
   source?: "claude" | "demo";
+  link?: { href: string; label: string };
+  chips?: string[];
 };
 
 export type AiChat = {
   id: string;
   mode: "athlete" | "campaign" | "budget" | "free";
+  script?: { id: string; step: number };
   title: string;
   createdAt: string;
   messages: AiChatMessage[];

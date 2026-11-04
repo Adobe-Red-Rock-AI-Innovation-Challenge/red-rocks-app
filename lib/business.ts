@@ -25,7 +25,7 @@ export function deleteChats(ids: string[] | "all") {
 // The assistant never prices athletes, so a business asks the athlete for a quote instead.
 export function requestRate(sponsorName: string, athleteId: string, context: string) {
   const athlete = athletes.find((item) => item.id === athleteId);
-  if (!athlete) return;
+  if (!athlete) return null;
   const first = athlete.name.split(" ")[0];
   const offer = {
     ...newOffer({
@@ -50,6 +50,7 @@ export function requestRate(sponsorName: string, athleteId: string, context: str
     offers: [offer, ...state.offers],
     notifications: [notification(`${sponsorName} asked for your rate`, "/athlete/dashboard"), ...state.notifications],
   }));
+  return offer.id;
 }
 
 export function downloadFile(file: AiFile) {

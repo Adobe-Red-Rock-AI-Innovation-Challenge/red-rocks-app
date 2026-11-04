@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { DealSteps } from "@/components/deal-steps";
 import { athletes } from "@/lib/data";
 import { needsNilGo, sendDealMessage, updateOffer } from "@/lib/deals";
-import { PLATFORM_FEE_PERCENT } from "@/lib/packages";
 import { checkOffer, worstStatus, type NilStatus } from "@/lib/nil";
 import type { Athlete, Offer } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -56,7 +55,7 @@ function QuoteForm({ offer }: { offer: Offer }) {
           offer.id,
           { status: "negotiating", counterPrice: quote },
           `${offer.title}: athlete quoted $${quote}`,
-          "/business/requests",
+          `/business/requests?request=${offer.id}`,
         );
         if (note.trim()) sendDealMessage(offer, "athlete", note);
         toast.success("Quote sent");
@@ -286,7 +285,7 @@ export default function AthleteDashboardPage() {
   const sales = state.sales.filter((sale) => sale.athleteId === athlete.id);
   const dealPay = offers
     .filter((offer) => offer.status === "paid" || offer.status === "reported")
-    .reduce((sum, offer) => sum + offer.price * (1 - PLATFORM_FEE_PERCENT / 100), 0);
+    .reduce((sum, offer) => sum + offer.price, 0);
   const giftPay = sales.reduce((sum, sale) => sum + sale.athleteShare, 0);
 
   return (

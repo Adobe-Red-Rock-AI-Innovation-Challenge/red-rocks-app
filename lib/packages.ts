@@ -6,7 +6,8 @@ export type SponsorPackage = {
   includes: string[];
 };
 
-export const PLATFORM_FEE_PERCENT = 15;
+// Athletes keep 100% of every price; sponsors pay this service fee on top to run the hub.
+export const SERVICE_FEE_PERCENT = 15;
 
 // Prices are planning assumptions, to be checked against comparable NIL deals before launch.
 export const sponsorPackages: SponsorPackage[] = [

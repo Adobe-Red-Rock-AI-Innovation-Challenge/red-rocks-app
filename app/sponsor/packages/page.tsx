@@ -9,7 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { athletes } from "@/lib/data";
 import { newOffer } from "@/lib/deals";
 import { notification, setDemoState } from "@/lib/demo-store";
-import { PLATFORM_FEE_PERCENT, sponsorPackages, type SponsorPackage } from "@/lib/packages";
+import { SERVICE_FEE_PERCENT, sponsorPackages, type SponsorPackage } from "@/lib/packages";
 
 export default function PackagesPage() {
   const router = useRouter();
@@ -93,7 +93,8 @@ export default function PackagesPage() {
       </div>
 
       <p className="mt-6 text-sm text-muted-foreground">
-        Athletes receive {100 - PLATFORM_FEE_PERCENT}% of every package. Prices are planning
+        Athletes receive 100% of every package. A {SERVICE_FEE_PERCENT}% service fee is added on
+        top to run the hub. Prices are planning
         estimates for this prototype.{" "}
         <Link href="/impact" className={buttonVariants({ variant: "link", className: "px-0" })}>
           See the revenue model

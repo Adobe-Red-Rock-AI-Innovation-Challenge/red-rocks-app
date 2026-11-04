@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Bot, FolderKanban, MessagesSquare, Sparkles, UserRound } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 import { businessName } from "@/lib/business";
@@ -11,6 +11,7 @@ const projectStatuses = ["accepted", "cleared", "delivered", "paid", "reported"]
 
 export function BusinessSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { state } = useDemo();
   const name = businessName(state);
   const mine = state.offers.filter((offer) => offer.sponsorName === name);
@@ -53,12 +54,13 @@ export function BusinessSidebar() {
           </Link>
         ))}
       </nav>
-      <Link
-        href="/business/assistant"
-        className="mt-4 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white"
+      <button
+        type="button"
+        onClick={() => router.push(`/business/assistant?new=${Date.now()}`)}
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white"
       >
         <Sparkles className="size-4" /> Open AI Assistant
-      </Link>
+      </button>
     </aside>
   );
 }

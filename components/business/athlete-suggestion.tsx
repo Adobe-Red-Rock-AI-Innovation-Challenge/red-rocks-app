@@ -7,7 +7,15 @@ import { useDemo } from "@/components/demo-provider";
 import { businessName, requestRate } from "@/lib/business";
 import { athletes } from "@/lib/data";
 
-export function AthleteSuggestion({ athleteId, context }: { athleteId: string; context: string }) {
+export function AthleteSuggestion({
+  athleteId,
+  context,
+  onRequested,
+}: {
+  athleteId: string;
+  context: string;
+  onRequested?: (athleteName: string, requestId: string) => void;
+}) {
   const { state } = useDemo();
   const athlete = athletes.find((item) => item.id === athleteId);
   if (!athlete) return null;
@@ -36,8 +44,9 @@ export function AthleteSuggestion({ athleteId, context }: { athleteId: string; c
             type="button"
             disabled={requested || pending}
             onClick={() => {
-              requestRate(sponsorName, athleteId, context);
-              toast.success(`Rate request sent to ${athlete.name}. Follow it in Requests.`);
+              const id = requestRate(sponsorName, athleteId, context);
+              toast.success(`Rate request sent to ${athlete.name}`);
+              if (id) onRequested?.(athlete.name, id);
             }}
             className="rounded-full bg-primary px-3 py-1.5 text-sm text-white disabled:opacity-60"
           >

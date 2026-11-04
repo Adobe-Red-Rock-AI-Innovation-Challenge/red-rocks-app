@@ -41,7 +41,7 @@ export default function AiHistoryPage() {
               <Trash2 /> Delete all
             </Button>
           )}
-          <Link href="/business/assistant" className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white">
+          <Link href={`/business/assistant?new=${chats.length}-${state.aiChats[0]?.id ?? "0"}`} className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white">
             <Sparkles className="size-4" /> New conversation
           </Link>
         </div>

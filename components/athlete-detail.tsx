@@ -115,12 +115,17 @@ export function AthleteDetail({ athlete, quest }: { athlete: Athlete; quest: Que
         )}
         <p className="mt-2 text-xs text-muted-foreground">Source: official Utah Athletics roster bio.</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {tags.map((tag) => (
+          {[...tags, ...(profile ? [] : athlete.personalityTags)].map((tag) => (
             <Badge key={tag} variant="secondary">
               {tag}
             </Badge>
           ))}
         </div>
+        {!profile && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            Hashtags are sample personal-brand tags for the demo; athletes set their own in Profile.
+          </p>
+        )}
 
         {quest && (
           <section className="mt-8 rounded-lg border p-5">

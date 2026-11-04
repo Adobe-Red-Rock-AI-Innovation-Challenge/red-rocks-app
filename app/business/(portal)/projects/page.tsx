@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { businessName } from "@/lib/business";
 import { athletes } from "@/lib/data";
 import { addTask, dealMessage, updateOffer, updateTask } from "@/lib/deals";
+import { SERVICE_FEE_PERCENT } from "@/lib/packages";
 import type { Offer, ProjectTask } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -172,9 +173,24 @@ function ProjectCard({ offer, pay, busy }: { offer: Offer; pay: ReturnType<typeo
         {offer.status === "accepted" && <span className="text-muted-foreground">The athlete is getting NIL Go clearance.</span>}
         {offer.status === "cleared" && <span className="text-muted-foreground">Cleared. The athlete is creating the content.</span>}
         {offer.status === "delivered" && (
-          <Button disabled={busy} onClick={() => pay({ kind: "deal", offerId: offer.id, title: offer.title, amount: offer.price })}>
-            Pay ${offer.price.toLocaleString("en-US")}
-          </Button>
+          <>
+            <Button
+              disabled={busy}
+              onClick={() =>
+                pay({
+                  kind: "deal",
+                  offerId: offer.id,
+                  title: offer.title,
+                  amount: Math.round(offer.price * (1 + SERVICE_FEE_PERCENT / 100)),
+                })
+              }
+            >
+              Pay ${Math.round(offer.price * (1 + SERVICE_FEE_PERCENT / 100)).toLocaleString("en-US")}
+            </Button>
+            <span className="text-muted-foreground">
+              ${offer.price.toLocaleString("en-US")} to the athlete + {SERVICE_FEE_PERCENT}% service fee
+            </span>
+          </>
         )}
         {offer.status === "paid" && (
           <Button

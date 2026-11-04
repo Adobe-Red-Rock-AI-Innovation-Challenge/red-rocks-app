@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState, useSyncExternalStore, type FormEvent } from "react";
 import { toast } from "sonner";
 import { DealSteps } from "@/components/deal-steps";
 import { useDemo } from "@/components/demo-provider";
@@ -13,6 +13,8 @@ import { athletes } from "@/lib/data";
 import { sendDealMessage, updateOffer } from "@/lib/deals";
 import type { Offer } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+const noSubscription = () => () => {};
 
 const openStatuses: Offer["status"][] = ["inquiry", "pending", "negotiating", "declined"];
 
@@ -29,9 +31,11 @@ export default function RequestsPage() {
   const { state } = useDemo();
   const name = businessName(state);
   const requests = state.offers.filter((offer) => offer.sponsorName === name && openStatuses.includes(offer.status));
+  const search = useSyncExternalStore(noSubscription, () => window.location.search, () => "");
+  const linked = new URLSearchParams(search).get("request");
   const [openId, setOpenId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
-  const open = requests.find((offer) => offer.id === openId) ?? requests[0];
+  const open = requests.find((offer) => offer.id === (openId ?? linked)) ?? requests[0];
   const athlete = athletes.find((item) => item.id === open?.athleteId);
 
   function send(event: FormEvent) {

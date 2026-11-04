@@ -3,7 +3,6 @@
 import { useDemo } from "@/components/demo-provider";
 import { plans } from "@/lib/checkout";
 import { isLive } from "@/lib/deals";
-import { PLATFORM_FEE_PERCENT } from "@/lib/packages";
 import { projectRevenue, scenarios } from "@/lib/revenue";
 
 // The goal is the Base revenue model, so the bar and /impact always tell the same story.
@@ -15,7 +14,7 @@ export function SeasonGoal() {
 
   const sponsorDollars = state.offers
     .filter((offer) => offer.status === "paid" || offer.status === "reported")
-    .reduce((sum, offer) => sum + offer.price * (1 - PLATFORM_FEE_PERCENT / 100), 0);
+    .reduce((sum, offer) => sum + offer.price, 0);
   const fanPayments =
     (state.membership ? plans[state.membership].price : 0) +
     state.giftDollars +

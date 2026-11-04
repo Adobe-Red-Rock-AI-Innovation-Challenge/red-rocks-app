@@ -98,7 +98,7 @@ export function sendDealMessage(offer: Offer, from: DealMessage["from"], text: s
     notifications: [
       notification(
         from === "sponsor" ? `New message from ${offer.sponsorName}` : `An athlete replied about "${offer.title}"`,
-        from === "sponsor" ? "/athlete/dashboard" : "/business/requests",
+        from === "sponsor" ? "/athlete/dashboard" : `/business/requests?request=${offer.id}`,
       ),
       ...state.notifications,
     ],

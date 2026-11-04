@@ -53,7 +53,12 @@
       "Currently tied 4th in program history with Grace McCallum and MyKayla Skinner for all-around wins in a season (7)",
       "Placed 4th on floor and 7th in the all-around at the 2026 NCAA Championships"
     ],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#bookworm",
+      "#travel",
+      "#music"
+    ]
   },
   {
     "id": "zoe-johnson",
@@ -101,7 +106,12 @@
       "Earned two career wins, both on vault",
       "Career-high scores of 9.95 on vault and 9.90 on floor"
     ],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#pinkholic",
+      "#music",
+      "#bookworm"
+    ]
   },
   {
     "id": "clara-raposo",
@@ -145,7 +155,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#dance",
+      "#energetic",
+      "#makeup"
+    ]
   },
   {
     "id": "abbi-ryssman",
@@ -196,7 +211,12 @@
       "Posted 3 career victories in debut season, all on beam",
       "Set career-highs of 9.925 on bars and 9.95 on beam"
     ],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#socialmediaenthusiast",
+      "#energetic",
+      "#bookworm"
+    ]
   },
   {
     "id": "sage-curtis",
@@ -244,7 +264,12 @@
       "Debuted on floor with a 9.80 against Arizona State (1/30)",
       "Recorded six scores of 9.90 or higher on floor in freshman season"
     ],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#music",
+      "#fashion",
+      "#bookworm"
+    ]
   },
   {
     "id": "bailey-stroud",
@@ -286,7 +311,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#creative",
+      "#gamer",
+      "#music"
+    ]
   },
   {
     "id": "norah-christian",
@@ -324,7 +354,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#music",
+      "#travel",
+      "#energetic"
+    ]
   },
   {
     "id": "elizabeth-gantner",
@@ -365,7 +400,12 @@
       "Hit 30-of-31 career routines",
       "Posted a career-high 9.90 on beam against Arizona in 2025"
     ],
-    "interests": "Enjoys cooking, arts and crafts, listening to music, and hanging out with family and friends"
+    "interests": "Enjoys cooking, arts and crafts, listening to music, and hanging out with family and friends",
+    "personalityTags": [
+      "#foodie",
+      "#creative",
+      "#music"
+    ]
   },
   {
     "id": "lonie-gervais",
@@ -403,7 +443,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#bookworm",
+      "#creative",
+      "#music"
+    ]
   },
   {
     "id": "ayla-miller",
@@ -441,7 +486,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#gamer",
+      "#fashion",
+      "#socialmediaenthusiast"
+    ]
   },
   {
     "id": "poppygrace-stickler",
@@ -479,7 +529,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#makeup",
+      "#gamer",
+      "#bookworm"
+    ]
   },
   {
     "id": "lilly-tubbs",
@@ -517,7 +572,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#music",
+      "#makeup",
+      "#outdoors"
+    ]
   },
   {
     "id": "arielle-ward",
@@ -555,7 +615,12 @@
       }
     ],
     "highlights": [],
-    "interests": null
+    "interests": null,
+    "personalityTags": [
+      "#creative",
+      "#energetic",
+      "#outdoors"
+    ]
   },
   {
     "id": "camie-winger",
@@ -600,7 +665,12 @@
       "2026 All-Big 12 Team (beam)",
       "2025 All-Big 12 Team (beam)"
     ],
-    "interests": "Enjoys drawing, singing, hiking, biking, and camping"
+    "interests": "Enjoys drawing, singing, hiking, biking, and camping",
+    "personalityTags": [
+      "#creative",
+      "#music",
+      "#outdoors"
+    ]
   },
   {
     "id": "ella-zirbes",
@@ -645,6 +715,11 @@
       "2026 All-Big 12 Team (vault, bars, floor)",
       "2025 All-Big 12 Team (vault and bars)"
     ],
-    "interests": "Enjoys singing, reading, traveling, and hanging out with friends and family"
+    "interests": "Enjoys singing, reading, traveling, and hanging out with friends and family",
+    "personalityTags": [
+      "#music",
+      "#bookworm",
+      "#travel"
+    ]
   }
 ]

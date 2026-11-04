@@ -1,5 +1,6 @@
 import { athletes } from "@/lib/data";
-import { PLATFORM_FEE_PERCENT, sponsorPackages } from "@/lib/packages";
+import { SERVICE_FEE_PERCENT, sponsorPackages } from "@/lib/packages";
+import { WRTH_SOURCE, wrthFacts, wrthStats } from "@/lib/wrth";
 import type { CampaignPlan, RateCardItem } from "@/lib/types";
 
 export type AiTasks = {
@@ -55,11 +56,11 @@ const businessFaq: { match: RegExp; answer: string }[] = [
   },
   {
     match: PRICE_QUESTION,
-    answer: `${RATE_RULE} Our sponsor packages start at $${sponsorPackages[0].price.toLocaleString("en-US")} (${sponsorPackages.map((item) => `${item.name} $${item.price.toLocaleString("en-US")}`).join(", ")}), and athletes receive ${100 - PLATFORM_FEE_PERCENT}% of each package.`,
+    answer: `${RATE_RULE} Our sponsor packages start at $${sponsorPackages[0].price.toLocaleString("en-US")} (${sponsorPackages.map((item) => `${item.name} $${item.price.toLocaleString("en-US")}`).join(", ")}). Athletes keep 100% of the price; sponsors add a ${SERVICE_FEE_PERCENT}% service fee to run the hub.`,
   },
   {
     match: /\b(packages?|options?|plans?|tiers?)\b/,
-    answer: `There are three sponsor packages:\n${sponsorPackages.map((item) => `• ${item.name}, $${item.price.toLocaleString("en-US")}: ${item.bestFor}.`).join("\n")}\nAthletes receive ${100 - PLATFORM_FEE_PERCENT}% of each package. Tell me your goal and I'll suggest one.`,
+    answer: `There are three sponsor packages:\n${sponsorPackages.map((item) => `• ${item.name}, $${item.price.toLocaleString("en-US")}: ${item.bestFor}.`).join("\n")}\nAthletes keep 100% of each package; sponsors add a ${SERVICE_FEE_PERCENT}% service fee. Tell me your goal and I'll suggest one.`,
   },
   {
     match: /\b(results?|roi|measure|tracks?|tracking|redemptions?|redeem|proof|worth it)\b/,
@@ -70,6 +71,10 @@ const businessFaq: { match: RegExp; answer: string }[] = [
     match: /\b(attendance|crowds?|how many (fans|people)|reach|exposure)\b/,
     answer:
       "Red Rocks home meets averaged 12,207 fans in 2025 (Salt Lake Tribune). Utah has led the nation in gymnastics attendance in 36 of the last 39 seasons, and the NCAA record crowd of 16,019 was set at the Huntsman Center (Utah Athletics).",
+  },
+  {
+    match: /\b(followers?|social|tiktok|instagram|views|online|wrth|who rocks the house|donors?)\b/,
+    answer: `${wrthStats.map((item) => `${item.value} ${item.label.toLowerCase()}`).join("; ")}. ${wrthFacts[0]} ${wrthFacts[3]} (Source: ${WRTH_SOURCE}.)`,
   },
   {
     match: /\b(arena|banners?|signage|video board|scoreboard|in.person)\b/,

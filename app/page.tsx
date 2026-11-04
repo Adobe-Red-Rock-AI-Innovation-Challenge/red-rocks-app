@@ -7,6 +7,7 @@ import { JoinForm } from "@/components/home/join-form";
 import { ReachSection } from "@/components/home/reach-section";
 import { plans } from "@/lib/checkout";
 import type { Membership } from "@/lib/types";
+import { WRTH_SOURCE, wrthStats } from "@/lib/wrth";
 
 const MUSS_URL = "https://muss.utah.edu/muss-rewards/";
 const PROGRAM_URL = "https://utahutes.com/sports/womens-gymnastics";
@@ -122,6 +123,18 @@ export default function Home() {
             </a>
           </div>
         </div>
+      </section>
+
+      <section aria-label="Who Rocks the House by the numbers" className="rounded-3xl bg-black px-5 py-6 text-white sm:px-8">
+        <dl className="grid grid-cols-2 gap-5 md:grid-cols-4">
+          {wrthStats.map((item) => (
+            <div key={item.label}>
+              <dd className="text-3xl font-extrabold text-primary sm:text-4xl">{item.value}</dd>
+              <dt className="text-sm text-white/80">{item.label}</dt>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-4 text-xs text-white/60">Source: {WRTH_SOURCE}.</p>
       </section>
 
       <section id="about" className="grid scroll-mt-28 gap-6 lg:grid-cols-[1fr_2fr]">

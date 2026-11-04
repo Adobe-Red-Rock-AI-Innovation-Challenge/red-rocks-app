@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RotateCcw } from "lucide-react";
@@ -71,11 +72,30 @@ export function SiteHeader() {
 
       <div className="border-b bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-0.5 px-4 py-2">
-          <Link
-            href="/"
-            className="font-heading text-2xl font-extrabold tracking-tight whitespace-nowrap uppercase"
-          >
-            <span className="text-primary">Red Rocks</span> Fan Hub
+          {/* Fans see WRTH, the fan club; businesses and athletes see the program's own mark. */}
+          <Link href="/" className="flex shrink-0 items-center gap-2.5">
+            {activeRole === "fan" ? (
+              <Image
+                src="/images/brand/wrth.png"
+                alt="WRTH, Who Rocks the House"
+                width={273}
+                height={66}
+                priority
+                className="h-8 w-auto"
+              />
+            ) : (
+              <>
+                <Image
+                  src="/images/brand/utah-gymnastics.png"
+                  alt=""
+                  width={252}
+                  height={180}
+                  priority
+                  className="h-10 w-auto rounded-md"
+                />
+                <span className="text-xl font-extrabold tracking-tight whitespace-nowrap">UTAH GYMNASTICS</span>
+              </>
+            )}
           </Link>
           <nav
             aria-label="Main"

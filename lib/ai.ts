@@ -1,4 +1,5 @@
 import { athletes } from "@/lib/data";
+import { PLATFORM_FEE_PERCENT, sponsorPackages } from "@/lib/packages";
 import type { CampaignPlan, RateCardItem } from "@/lib/types";
 
 export type AiTasks = {
@@ -35,6 +36,57 @@ export type AssistantMode = "athlete" | "campaign" | "budget" | "free";
 
 export const RATE_RULE =
   "I don't estimate any athlete's personal rate. Use Request rate on an athlete card to ask them directly; they reply with their own quote in Requests.";
+
+export const NO_ANSWER =
+  "I don't have an answer to that yet. Please contact the Red Rocks partnerships team with the Join Us form at the bottom of the home page, and someone will follow up.";
+
+const ON_TOPIC =
+  /athlete|gymnast|campaign|promot|brand|budget|sponsor|deal|post|reel|instagram|tiktok|audience|fan|idea|message|launch|store|shop|product|customer|business|who |fit|recommend|tone|timing|season|meet/;
+
+// Whole words only, so "coffee" never reads as "fee".
+const PRICE_QUESTION = /\b(how much|price|pricing|cost|costs|rates?|charges?|fees?)\b/;
+
+// Common business questions the demo answers without a model, from facts used elsewhere in the app.
+const businessFaq: { match: RegExp; answer: string }[] = [
+  {
+    match: /\b(nil go|clearance|compliance|compliant|legal|rules?|allowed)\b/,
+    answer:
+      "Every third-party NIL deal of $600 or more must be submitted to NIL Go, the College Sports Commission's clearinghouse, before work starts. Deals must promote a real product or service, pay a fair rate for the work and never tie pay to performance or recruiting. Posts need #ad, and school logos or uniforms need approval. The hub flags these checks on every offer.",
+  },
+  {
+    match: PRICE_QUESTION,
+    answer: `${RATE_RULE} Our sponsor packages start at $${sponsorPackages[0].price.toLocaleString("en-US")} (${sponsorPackages.map((item) => `${item.name} $${item.price.toLocaleString("en-US")}`).join(", ")}), and athletes receive ${100 - PLATFORM_FEE_PERCENT}% of each package.`,
+  },
+  {
+    match: /\b(packages?|options?|plans?|tiers?)\b/,
+    answer: `There are three sponsor packages:\n${sponsorPackages.map((item) => `• ${item.name}, $${item.price.toLocaleString("en-US")}: ${item.bestFor}.`).join("\n")}\nAthletes receive ${100 - PLATFORM_FEE_PERCENT}% of each package. Tell me your goal and I'll suggest one.`,
+  },
+  {
+    match: /\b(results?|roi|measure|tracks?|tracking|redemptions?|redeem|proof|worth it)\b/,
+    answer:
+      "Every campaign gets its own offer code. Fans claim a personal code on their VIP Pass, and it only counts when your staff enter it on the Redeem page, so you see real store visits, cost per visit and how many fans claimed. Results appear on your Results page.",
+  },
+  {
+    match: /\b(attendance|crowds?|how many (fans|people)|reach|exposure)\b/,
+    answer:
+      "Red Rocks home meets averaged 12,207 fans in 2025 (Salt Lake Tribune). Utah has led the nation in gymnastics attendance in 36 of the last 39 seasons, and the NCAA record crowd of 16,019 was set at the Huntsman Center (Utah Athletics).",
+  },
+  {
+    match: /\b(arena|banners?|signage|video board|scoreboard|in.person)\b/,
+    answer:
+      "In-arena options at the Huntsman Center include the center video board, LED ribbon boards, mat-side signage, a concourse booth, fan giveaways and PA reads. That inventory is sold by Utah Athletics; we connect you with their partnership team through the Join Us form.",
+  },
+  {
+    match: /how (does|do) (it|this|the hub) work|process|steps|get started|what happens next/,
+    answer:
+      "1. Tell me your goal or budget and I'll suggest athletes.\n2. Use Request rate; each athlete replies with their own quote in Requests.\n3. Accept a quote and it becomes a Project with tasks you can review.\n4. The athlete gets NIL Go clearance and posts.\n5. Fans redeem your offer and you see the results.",
+  },
+  {
+    match: /^(hi|hello|hey|good (morning|afternoon|evening))\b/,
+    answer:
+      "Hi! I can find athletes for your business, shape a campaign idea or plan around your budget. Where would you like to start?",
+  },
+];
 
 function budgetFrom(text: string) {
   const match = /\$?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|thousand)?/i.exec(text);
@@ -279,6 +331,23 @@ export const fallbacks: { [T in AiTask]: (input: AiInput<T>) => AiOutput<T> } = 
 
     // A follow-up about a named athlete gets roster facts, whatever mode the chat started in.
     const askingAbout = named.length > 0 && !budget;
+
+    // Pricing questions about a named athlete never get a number, only the way to ask them.
+    if (named.length > 0 && PRICE_QUESTION.test(lower)) {
+      return {
+        reply: `I don't estimate ${named.map((athlete) => athlete.name).join(" or ")}'s personal rate. Use Request rate on the card below and they'll reply with their own quote in Requests.`,
+        athleteIds: named.map((athlete) => athlete.id),
+        files: [],
+      };
+    }
+
+    if (!askingAbout && !budget) {
+      const faq = businessFaq.find((item) => item.match.test(lower));
+      if (faq) return { reply: faq.answer, athleteIds: [], files: [] };
+    }
+    if (!askingAbout && !budget && !ON_TOPIC.test(lower)) {
+      return { reply: NO_ANSWER, athleteIds: [], files: [] };
+    }
 
     if (!askingAbout && (mode === "budget" || (mode === "free" && budget))) {
       const amount = budget ?? 5000;

@@ -41,6 +41,15 @@ const starters: { mode: AssistantMode; icon: typeof Users; title: string; text: 
   },
 ];
 
+// One-tap follow-ups keep a live demo moving without typing.
+const followUps = [
+  "How do you measure results?",
+  "What is NIL Go?",
+  "What packages do you offer?",
+  "How does it work?",
+  "How many fans come to meets?",
+];
+
 function turn(role: AiChatMessage["role"], text: string, extra: Partial<AiChatMessage> = {}): AiChatMessage {
   return { id: crypto.randomUUID(), role, text, ...extra };
 }
@@ -170,6 +179,23 @@ export default function AssistantPage() {
                     {message.source && <AiSource source={message.source} />}
                   </li>
                 ),
+              )}
+              {!busy && current.messages.at(-1)?.role === "assistant" && (
+                <li aria-label="Suggested questions" className="flex flex-wrap gap-2">
+                  {followUps
+                    .filter((question) => !current.messages.some((message) => message.text === question))
+                    .slice(0, 3)
+                    .map((question) => (
+                      <button
+                        key={question}
+                        type="button"
+                        onClick={() => send(question, current.mode)}
+                        className="rounded-full border px-3 py-1.5 text-sm hover:border-primary hover:text-primary"
+                      >
+                        {question}
+                      </button>
+                    ))}
+                </li>
               )}
               {busy && (
                 <li className="flex items-center gap-2 text-muted-foreground">

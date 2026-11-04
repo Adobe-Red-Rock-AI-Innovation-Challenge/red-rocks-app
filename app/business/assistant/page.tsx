@@ -53,7 +53,8 @@ function profileSummary(athlete: Athlete) {
 function scriptedReply(chat: AiChat, text: string): { reply: Reply; script: AiChat["script"] } | null {
   const step = chat.script?.step ?? 0;
 
-  if (chat.mode === "athlete") {
+  // A longer request ("write a campaign with Avery for my brand") goes to the AI instead of the script.
+  if (chat.mode === "athlete" && text.split(/\s+/).length <= 6) {
     const named = findAthlete(text);
     if (named.length > 0) {
       return {
@@ -140,7 +141,7 @@ function Assistant({ search }: { search: string }) {
       mode,
       title,
       createdAt: new Date().toISOString(),
-      messages: [turn("user", title), turn("assistant", openers[mode], { chips: openerChips[mode], source: "demo" })],
+      messages: [turn("user", title), turn("assistant", openers[mode], { chips: openerChips[mode], source: "script" })],
     });
   }
 
@@ -166,7 +167,7 @@ function Assistant({ search }: { search: string }) {
         commit({
           ...asked,
           script: scripted.script,
-          messages: [...asked.messages, turn("assistant", scripted.reply.text, { ...scripted.reply, source: "demo" })],
+          messages: [...asked.messages, turn("assistant", scripted.reply.text, { ...scripted.reply, source: "script" })],
         });
         return;
       }
@@ -202,7 +203,7 @@ function Assistant({ search }: { search: string }) {
         turn(
           "assistant",
           `Request sent to ${athleteName}. We'll notify you as soon as ${first} replies with a quote. You can follow it in Business Hub → Requests; right now its status is “Waiting for the athlete's quote.”`,
-          { link: { href: `/business/requests?request=${requestId}`, label: `View the request with ${first}` }, source: "demo" },
+          { link: { href: `/business/requests?request=${requestId}`, label: `View the request with ${first}` }, source: "script" },
         ),
       ],
     });

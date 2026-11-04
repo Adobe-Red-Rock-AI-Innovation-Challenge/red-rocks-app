@@ -6,7 +6,11 @@ export function AiSource({ source }: { source: Source }) {
   return (
     <p className="flex items-center gap-1 text-xs text-muted-foreground">
       <Sparkles className="size-3" />
-      {source === "claude" ? "Written by Claude" : "Demo AI (sample output, no API key set)"}
+      {source === "claude"
+        ? "Written by Claude"
+        : source === "script"
+          ? "Scripted demo answer"
+          : "Demo AI (sample output, no API key set)"}
     </p>
   );
 }

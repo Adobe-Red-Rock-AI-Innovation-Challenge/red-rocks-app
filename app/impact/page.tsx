@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ArrowRight, Building2, HeartHandshake, UsersRound } from "lucide-react";
-import { BusinessQuotes } from "@/components/business-quotes";
 import { SeasonGoal } from "@/components/season-goal";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
@@ -104,8 +103,6 @@ export default function ImpactPage() {
           <p className="text-sm text-white/90">per year in the {scenario} scenario below</p>
         </article>
       </section>
-
-      <BusinessQuotes />
 
       <div className="mt-12">
         <SeasonGoal />

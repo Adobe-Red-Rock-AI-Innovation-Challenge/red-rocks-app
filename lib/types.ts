@@ -207,7 +207,7 @@ export type AiChatMessage = {
   text: string;
   athleteIds?: string[];
   files?: AiFile[];
-  source?: "claude" | "demo";
+  source?: "claude" | "demo" | "script";
   link?: { href: string; label: string };
   chips?: string[];
 };

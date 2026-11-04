@@ -132,7 +132,7 @@ function round(value: number) {
 export type AiTask = keyof AiTasks;
 export type AiInput<T extends AiTask> = AiTasks[T]["input"];
 export type AiOutput<T extends AiTask> = AiTasks[T]["output"];
-export type AiSource = "claude" | "demo";
+export type AiSource = "claude" | "demo" | "script";
 
 function words(text: string) {
   return new Set(text.toLowerCase().match(/[a-z]{4,}/g) ?? []);

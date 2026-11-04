@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { quotes } from "@/components/business-quotes";
 
 // A presenter's checklist: one sponsor journey from first question to money, in demo order.
 const steps = [
@@ -93,15 +92,6 @@ export default function PitchPage() {
           </li>
         ))}
       </ol>
-
-      <section className="mt-8 rounded-2xl bg-neutral-50 p-5">
-        <h2 className="text-xl">Business interviews</h2>
-        <p className="mt-1 text-sm">
-          {quotes.length === 0
-            ? "No quotes yet. After each interview, add the owner's own words to data/testimonials.json; they appear on the WRTH money flow page."
-            : `${quotes.length} real quote${quotes.length === 1 ? "" : "s"} on the WRTH money flow page.`}
-        </p>
-      </section>
     </div>
   );
 }

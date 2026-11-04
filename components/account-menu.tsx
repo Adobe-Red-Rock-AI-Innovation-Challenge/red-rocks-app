@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 import { buttonVariants } from "@/components/ui/button";
@@ -13,7 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setDemoState, signOut } from "@/lib/demo-store";
-import { roles } from "@/lib/roles";
+import { roleForPath, roles } from "@/lib/roles";
+import type { DemoNotification, Role } from "@/lib/types";
+
+// A notification belongs to the role whose pages it links to, so each demo role sees only its own.
+function isFor(item: DemoNotification, role: Role) {
+  const owner = roleForPath(item.href.split("?")[0]);
+  return owner === null || owner === role;
+}
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -22,8 +29,11 @@ function initials(name: string) {
 
 export function AccountMenu() {
   const router = useRouter();
+  const pathname = usePathname();
   const { state } = useDemo();
-  const { user, notifications } = state;
+  const { user } = state;
+  const activeRole = roleForPath(pathname) ?? state.role;
+  const notifications = state.notifications.filter((item) => isFor(item, activeRole));
 
   if (!user) {
     return (
@@ -39,7 +49,9 @@ export function AccountMenu() {
   function markAllRead() {
     setDemoState((current) => ({
       ...current,
-      notifications: current.notifications.map((item) => ({ ...item, read: true })),
+      notifications: current.notifications.map((item) =>
+        isFor(item, activeRole) ? { ...item, read: true } : item,
+      ),
     }));
   }
 

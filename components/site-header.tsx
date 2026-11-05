@@ -72,7 +72,7 @@ export function SiteHeader() {
       </div>
 
       <div className="border-b bg-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-0.5 px-4 py-2">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-0.5 px-4 py-2 sm:flex-nowrap">
           <Link href="/" className="flex shrink-0 items-center gap-2.5">
             <Image
               src="/images/brand/utah-gymnastics.png"
@@ -86,7 +86,7 @@ export function SiteHeader() {
           </Link>
           <nav
             aria-label="Main"
-            className="order-last flex w-full min-w-0 gap-5 overflow-x-auto sm:order-none sm:w-auto"
+            className="order-last flex w-full min-w-0 gap-5 overflow-x-auto sm:order-none sm:w-auto sm:flex-1"
           >
             {links.map((link) => (
               <Link
@@ -102,7 +102,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <div className="ml-auto">
+          <div className="ml-auto shrink-0">
             <AccountMenu />
           </div>
         </div>

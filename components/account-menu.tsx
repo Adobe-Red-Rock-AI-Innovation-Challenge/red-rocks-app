@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell, MessageCircle } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setDemoState, signOut } from "@/lib/demo-store";
+import { awaitingReply } from "@/lib/chat";
 import { athletes } from "@/lib/data";
 import { roleForPath, roles } from "@/lib/roles";
 import type { DemoNotification, Role } from "@/lib/types";
@@ -54,6 +55,7 @@ export function AccountMenu() {
   const displayName =
     activeRole === "athlete" && athlete ? athlete.name : ownRole ? user.name : `Demo ${roleLabel}`;
   const subtitle = activeRole === "sponsor" && isBusiness ? user.organization : roleLabel;
+  const waiting = state.conversations.filter((item) => item.athleteId === athlete?.id && awaitingReply(item)).length;
 
   function markAllRead() {
     setDemoState((current) => ({
@@ -66,6 +68,20 @@ export function AccountMenu() {
 
   return (
     <div className="flex items-center gap-2">
+      {activeRole === "athlete" && athlete && (
+        <Link
+          href="/athlete/messages"
+          aria-label={`Fan messages, ${waiting} waiting for a reply`}
+          className="relative flex size-10 items-center justify-center rounded-full bg-neutral-100 text-primary hover:bg-neutral-200"
+        >
+          <MessageCircle className="size-5" />
+          {waiting > 0 && (
+            <span className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              {waiting}
+            </span>
+          )}
+        </Link>
+      )}
       <DropdownMenu onOpenChange={(open) => !open && markAllRead()}>
         <DropdownMenuTrigger
           aria-label={`Notifications, ${unread} unread`}
@@ -96,8 +112,8 @@ export function AccountMenu() {
       </DropdownMenu>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 rounded-full bg-neutral-100 py-1 pr-1 text-left hover:bg-neutral-200 sm:pl-4">
-          <span className="hidden max-w-44 sm:block">
+        <DropdownMenuTrigger className="flex items-center gap-3 rounded-full bg-neutral-100 py-1 pr-1 text-left hover:bg-neutral-200 xl:pl-4">
+          <span className="hidden max-w-44 xl:block">
             <span className="block truncate text-sm font-bold leading-tight">{displayName}</span>
             <span className="block truncate text-xs leading-tight text-muted-foreground">
               {subtitle}

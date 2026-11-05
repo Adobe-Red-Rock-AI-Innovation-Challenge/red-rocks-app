@@ -2,7 +2,7 @@ import type { Role } from "@/lib/types";
 
 export const roles: { id: Role; label: string; home: string }[] = [
   { id: "fan", label: "Fan", home: "/" },
-  { id: "sponsor", label: "Sponsor", home: "/business/assistant" },
+  { id: "sponsor", label: "Sponsor", home: "/business/projects" },
   { id: "athlete", label: "Athlete", home: "/athlete/tasks" },
 ];
 
@@ -24,7 +24,6 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
   athlete: [
     { href: "/athlete/tasks", label: "Tasks" },
     { href: "/athlete/dashboard", label: "Deals" },
-    { href: "/athlete/messages", label: "Messages" },
     { href: "/athlete/opportunities", label: "Opportunities" },
     { href: "/athlete/setup", label: "Profile" },
   ],

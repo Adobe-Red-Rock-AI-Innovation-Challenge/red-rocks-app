@@ -1,40 +1,69 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Building2, HeartHandshake, UsersRound } from "lucide-react";
+import { ArrowRight, Building2, HeartHandshake, Megaphone, UsersRound } from "lucide-react";
 import { SeasonGoal } from "@/components/season-goal";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
+import { plans } from "@/lib/checkout";
+import { ATHLETE_SHARE_PERCENT } from "@/lib/gifts";
 import { SERVICE_FEE_PERCENT, sponsorPackages } from "@/lib/packages";
-import { projectRevenue, scenarios, type RevenueInputs } from "@/lib/revenue";
+import {
+  CLINIC_PRICE,
+  DEFAULT_SCENARIO,
+  PITCHED_CAMPAIGN_PRICE,
+  projectRevenue,
+  scenarios,
+  SIGNED_DROP_PRICE,
+  type RevenueInputs,
+} from "@/lib/revenue";
 import { WRTH_SOURCE, wrthStats } from "@/lib/wrth";
+
+const tiers = Object.values(plans)
+  .map((plan) => `${plan.name.replace("Red Rocks ", "")} $${plan.price}`)
+  .join(", ");
 
 const fields: { key: keyof RevenueInputs; label: string; source: string }[] = [
   { key: "existingDonors", label: "Current WRTH donors", source: `Source: ${WRTH_SOURCE}` },
-  { key: "reachableFans", label: "New fans we can reach", source: "Source: 2025 average crowd, Salt Lake Tribune" },
-  { key: "paidPercent", label: "New fans who join (%)", source: "Assumption" },
-  { key: "monthlyPrice", label: "Average membership ($/month)", source: "Assumption between WRTH's $10 duo and $25 family plans" },
-  { key: "monthsPerYear", label: "Paid months per year", source: "Assumption: the season" },
+  { key: "reachableFans", label: "Season ticket holders we can reach", source: `Source: ${WRTH_SOURCE}` },
+  { key: "paidPercent", label: "Ticket holders who join (%)", source: "Assumption" },
+  { key: "monthlyPrice", label: "Average membership ($/month)", source: `Assumption: average $15/month across tiers (${tiers})` },
+  { key: "monthsPerYear", label: "Paid months per year", source: "Assumption: year-round membership" },
+  { key: "oneTimeSupports", label: "One-time supports per year (Quests, shout-outs)", source: "Assumption" },
+  { key: "oneTimeAverage", label: "Average one-time support ($)", source: "Assumption" },
   { key: "fanSharePercent", label: "Share of fan money to athletes (%)", source: "WRTH promise: 100% of contributions" },
   { key: "spotlights", label: `${sponsorPackages[0].name} deals per year`, source: "Assumption" },
   { key: "meetNights", label: `${sponsorPackages[1].name} deals per year`, source: "Assumption" },
-  { key: "teamPackages", label: `${sponsorPackages[2].name} deals per year`, source: "Assumption" },
+  { key: "anchorPartners", label: `${sponsorPackages[2].name}s per season`, source: "Assumption" },
+  { key: "clinics", label: "Athlete youth clinics per year", source: `Assumption: $${CLINIC_PRICE.toLocaleString("en-US")} each` },
+  { key: "pitchedCampaigns", label: "Athlete-pitched brand campaigns", source: `Assumption: $${PITCHED_CAMPAIGN_PRICE.toLocaleString("en-US")} each` },
+  { key: "signedDrops", label: "Signed drops sold", source: `Assumption: $${SIGNED_DROP_PRICE} each, ${ATHLETE_SHARE_PERCENT}% to the athlete` },
   { key: "serviceFeePercent", label: "Service fee sponsors pay on top (%)", source: "Assumption: runs the hub" },
   { key: "athletes", label: "Athletes on the roster", source: "Source: official Utah roster" },
 ];
 
 const flow = [
   {
-    icon: UsersRound,
-    title: "Fans",
-    lines: ["$10 duo and $25 family memberships", "One-time gifts and Quests", "Athlete gifts and shout-outs"],
-    note: "100% of contributions reach athletes, minus card processing.",
-  },
-  {
     icon: Building2,
     title: "Sponsors",
-    lines: ["NIL deals priced by each athlete's own quote", "Team and meet-night packages", "Tracked offers fans redeem in store"],
-    note: `Athletes keep 100% of the quote. Sponsors add a ${SERVICE_FEE_PERCENT}% service fee that runs the hub.`,
+    lines: [
+      sponsorPackages.map((item) => `${item.name} $${item.price.toLocaleString("en-US")}`).join(" · "),
+      "NIL deals priced by each athlete's own quote",
+      "Tracked offers fans redeem in store",
+    ],
+    note: `Athletes keep 100% of the price. Sponsors add a ${SERVICE_FEE_PERCENT}% service fee that runs the hub.`,
+  },
+  {
+    icon: Megaphone,
+    title: "Athlete campaigns",
+    lines: ["Youth clinics", "Brand campaigns athletes pitch themselves", `Signed drops (${ATHLETE_SHARE_PERCENT}% to the athlete)`],
+    note: "Athletes set their own price. The NIL check runs on every campaign.",
+  },
+  {
+    icon: UsersRound,
+    title: "Fans",
+    lines: [`Memberships: ${tiers} a month`, "One-time Quests and shout-outs", "Athlete gifts"],
+    note: "100% of contributions reach athletes, minus card processing.",
   },
 ];
 
@@ -43,17 +72,17 @@ function money(value: number) {
 }
 
 export default function ImpactPage() {
-  const [scenario, setScenario] = useState("Base");
-  const [inputs, setInputs] = useState<RevenueInputs>(scenarios.Base);
+  const [scenario, setScenario] = useState(DEFAULT_SCENARIO);
+  const [inputs, setInputs] = useState<RevenueInputs>(scenarios[DEFAULT_SCENARIO]);
   const result = projectRevenue(inputs);
 
   const outputs = [
     { label: "NIL dollars to athletes", value: money(result.athleteDollars) },
-    { label: "Per athlete", value: money(result.perAthlete) },
     { label: "From sponsors", value: money(result.sponsorRevenue) },
+    { label: "From athlete campaigns", value: money(result.athleteCampaigns) },
     { label: "From fans", value: money(result.fanRevenue) },
+    { label: "Per athlete", value: money(result.perAthlete) },
     { label: "Paying members", value: result.members.toLocaleString("en-US") },
-    { label: "Service fees for operations", value: money(result.operations) },
   ];
 
   return (
@@ -142,6 +171,10 @@ export default function ImpactPage() {
           </div>
         ))}
       </dl>
+      <p className="mt-3 rounded-lg bg-neutral-50 p-3 text-sm">
+        <span className="font-bold">{money(result.serviceFees)}</span> in {inputs.serviceFeePercent}% service
+        fees sponsors pay on top runs the hub. It is not counted in the NIL dollars above.
+      </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {fields.map((field) => (
@@ -163,12 +196,19 @@ export default function ImpactPage() {
       <section className="mt-10 rounded-lg bg-neutral-50 p-5 text-sm">
         <h2 className="text-2xl">How this is calculated</h2>
         <ul className="mt-3 grid list-disc gap-1 pl-5">
-          <li>Sponsor money = deals × package price. Athletes keep all of it; the service fee is added on top.</li>
-          <li>Fan money = (current donors + new fans × join rate) × monthly price × months. Athletes receive the share you set.</li>
+          <li>Sponsor money = deals × package price. Athletes keep all of it; the service fee is added on top and is not part of the goal.</li>
+          <li>
+            Athlete campaigns = youth clinics × {money(CLINIC_PRICE)} + athlete-pitched campaigns ×{" "}
+            {money(PITCHED_CAMPAIGN_PRICE)} + signed drops × ${SIGNED_DROP_PRICE} × {ATHLETE_SHARE_PERCENT}%.
+          </li>
+          <li>
+            Fan money = (current donors + ticket holders × join rate) × monthly price × months, plus
+            one-time supports × average gift. Athletes receive the share you set.
+          </li>
           <li>
             Package prices: {sponsorPackages.map((item) => `${item.name} ${money(item.price)}`).join(", ")}.
           </li>
-          <li>Card fees and taxes are not modeled. Totals are estimates, not forecasts.</li>
+          <li>Card fees and taxes are not modeled. Totals are planning estimates, not forecasts.</li>
         </ul>
       </section>
     </div>

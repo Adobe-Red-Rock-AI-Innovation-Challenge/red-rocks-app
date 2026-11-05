@@ -19,10 +19,6 @@ export default function SponsorResultsPage() {
   const claims = campaigns.reduce((sum, offer) => sum + offer.claims, 0);
   const redemptions = campaigns.reduce((sum, offer) => sum + offer.redemptions, 0);
   const sales = redemptions * (Number.isNaN(averageSale) ? 0 : averageSale);
-  const sponsors = new Set(campaigns.map((offer) => offer.sponsorName));
-  const repeatSponsors = [...sponsors].filter(
-    (name) => campaigns.filter((offer) => offer.sponsorName === name).length > 1,
-  );
 
   const tiles = [
     { label: "Spend", value: money(spend) },
@@ -30,10 +26,6 @@ export default function SponsorResultsPage() {
     { label: "Redeemed in store", value: redemptions.toLocaleString("en-US") },
     { label: "Cost per redemption", value: redemptions ? money(spend / redemptions) : "—" },
     { label: "Estimated sales", value: money(sales) },
-    {
-      label: "Repeat sponsors",
-      value: sponsors.size ? `${Math.round((repeatSponsors.length / sponsors.size) * 100)}%` : "—",
-    },
   ];
 
   return (
@@ -44,7 +36,7 @@ export default function SponsorResultsPage() {
         on the Redeem page, so you pay only for people who walked in.
       </p>
 
-      <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+      <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
         {tiles.map((tile) => (
           <div key={tile.label} className="rounded-lg border p-4">
             <dd className="font-heading text-3xl font-extrabold text-primary">{tile.value}</dd>

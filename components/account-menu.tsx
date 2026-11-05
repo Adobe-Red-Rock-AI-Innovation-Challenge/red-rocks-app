@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { setDemoState, signOut } from "@/lib/demo-store";
+import { athletes } from "@/lib/data";
 import { roleForPath, roles } from "@/lib/roles";
 import type { DemoNotification, Role } from "@/lib/types";
 
@@ -44,7 +45,15 @@ export function AccountMenu() {
   }
 
   const unread = notifications.filter((item) => !item.read).length;
-  const subtitle = user.organization ?? roles.find((role) => role.id === state.role)?.label;
+  // The chip follows the role being demoed. Business accounts carry an organization, so a business
+  // signed in shows as itself only on sponsor pages, and as the athlete in view or a demo fan elsewhere.
+  const athlete = athletes.find((item) => item.id === state.activeAthleteId);
+  const roleLabel = roles.find((role) => role.id === activeRole)?.label;
+  const isBusiness = Boolean(user.organization);
+  const ownRole = activeRole === "sponsor" ? isBusiness : activeRole === "fan" && !isBusiness;
+  const displayName =
+    activeRole === "athlete" && athlete ? athlete.name : ownRole ? user.name : `Demo ${roleLabel}`;
+  const subtitle = activeRole === "sponsor" && isBusiness ? user.organization : roleLabel;
 
   function markAllRead() {
     setDemoState((current) => ({
@@ -89,13 +98,13 @@ export function AccountMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-3 rounded-full bg-neutral-100 py-1 pr-1 text-left hover:bg-neutral-200 sm:pl-4">
           <span className="hidden max-w-44 sm:block">
-            <span className="block truncate text-sm font-bold leading-tight">{user.name}</span>
+            <span className="block truncate text-sm font-bold leading-tight">{displayName}</span>
             <span className="block truncate text-xs leading-tight text-muted-foreground">
               {subtitle}
             </span>
           </span>
           <span className="flex size-8 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
-            {initials(user.name)}
+            {initials(displayName)}
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-72 p-2">

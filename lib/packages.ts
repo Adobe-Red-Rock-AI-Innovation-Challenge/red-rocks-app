@@ -1,7 +1,8 @@
 export type SponsorPackage = {
-  id: "spotlight" | "meet-night" | "team";
+  id: "spotlight" | "meet-night" | "anchor";
   name: string;
   price: number;
+  priceNote?: string;
   bestFor: string;
   includes: string[];
 };
@@ -14,8 +15,8 @@ export const sponsorPackages: SponsorPackage[] = [
   {
     id: "spotlight",
     name: "Athlete Spotlight",
-    price: 1500,
-    bestFor: "A local business testing NIL for the first time",
+    price: 2500,
+    bestFor: "A small business near campus",
     includes: [
       "One athlete matched by AI",
       "One Reel and one story set",
@@ -25,8 +26,8 @@ export const sponsorPackages: SponsorPackage[] = [
   {
     id: "meet-night",
     name: "Meet Night",
-    price: 5000,
-    bestFor: "A brand that wants one big local moment",
+    price: 7500,
+    bestFor: "A mid-size Utah brand that wants one big local moment",
     includes: [
       "Four athletes promote one meet-week offer",
       "A QR offer for every VIP Pass member",
@@ -34,14 +35,16 @@ export const sponsorPackages: SponsorPackage[] = [
     ],
   },
   {
-    id: "team",
-    name: "Team Package",
-    price: 15000,
+    id: "anchor",
+    name: "Anchor Partner",
+    price: 150000,
+    priceNote: "per season",
     bestFor: "A season partner who wants the whole roster",
     includes: [
       "Every athlete takes part and shares the fee",
       "A season-long tracked member offer",
       "Monthly results reports",
+      "“Presented by” credit on the meet-day Live TikTok",
     ],
   },
 ];

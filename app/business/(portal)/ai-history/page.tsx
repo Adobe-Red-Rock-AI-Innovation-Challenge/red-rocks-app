@@ -23,7 +23,7 @@ export default function AiHistoryPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl sm:text-4xl">AI Assistant</h1>
+          <h1 className="text-3xl sm:text-4xl">AI Assistant — quick ideas</h1>
           <p className="mt-1 text-muted-foreground">Your past conversations and the files they produced.</p>
         </div>
         <div className="flex flex-wrap gap-2">

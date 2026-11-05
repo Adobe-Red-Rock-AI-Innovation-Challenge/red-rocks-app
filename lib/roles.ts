@@ -16,7 +16,7 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
     { href: "/business/projects", label: "Business Hub" },
     { href: "/sponsor/athletes", label: "Athletes" },
     { href: "/sponsor/packages", label: "Packages" },
-    { href: "/sponsor/planner", label: "Planner" },
+    { href: "/sponsor/planner", label: "Campaign Planner" },
     { href: "/sponsor/results", label: "Results" },
     { href: "/sponsor/redeem", label: "Redeem" },
   ],

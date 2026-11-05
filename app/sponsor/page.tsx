@@ -20,7 +20,7 @@ export default function SponsorPage() {
   const { state } = useDemo();
   const [sponsorName, setSponsorName] = useState(sponsors[0].name);
   const [need, setNeed] = useState("");
-  const [budget, setBudget] = useState(1500);
+  const [budget, setBudget] = useState(2500);
   const [matches, setMatches] = useState<AiOutput<"match">["matches"] | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [source, setSource] = useState<Source | null>(null);

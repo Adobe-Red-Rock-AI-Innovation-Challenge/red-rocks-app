@@ -13,6 +13,5 @@ export const wrthFacts = [
   "National broadcasts on FOX, ABC and Disney+ reach about 1M viewers.",
   "WRTH is the first female, sport-specific NIL partner, working only for Utah Gymnastics.",
   "100% of contributions go to the student-athletes, with a team-wide focus on every athlete.",
-  "Fan subscriptions: $10/month for duos and $25/month for families.",
   "The NIL market is projected at $1.67B in year 4.",
 ];

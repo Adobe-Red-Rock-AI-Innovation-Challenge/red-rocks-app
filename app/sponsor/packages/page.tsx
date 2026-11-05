@@ -33,7 +33,7 @@ export default function PackagesPage() {
         title: `${item.name}: ${sponsorName}`,
         deliverables: `${item.includes[0]}. Promote a member-only offer from ${sponsorName}.`,
         price: share,
-        timeline: item.id === "team" ? "Season long, monthly posts" : "Meet week",
+        timeline: item.id === "anchor" ? "Season long, monthly posts" : "Meet week",
         caption: `Meet week with ${sponsorName}! Show your VIP Pass for the deal. #ad`,
       }),
     );
@@ -70,6 +70,7 @@ export default function PackagesPage() {
             <h2 className="text-2xl">{item.name}</h2>
             <p className="mt-1 font-heading text-4xl font-extrabold text-primary">
               ${item.price.toLocaleString("en-US")}
+              {item.priceNote && <span className="text-base text-muted-foreground"> / {item.priceNote}</span>}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">{item.bestFor}</p>
             <ul className="mt-4 grid flex-1 gap-2 text-sm">

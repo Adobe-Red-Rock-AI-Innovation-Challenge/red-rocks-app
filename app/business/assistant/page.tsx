@@ -228,7 +228,7 @@ function Assistant({ search }: { search: string }) {
           <span className="flex size-9 items-center justify-center rounded-full bg-primary">
             <Image src="/images/home/u-hands.png" alt="" width={28} height={28} className="size-7" />
           </span>
-          <span className="font-extrabold">Red Rocks Business Assistant</span>
+          <span className="font-extrabold">AI Assistant — quick ideas</span>
         </div>
         <button
           type="button"

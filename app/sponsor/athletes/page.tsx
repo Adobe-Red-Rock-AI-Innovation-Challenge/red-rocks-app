@@ -70,7 +70,7 @@ export default function SponsorAthletesPage() {
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {athletes.map((athlete) => {
+        {athletes.map((athlete, index) => {
           const from = Math.min(...athlete.rateCard.map((item) => item.price));
           return (
             <article key={athlete.id} className="flex flex-col overflow-hidden rounded-lg border">
@@ -79,6 +79,8 @@ export default function SponsorAthletesPage() {
                 alt=""
                 width={400}
                 height={500}
+                loading="eager"
+                fetchPriority={index < 4 ? "high" : "auto"}
                 className="aspect-[4/5] w-full object-cover object-top"
               />
               <div className="flex flex-1 flex-col p-4">

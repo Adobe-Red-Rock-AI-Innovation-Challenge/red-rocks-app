@@ -26,7 +26,7 @@ export function BusinessSidebar() {
     { href: "/business/profile", label: "Profile", icon: UserRound },
     { href: "/business/requests", label: "Requests", icon: MessagesSquare, count: waiting },
     { href: "/business/projects", label: "Projects", icon: FolderKanban, count: projects },
-    { href: "/business/ai-history", label: "AI Assistant", icon: Bot, count: state.aiChats.length },
+    { href: "/business/ai-history", label: "AI Assistant — quick ideas", icon: Bot, count: state.aiChats.length },
   ];
 
   return (

@@ -161,7 +161,7 @@ export default function CampaignPlannerPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-4xl sm:text-5xl">Campaign planner</h1>
+      <h1 className="text-4xl sm:text-5xl">Campaign Planner — full calendar</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Tell us about your business. AI researches the fit, picks athletes and lays out a full
         campaign calendar you can refine.

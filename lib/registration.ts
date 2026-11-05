@@ -19,7 +19,7 @@ export const registrationForms: Record<PartnerRole, RegistrationField[]> = {
       key: "interest",
       label: "Package you are interested in",
       type: "select",
-      options: ["Athlete Spotlight", "Meet Night", "Team Package", "Not sure yet"],
+      options: ["Athlete Spotlight", "Meet Night", "Anchor Partner", "Not sure yet"],
     },
     { key: "goal", label: "What do you want to promote?", placeholder: "A new menu, a store opening..." },
   ],

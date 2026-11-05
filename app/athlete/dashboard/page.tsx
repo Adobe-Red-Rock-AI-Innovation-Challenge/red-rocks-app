@@ -7,17 +7,12 @@ import { useDemo } from "@/components/demo-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DealSteps } from "@/components/deal-steps";
+import { NilCheckTable } from "@/components/nil-check-table";
 import { athletes } from "@/lib/data";
 import { needsNilGo, sendDealMessage, updateOffer } from "@/lib/deals";
-import { checkOffer, worstStatus, type NilStatus } from "@/lib/nil";
+import { checkOffer, worstStatus } from "@/lib/nil";
 import type { Athlete, Offer } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const statusStyles: Record<NilStatus, { dot: string; label: string }> = {
-  green: { dot: "bg-green-600", label: "Clear" },
-  yellow: { dot: "bg-yellow-500", label: "Review" },
-  red: { dot: "bg-red-700", label: "Blocked" },
-};
 
 // NIL Go has no public API, so the app prepares the facts the athlete types into the portal.
 async function copyNilGoSummary(offer: Offer, athlete: Athlete) {
@@ -158,25 +153,7 @@ function OfferCard({ offer, athlete, offers }: { offer: Offer; athlete: Athlete;
         <DealSteps status={offer.status} />
       </div>
 
-      <table className="mt-4 w-full text-sm">
-        <caption className="mb-1 flex items-center gap-2 text-left font-semibold">
-          NIL check: {statusStyles[overall].label}
-        </caption>
-        <tbody>
-          {checks.map((check) => (
-            <tr key={check.label} className="border-t">
-              <td className="py-1.5 pr-3 whitespace-nowrap">
-                <span className="flex items-center gap-2">
-                  <span className={cn("size-2.5 rounded-full", statusStyles[check.status].dot)} />
-                  {statusStyles[check.status].label}
-                </span>
-              </td>
-              <td className="py-1.5 pr-3 font-semibold">{check.label}</td>
-              <td className="py-1.5 text-muted-foreground">{check.detail}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <NilCheckTable checks={checks} className="mt-4" />
 
       <DealThread offer={offer} />
 

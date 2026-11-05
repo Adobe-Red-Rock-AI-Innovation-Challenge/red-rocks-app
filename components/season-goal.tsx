@@ -1,6 +1,7 @@
 "use client";
 
 import { useDemo } from "@/components/demo-provider";
+import { athleteCampaignDollars } from "@/lib/athlete-campaigns";
 import { plans } from "@/lib/checkout";
 import { isLive } from "@/lib/deals";
 import { DEFAULT_SCENARIO, NIL_GOAL, QUARTER_MILESTONES, scenarios } from "@/lib/revenue";
@@ -22,8 +23,17 @@ export function SeasonGoal() {
     (state.membership ? plans[state.membership].price : 0) +
     state.giftDollars +
     Object.values(state.questContributions).reduce((sum, amount) => sum + amount, 0);
-  const giftShares = state.sales.reduce((sum, sale) => sum + sale.athleteShare, 0);
-  const raised = Math.round(sponsorDollars + fanPayments * FAN_SHARE + giftShares);
+  // Signed drops are sales too, but they count once, under athlete campaigns.
+  const giftShares = state.sales
+    .filter((sale) => !sale.productId.startsWith("drop:"))
+    .reduce((sum, sale) => sum + sale.athleteShare, 0);
+  const campaignDollars = athleteCampaignDollars(state);
+  const raised = Math.round(sponsorDollars + campaignDollars + fanPayments * FAN_SHARE + giftShares);
+  const streams = [
+    { label: "Sponsors", value: sponsorDollars },
+    { label: "Athlete campaigns", value: campaignDollars },
+    { label: "Fans and gifts", value: fanPayments * FAN_SHARE + giftShares },
+  ];
   const percent = Math.min(100, (raised / NIL_GOAL) * 100);
   const liveCampaigns = state.offers.filter(isLive).length;
 
@@ -56,8 +66,17 @@ export function SeasonGoal() {
           </li>
         ))}
       </ol>
+      <dl className="mt-3 grid grid-cols-3 gap-2 text-sm">
+        {streams.map((stream) => (
+          <div key={stream.label}>
+            <dt className="text-xs text-muted-foreground">{stream.label}</dt>
+            <dd className="font-bold">${Math.round(stream.value).toLocaleString("en-US")}</dd>
+          </div>
+        ))}
+      </dl>
       <p className="mt-2 text-xs text-muted-foreground">
-        Counts paid sponsor deals, the athletes&apos; share of fan payments and gift sales. Goal and quarterly
+        Counts paid sponsor deals, booked athlete clinics and signed drops, the athletes&apos; share of fan
+        payments and gift sales. Goal and quarterly
         milestones come from the $2M Plan revenue model. Demo counter: it starts from sample deals and grows with each payment
         in this browser.
       </p>

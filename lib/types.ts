@@ -103,6 +103,8 @@ export type Sale = {
   athleteShare: number;
   createdAt: string;
   done?: boolean;
+  // Set for athlete-made items such as a signed drop, which are not in the gift catalog.
+  title?: string;
 };
 
 export type ChatMessage = { id: string; from: "fan" | "athlete"; text: string; createdAt: string };
@@ -113,6 +115,25 @@ export type Conversation = {
   fanName: string;
   messages: ChatMessage[];
   blocked?: boolean;
+  // The fan's membership when they last wrote; Inner Circle members are answered first.
+  tier?: Membership;
+  sample?: boolean;
+};
+
+export type AthleteCampaignKind = "clinic" | "drop";
+
+// Campaigns an athlete creates and prices themselves: a youth clinic clubs and sponsors book,
+// or a signed drop fans buy on /gifts.
+export type AthleteCampaign = {
+  id: string;
+  athleteId: string;
+  kind: AthleteCampaignKind;
+  title: string;
+  pitch: string;
+  createdAt: string;
+  clinic?: { date: string; seats: number; pricePerSeat: number; bookedBy?: string };
+  drop?: { item: string; quantity: number; price: number; sold: number };
+  sample?: boolean;
 };
 
 export type PlanItem = { start: number; end: number; text: string };
@@ -258,6 +279,7 @@ export type DemoState = {
   fanCodes: Record<string, string>;
   sales: Sale[];
   conversations: Conversation[];
+  athleteCampaigns: AthleteCampaign[];
   campaigns: SavedCampaign[];
   aiChats: AiChat[];
   businessProfile: BusinessProfile | null;

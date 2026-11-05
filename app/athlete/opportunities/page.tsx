@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AthletePicker } from "@/components/athlete-picker";
 import { useDemo } from "@/components/demo-provider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { clinicTotal } from "@/lib/athlete-campaigns";
 import { athletes } from "@/lib/data";
 import { notification, setDemoState } from "@/lib/demo-store";
 import type { SponsorRequest } from "@/lib/types";
@@ -71,15 +74,50 @@ export default function OpportunitiesPage() {
   const { state } = useDemo();
   const athlete = athletes.find((item) => item.id === state.activeAthleteId) ?? athletes[0];
   const open = state.requests.filter((request) => request.status === "open");
+  const mine = state.athleteCampaigns.filter((campaign) => campaign.athleteId === athlete.id);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12">
-      <h1 className="text-4xl sm:text-5xl">Opportunities</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-4xl sm:text-5xl">Opportunities</h1>
+        <Link href="/athlete/campaigns/new" className={buttonVariants({ size: "lg", className: "px-4" })}>
+          <Plus className="size-4" /> Create campaign
+        </Link>
+      </div>
       <p className="mt-2 mb-6 text-muted-foreground">
-        Sponsors posted these. Raise your hand if you&apos;re free and interested.
+        Sponsors posted these. Raise your hand if you&apos;re free and interested, or create your own
+        campaign.
       </p>
       <AthletePicker />
-      <div className="mt-6 grid gap-4">
+
+      <h2 className="mt-8 text-2xl">Your campaigns</h2>
+      <div className="mt-3 grid gap-3">
+        {mine.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            None yet. Create a youth clinic or a signed drop and set your own price.
+          </p>
+        )}
+        {mine.map((campaign) => (
+          <article key={campaign.id} className="rounded-lg border p-4">
+            <p className="text-xs font-semibold text-primary">
+              {campaign.kind === "clinic" ? "Youth clinic" : "Signed drop"}
+              {campaign.sample && " · Sample"}
+            </p>
+            <h3 className="text-xl">{campaign.title}</h3>
+            <p className="mt-1 text-sm">{campaign.pitch}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {campaign.clinic
+                ? `${campaign.clinic.date} · ${campaign.clinic.seats} spots × $${campaign.clinic.pricePerSeat} = $${clinicTotal(campaign).toLocaleString("en-US")} · ${campaign.clinic.bookedBy ? `Booked by ${campaign.clinic.bookedBy}` : "Open for clubs and sponsors"}`
+                : campaign.drop
+                  ? `$${campaign.drop.price} each · ${campaign.drop.sold} of ${campaign.drop.quantity} sold · Live on Gifts`
+                  : null}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <h2 className="mt-8 text-2xl">From sponsors</h2>
+      <div className="mt-3 grid gap-4">
         {open.length === 0 && <p className="text-sm text-muted-foreground">No open requests.</p>}
         {open.map((request) => (
           <RequestCard key={request.id} request={request} athleteId={athlete.id} />

@@ -92,7 +92,7 @@ function tasksFor(state: DemoState, athleteId: string): Task[] {
     .filter((sale) => sale.athleteId === athleteId)
     .map((sale) => {
       const product = findProduct(sale.productId);
-      const title = productTodo[sale.productId] ?? product?.name ?? "Fan order";
+      const title = sale.title ?? productTodo[sale.productId] ?? product?.name ?? "Fan order";
       return {
         id: sale.id,
         source: "Fan",

@@ -134,6 +134,10 @@ const tasks: Record<AiTask, { system: string; schema: Record<string, unknown> }>
       "Draft a short, warm reply (under 50 words) from a college gymnast to a fan's message. Stay positive and general. Never share personal details, schedules, locations or contact information, and never make promises.",
     schema: textResult,
   },
+  pitch: {
+    system: `Write a short public pitch (under 60 words) for a campaign a college gymnast runs on their own: a youth clinic that gym clubs and sponsors book, or a signed drop fans buy. Use only this athlete's roster facts and the details given; never invent stats, schedules or personal stories. Never tie anything to performance or results, never mention school logos or uniforms, and end with #ad. Roster: ${roster}`,
+    schema: textResult,
+  },
   polish: {
     system:
       "Polish a fan's short note to a college gymnast. Keep their meaning and voice, fix errors, stay under 60 words, and add no invented facts.",

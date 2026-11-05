@@ -4,6 +4,7 @@ import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { ChatThread } from "@/components/chat-thread";
 import { useDemo } from "@/components/demo-provider";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { VipCard } from "@/components/vip-card";
@@ -50,7 +51,8 @@ export default function FanDashboardPage() {
   const { state } = useDemo();
   const { fan, membership } = state;
   const campaigns = state.offers.filter((offer) => isLive(offer) && offer.status !== "reported");
-  const myChats = fan ? state.conversations.filter((chat) => chat.fanName === fan.name) : [];
+  // The fan's own conversations, plus the sample so the demo shows a reply right away.
+  const myChats = state.conversations.filter((chat) => chat.sample || chat.fanName === fan?.name);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -84,21 +86,28 @@ export default function FanDashboardPage() {
             )}
             {myChats.map((chat) => {
               const athlete = athletes.find((item) => item.id === chat.athleteId);
-              const last = chat.messages.at(-1);
+              const replied = chat.messages.at(-1)?.from === "athlete";
               return (
-                <Link
-                  key={chat.id}
-                  href={`/athletes/${chat.athleteId}`}
-                  className="rounded-lg border p-3 hover:border-primary"
-                >
-                  <p className="font-semibold">
-                    {athlete?.name}
-                    {last?.from === "athlete" && (
-                      <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[11px] text-white">Replied</span>
+                <article key={chat.id} aria-label={`Messages with ${athlete?.name}`} className="rounded-lg border p-3">
+                  <p className="flex flex-wrap items-center gap-2 font-semibold">
+                    <Link href={`/athletes/${chat.athleteId}`} className="hover:text-primary">
+                      {athlete?.name}
+                    </Link>
+                    {replied && <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] text-white">Replied</span>}
+                    {chat.sample && (
+                      <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-muted-foreground">
+                        Sample conversation
+                      </span>
                     )}
                   </p>
-                  <p className="line-clamp-1 text-sm text-muted-foreground">{last?.text}</p>
-                </Link>
+                  <div className="mt-2 max-h-56 overflow-y-auto">
+                    <ChatThread
+                      messages={chat.messages}
+                      mine="fan"
+                      names={{ fan: chat.sample ? chat.fanName : "You", athlete: athlete?.name ?? "Athlete" }}
+                    />
+                  </div>
+                </article>
               );
             })}
           </div>

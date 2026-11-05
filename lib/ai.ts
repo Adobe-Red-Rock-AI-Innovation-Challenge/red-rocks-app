@@ -27,6 +27,10 @@ export type AiTasks = {
   plan: { input: PlanInput; output: CampaignPlan };
   refine: { input: { plan: CampaignPlan; instruction: string }; output: CampaignPlan };
   reply: { input: { athleteName: string; fanName: string; message: string }; output: { text: string } };
+  pitch: {
+    input: { athleteId: string; kind: "clinic" | "drop"; details: string };
+    output: { text: string };
+  };
   assistant: {
     input: { mode: AssistantMode; messages: { role: "user" | "assistant"; text: string }[] };
     output: { reply: string; athleteIds: string[]; files: { name: string; content: string }[] };
@@ -440,4 +444,15 @@ Ask me about any athlete, or tell me what you want to promote. ${RATE_RULE}`,
       /\?/.test(message) ? ". Great question: keep practicing the basics and have fun with it" : ""
     }. See you at the next meet! – ${athleteName.split(" ")[0]}`,
   }),
+
+  pitch: ({ athleteId, kind, details }) => {
+    const athlete = athletes.find((item) => item.id === athleteId) ?? athletes[0];
+    const who = `${athlete.name}${athlete.event !== "Red Rocks gymnast" ? `, Red Rocks ${athlete.event.toLowerCase()}` : " of the Red Rocks"}`;
+    return {
+      text:
+        kind === "clinic"
+          ? `${who}, leads a youth clinic for young gymnasts: warm-ups, skill drills and a Q&A about training as a college athlete. ${details} #ad`
+          : `${who}, signs a limited drop for fans who cheer from the stands or from home. ${details} #ad`,
+    };
+  },
 };

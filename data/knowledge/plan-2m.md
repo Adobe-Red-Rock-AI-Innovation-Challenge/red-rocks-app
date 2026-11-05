@@ -21,3 +21,6 @@ Goal: $2,000,000 a year in NIL dollars paid to Red Rocks athletes. All figures b
 
 ## Quarterly milestones
 Q1 $250K → Q2 $750K → Q3 $1.5M → Q4 $2M (cumulative).
+
+## Fan engagement features
+- Member ↔ athlete DMs are live: members only, AI drafts, athlete approves.

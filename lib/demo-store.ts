@@ -3,7 +3,7 @@ import { athleteShare, findProduct } from "@/lib/gifts";
 import { athletes, quests } from "@/lib/data";
 import type { DemoNotification, DemoState, DemoUser, Purchase, Role } from "@/lib/types";
 
-const STORAGE_KEY = "red-rocks-demo-v4";
+const STORAGE_KEY = "red-rocks-demo-v5";
 
 export const initialState: DemoState = {
   role: "fan",
@@ -20,6 +20,7 @@ export const initialState: DemoState = {
       id: "seed-chat-avery",
       athleteId: "avery-neff",
       fanName: "Maya (age 11)",
+      tier: "family",
       messages: [
         {
           id: "seed-chat-avery-1",
@@ -28,6 +29,51 @@ export const initialState: DemoState = {
           createdAt: "2026-10-30T18:00:00.000Z",
         },
       ],
+    },
+    // A sample that already has a reply, so the demo shows the whole loop at once.
+    {
+      id: "seed-chat-sage",
+      athleteId: "sage-curtis",
+      fanName: "Demo Fan",
+      tier: "inner",
+      sample: true,
+      messages: [
+        {
+          id: "seed-chat-sage-1",
+          from: "fan",
+          text: "Our whole family loved watching from the stands this season. Good luck the rest of the way!",
+          createdAt: "2026-11-01T18:00:00.000Z",
+        },
+        {
+          id: "seed-chat-sage-2",
+          from: "athlete",
+          text: "Thank you so much! Hearing fans like your family in the Huntsman Center means a lot to all of us. See you at the next meet!",
+          createdAt: "2026-11-01T21:00:00.000Z",
+        },
+      ],
+    },
+  ],
+  athleteCampaigns: [
+    {
+      id: "seed-campaign-clinic",
+      athleteId: "bailey-stroud",
+      kind: "clinic",
+      title: "Bars basics youth clinic",
+      pitch:
+        "Bailey Stroud, a Red Rocks bars specialist, runs a two-hour clinic for young gymnasts: warm-ups, bar drills and a Q&A about training as a college athlete. #ad",
+      createdAt: "2026-11-02T16:00:00.000Z",
+      clinic: { date: "2026-12-13", seats: 20, pricePerSeat: 250 },
+      sample: true,
+    },
+    {
+      id: "seed-campaign-drop",
+      athleteId: "avery-neff",
+      kind: "drop",
+      title: "Signed photo card",
+      pitch: "A signed Avery Neff photo card for fans who cheer from the stands or from home. #ad",
+      createdAt: "2026-11-02T16:00:00.000Z",
+      drop: { item: "Signed photo card", quantity: 200, price: 35, sold: 0 },
+      sample: true,
     },
   ],
   campaigns: [],

@@ -1,19 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { MessageCircle } from "lucide-react";
+import { Lock, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { ChatThread } from "@/components/chat-thread";
 import { useDemo } from "@/components/demo-provider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { MAX_MESSAGE_LENGTH, messageProblem, sendFanMessage } from "@/lib/chat";
 import { setDemoState } from "@/lib/demo-store";
 import type { Athlete } from "@/lib/types";
 
-// Fans need only a first name to write; nothing else about them is collected here.
+// Messaging athletes is a member perk. Members need only a first name to write; nothing else is collected here.
 export function AthleteChat({ athlete }: { athlete: Athlete }) {
   const { state } = useDemo();
+  const { membership } = state;
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const fanName = state.fan?.name;
@@ -24,6 +26,7 @@ export function AthleteChat({ athlete }: { athlete: Athlete }) {
 
   function send(event: FormEvent) {
     event.preventDefault();
+    if (!membership) return;
     const problem = messageProblem(text);
     if (problem) {
       toast.error(problem);
@@ -38,7 +41,7 @@ export function AthleteChat({ athlete }: { athlete: Athlete }) {
       }
       setDemoState((current) => ({ ...current, fan: { name: sender as string, email: "" } }));
     }
-    sendFanMessage(athlete.id, sender, text);
+    sendFanMessage(athlete.id, sender, text, membership);
     setText("");
     toast.success(`Sent to ${first}`);
   }
@@ -62,26 +65,36 @@ export function AthleteChat({ athlete }: { athlete: Athlete }) {
               />
             </div>
           )}
-          <form onSubmit={send} className="mt-3 grid gap-2">
-            {!fanName && (
-              <Input
-                aria-label="Your first name"
-                placeholder="Your first name"
-                value={name}
-                maxLength={40}
-                onChange={(event) => setName(event.target.value)}
+          {!membership ? (
+            <div className="mt-3 rounded-xl bg-neutral-50 p-4 text-center">
+              <Lock className="mx-auto size-5 text-primary" />
+              <p className="mt-2 text-sm font-semibold">Members can message athletes — Join from $10/month</p>
+              <Link href="/fan/join" className={buttonVariants({ className: "mt-3 px-4" })}>
+                Join to message {first}
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={send} className="mt-3 grid gap-2">
+              {!fanName && (
+                <Input
+                  aria-label="Your first name"
+                  placeholder="Your first name"
+                  value={name}
+                  maxLength={40}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              )}
+              <Textarea
+                aria-label={`Message to ${first}`}
+                className="min-h-16"
+                placeholder={`Cheer ${first} on or ask a question`}
+                value={text}
+                maxLength={MAX_MESSAGE_LENGTH}
+                onChange={(event) => setText(event.target.value)}
               />
-            )}
-            <Textarea
-              aria-label={`Message to ${first}`}
-              className="min-h-16"
-              placeholder={`Cheer ${first} on or ask a question`}
-              value={text}
-              maxLength={MAX_MESSAGE_LENGTH}
-              onChange={(event) => setText(event.target.value)}
-            />
-            <Button type="submit">Send</Button>
-          </form>
+              <Button type="submit">Send</Button>
+            </form>
+          )}
           <p className="mt-2 text-[11px] text-muted-foreground">
             Be kind. No links, handles or contact details. Red Rocks staff can see messages, and
             athletes can turn them off.

@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ExternalLink, Gift, Package, Video } from "lucide-react";
+import { ExternalLink, Gift, Package, PenLine, Video } from "lucide-react";
+import { toast } from "sonner";
 import { useCheckout } from "@/components/checkout";
 import { useDemo } from "@/components/demo-provider";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { buyDrop } from "@/lib/athlete-campaigns";
 import { athletes, quests } from "@/lib/data";
 import { ATHLETE_SHARE_PERCENT, giftProducts, SCHOOL_GIVING_URL } from "@/lib/gifts";
 import { cn } from "@/lib/utils";
@@ -18,6 +20,7 @@ export default function GiftsPage() {
   const { pay, busy, dialog } = useCheckout();
   const [athleteId, setAthleteId] = useState(athletes[0].id);
   const athlete = athletes.find((item) => item.id === athleteId) ?? athletes[0];
+  const drops = state.athleteCampaigns.filter((campaign) => campaign.drop && campaign.athleteId === athlete.id);
 
   return (
     <div className="mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1fr)] gap-14 px-4 py-12">
@@ -127,10 +130,37 @@ export default function GiftsPage() {
               </article>
             );
           })}
+          {drops.map((campaign) => {
+            const drop = campaign.drop!;
+            const soldOut = drop.sold >= drop.quantity;
+            return (
+              <article key={campaign.id} className="flex flex-col rounded-2xl border border-primary p-5">
+                <PenLine className="size-8 rounded-full bg-red-50 p-1.5 text-primary" />
+                <p className="mt-3 text-xs font-semibold text-primary uppercase">Signed drop{campaign.sample && " · Sample"}</p>
+                <h3 className="text-xl">{drop.item}</h3>
+                <p className="text-sm text-muted-foreground">from {athlete.name}</p>
+                <p className="mt-2 flex-1 text-sm">{campaign.pitch}</p>
+                <p className="mt-3 text-2xl font-bold text-primary">${drop.price}</p>
+                <p className="text-xs text-muted-foreground">
+                  {ATHLETE_SHARE_PERCENT}% goes to the athlete · {drop.quantity - drop.sold} of {drop.quantity} left
+                </p>
+                <Button
+                  className="mt-3"
+                  disabled={soldOut}
+                  onClick={() => {
+                    buyDrop(campaign.id);
+                    toast.success(`Order placed. ${athlete.name.split(" ")[0]} will sign and send it.`);
+                  }}
+                >
+                  {soldOut ? "Sold out" : "Buy"}
+                </Button>
+              </article>
+            );
+          })}
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
           Payouts to athletes run through Stripe Connect, which pays each athlete&apos;s own
-          account and handles their tax forms. In this demo the payout is simulated. Gifts of
+          account and handles their tax forms. In this demo the payout is simulated, and signed drops are demo orders with no card charged. Gifts of
           $600 or more from one buyer may need NIL Go reporting.
         </p>
       </section>

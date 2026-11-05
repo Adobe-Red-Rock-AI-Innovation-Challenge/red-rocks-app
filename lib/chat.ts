@@ -1,15 +1,18 @@
 import { notification, setDemoState } from "@/lib/demo-store";
-import type { Conversation } from "@/lib/types";
+import { athletes } from "@/lib/data";
+import type { Conversation, Membership } from "@/lib/types";
 
 export const MAX_MESSAGE_LENGTH = 400;
 
 // Fans write to student-athletes, so contact details and links never go through.
-const CONTACT = /(@[a-z0-9_.]{2,}|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|https?:\/\/|www\.|\b\d{3}[\s.-]?\d{3}[\s.-]?\d{4}\b|snap(chat)?|whats ?app|telegram|venmo|cash ?app)/i;
+const CONTACT =
+  /(@[a-z0-9_.]{2,}|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|https?:\/\/|www\.|\b\d{3}[\s.-]?\d{3}[\s.-]?\d{4}\b|snap(chat)?|whats ?app|telegram|venmo|cash ?app)/i;
 
 export function messageProblem(text: string) {
   const clean = text.trim();
   if (!clean) return "Write a message first.";
-  if (clean.length > MAX_MESSAGE_LENGTH) return `Keep it under ${MAX_MESSAGE_LENGTH} characters.`;
+  if (clean.length > MAX_MESSAGE_LENGTH)
+    return `Keep it under ${MAX_MESSAGE_LENGTH} characters.`;
   if (CONTACT.test(clean)) {
     return "For everyone's safety, messages can't include links, handles, emails or phone numbers.";
   }
@@ -17,10 +20,21 @@ export function messageProblem(text: string) {
 }
 
 function message(from: "fan" | "athlete", text: string) {
-  return { id: crypto.randomUUID(), from, text: text.trim(), createdAt: new Date().toISOString() };
+  return {
+    id: crypto.randomUUID(),
+    from,
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
+  };
 }
 
-export function sendFanMessage(athleteId: string, fanName: string, text: string) {
+// Messaging is a member perk, so the fan's tier travels with each conversation.
+export function sendFanMessage(
+  athleteId: string,
+  fanName: string,
+  text: string,
+  tier: Membership,
+) {
   setDemoState((state) => {
     const existing = state.conversations.find(
       (item) => item.athleteId === athleteId && item.fanName === fanName,
@@ -28,10 +42,22 @@ export function sendFanMessage(athleteId: string, fanName: string, text: string)
     if (existing?.blocked) return state;
     const conversations: Conversation[] = existing
       ? state.conversations.map((item) =>
-          item.id === existing.id ? { ...item, messages: [...item.messages, message("fan", text)] } : item,
+          item.id === existing.id
+            ? {
+                ...item,
+                tier,
+                messages: [...item.messages, message("fan", text)],
+              }
+            : item,
         )
       : [
-          { id: crypto.randomUUID(), athleteId, fanName, messages: [message("fan", text)] },
+          {
+            id: crypto.randomUUID(),
+            athleteId,
+            fanName,
+            tier,
+            messages: [message("fan", text)],
+          },
           ...state.conversations,
         ];
     return {
@@ -46,13 +72,24 @@ export function sendFanMessage(athleteId: string, fanName: string, text: string)
 }
 
 export function sendAthleteReply(conversationId: string, text: string) {
-  setDemoState((state) => ({
-    ...state,
-    conversations: state.conversations.map((item) =>
-      item.id === conversationId ? { ...item, messages: [...item.messages, message("athlete", text)] } : item,
-    ),
-    notifications: [notification("An athlete replied to you", "/fan/dashboard"), ...state.notifications],
-  }));
+  setDemoState((state) => {
+    const chat = state.conversations.find((item) => item.id === conversationId);
+    const name =
+      athletes.find((item) => item.id === chat?.athleteId)?.name ??
+      "An athlete";
+    return {
+      ...state,
+      conversations: state.conversations.map((item) =>
+        item.id === conversationId
+          ? { ...item, messages: [...item.messages, message("athlete", text)] }
+          : item,
+      ),
+      notifications: [
+        notification(`${name} replied to your message`, "/fan/dashboard"),
+        ...state.notifications,
+      ],
+    };
+  });
 }
 
 export function setBlocked(conversationId: string, blocked: boolean) {

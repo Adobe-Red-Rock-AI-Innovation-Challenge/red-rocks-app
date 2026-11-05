@@ -4,8 +4,9 @@ Goal: $2,000,000 a year in NIL dollars paid to Red Rocks athletes. All figures b
 
 ## Three money streams
 - Sponsors, $900K: 4 Anchor Partners × $150,000 + 20 Meet Night × $7,500 + 60 Athlete Spotlight × $2,500.
-- Athlete campaigns, $400K: 20 youth clinics × $5,000 + 30 athlete-pitched brand campaigns × $5,000 + 6,000 signed drops × $35 × 70% to the athlete.
-- Fans, $700K: about 3,000 members (450 current WRTH donors + 26.1% of 9,800 season ticket holders = 3,008) × $15 a month average × 12 months ≈ $541K, plus 8,000 one-time supports (Quests, shout-outs) × $20 = $160K.
+- Athlete campaigns, about $402K: 20 youth clinics × $5,000 + 30 athlete-pitched brand campaigns × $5,000 + 6,200 signed drops × $35 × 70% to the athlete ($151,900).
+- Fans, about $701K: about 3,000 members (450 current WRTH donors + 26.1% of 9,800 season ticket holders = 3,008) × $15 a month average × 12 months ≈ $541K, plus 8,000 one-time supports (Quests, shout-outs) × $20 = $160K.
+- Total: $2,003,340 a year to athletes (sponsors $900,000 + athlete campaigns $401,900 + fans $701,440).
 
 ## Sponsor packages
 - Athlete Spotlight: $2,500. For a small business near campus. One AI-matched athlete, one Reel and one story set, a tracked offer code.

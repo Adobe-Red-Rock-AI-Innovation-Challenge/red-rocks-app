@@ -74,7 +74,7 @@ export const scenarios: Record<string, RevenueInputs> = {
     anchorPartners: 4,
     clinics: 20,
     pitchedCampaigns: 30,
-    signedDrops: 6000,
+    signedDrops: 6200,
   },
 };
 

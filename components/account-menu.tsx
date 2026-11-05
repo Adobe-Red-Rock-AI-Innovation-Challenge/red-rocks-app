@@ -129,6 +129,9 @@ export function AccountMenu() {
             <p className="truncate text-sm text-muted-foreground">{user.email}</p>
           </div>
           <DropdownMenuSeparator />
+          {activeRole === "athlete" && (
+            <DropdownMenuItem onClick={() => router.push("/athlete/setup")}>Athlete profile</DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => router.push("/settings")}>Settings</DropdownMenuItem>
           {user.isAdmin && (
             <DropdownMenuItem onClick={() => router.push("/admin")}>Team access</DropdownMenuItem>

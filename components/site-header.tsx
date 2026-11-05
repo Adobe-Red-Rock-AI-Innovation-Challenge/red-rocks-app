@@ -17,9 +17,9 @@ export function SiteHeader() {
   const activeRole = roleForPath(pathname) ?? state.role;
   const links = [
     ...navByRole[activeRole],
-    { href: "/gifts", label: "Gifts" },
-    // The revenue model is business detail, so fans see their own money story on Join and My Pass instead.
-    ...(activeRole === "fan" ? [] : [{ href: "/impact", label: "Impact" }]),
+    // Gifts are for fans; the revenue model is business detail, so fans see their money story on
+    // Join and My Pass instead.
+    ...(activeRole === "fan" ? [{ href: "/gifts", label: "Gifts" }] : [{ href: "/impact", label: "Impact" }]),
   ];
 
   function handleReset() {

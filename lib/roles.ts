@@ -16,16 +16,13 @@ export const navByRole: Record<Role, { href: string; label: string }[]> = {
     { href: "/business/projects", label: "Business Hub" },
     { href: "/sponsor/athletes", label: "Athletes" },
     { href: "/sponsor/packages", label: "Packages" },
-    { href: "/sponsor/opportunities", label: "Opportunities" },
     { href: "/sponsor/planner", label: "Campaign Planner" },
     { href: "/sponsor/results", label: "Results" },
-    { href: "/sponsor/redeem", label: "Redeem" },
   ],
   athlete: [
     { href: "/athlete/tasks", label: "Tasks" },
     { href: "/athlete/dashboard", label: "Deals" },
     { href: "/athlete/opportunities", label: "Opportunities" },
-    { href: "/athlete/setup", label: "Profile" },
   ],
 };
 

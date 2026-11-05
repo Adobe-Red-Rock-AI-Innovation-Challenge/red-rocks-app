@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useDemo } from "@/components/demo-provider";
+import { RedeemForm } from "@/components/redeem-form";
 import { Field, Input } from "@/components/ui/input";
 import { athletes } from "@/lib/data";
 import { isLive } from "@/lib/deals";
@@ -33,8 +35,21 @@ export default function SponsorResultsPage() {
       <h1 className="text-4xl sm:text-5xl">Results</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Fans claim a personal code on their VIP Pass. It counts as redeemed when your staff enter it
-        on the Redeem page, so you pay only for people who walked in.
+        in the box below, so you pay only for people who walked in.
       </p>
+
+      <section aria-label="Redeem a fan code" className="mt-6 rounded-2xl border p-4">
+        <h2 className="text-xl">Redeem a fan code</h2>
+        <p className="mt-1 mb-3 text-sm text-muted-foreground">
+          When a fan shows their VIP Pass in store, enter the code here. Each code counts once in the
+          numbers below. Counter staff can open{" "}
+          <Link href="/sponsor/redeem" className="underline">
+            the Redeem page
+          </Link>{" "}
+          on a phone.
+        </p>
+        <RedeemForm compact />
+      </section>
 
       <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
         {tiles.map((tile) => (

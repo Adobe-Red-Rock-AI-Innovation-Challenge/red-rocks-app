@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
+import { AthleteClinics } from "@/components/athlete-clinics";
 import { useDemo } from "@/components/demo-provider";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { athletes } from "@/lib/data";
@@ -92,6 +93,15 @@ export default function PackagesPage() {
           </section>
         ))}
       </div>
+
+      <section aria-label="Book an athlete clinic" className="mt-12">
+        <h2 className="text-3xl">Book an athlete clinic</h2>
+        <p className="mt-1 mb-5 max-w-2xl text-muted-foreground">
+          Or back one athlete directly: youth clinics Red Rocks athletes pitched and priced
+          themselves, for your gym club, your customers or your team.
+        </p>
+        <AthleteClinics />
+      </section>
 
       <p className="mt-6 text-sm text-muted-foreground">
         Athletes receive 100% of every package. A {SERVICE_FEE_PERCENT}% service fee is added on

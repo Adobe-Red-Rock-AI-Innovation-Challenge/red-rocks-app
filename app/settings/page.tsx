@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { useDemo } from "@/components/demo-provider";
@@ -46,6 +47,12 @@ export default function SettingsPage() {
           <Button type="submit" size="lg">
             Save changes
           </Button>
+          {state.role === "athlete" && (
+            <Link href="/athlete/setup" className="rounded-xl border p-4 text-sm hover:border-primary">
+              <span className="block font-semibold">Athlete profile</span>
+              <span className="text-muted-foreground">Your bio, tags and rate card, with AI help.</span>
+            </Link>
+          )}
         </form>
       ) : (
         <SignInPrompt next="/settings" message="Sign in to change your account." />

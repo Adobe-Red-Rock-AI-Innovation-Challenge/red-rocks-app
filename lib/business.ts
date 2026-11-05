@@ -53,11 +53,40 @@ export function requestRate(sponsorName: string, athleteId: string, context: str
   return offer.id;
 }
 
-export function downloadFile(file: AiFile) {
-  const url = URL.createObjectURL(new Blob([file.content], { type: "text/markdown" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = file.name.endsWith(".md") ? file.name : `${file.name}.md`;
-  link.click();
-  URL.revokeObjectURL(url);
+// The built-in PDF fonts cover Latin-1 and common punctuation, so anything else is swapped for ASCII.
+function pdfText(text: string) {
+  return text
+    .replace(/\*\*|__|`/g, "")
+    .replace(/→/g, "->")
+    .replace(/[^\x20-\x7E\xA0-\xFF“”‘’–—•…\n]/g, "");
+}
+
+// AI files are written in Markdown; the business downloads them as a simple PDF.
+export async function downloadFile(file: AiFile) {
+  const { jsPDF } = await import("jspdf");
+  const pdf = new jsPDF({ unit: "pt", format: "letter" });
+  const margin = 56;
+  const width = pdf.internal.pageSize.getWidth() - margin * 2;
+  const bottom = pdf.internal.pageSize.getHeight() - margin;
+  let y = margin;
+
+  for (const raw of file.content.split("\n")) {
+    const heading = raw.match(/^(#{1,3})\s+(.*)/);
+    const bullet = raw.match(/^\s*[-*•]\s+(.*)/);
+    const size = heading ? [20, 15, 13][heading[1].length - 1] : 11;
+    const text = pdfText(heading ? heading[2] : bullet ? `•  ${bullet[1]}` : raw);
+    pdf.setFont("helvetica", heading ? "bold" : "normal").setFontSize(size);
+    const lines: string[] = text.trim() ? pdf.splitTextToSize(text, bullet ? width - 12 : width) : [""];
+    const lineHeight = size * 1.4;
+    if (heading && y > margin) y += 6;
+    for (const line of lines) {
+      if (y + lineHeight > bottom) {
+        pdf.addPage();
+        y = margin;
+      }
+      pdf.text(line, bullet ? margin + 12 : margin, y + size);
+      y += line ? lineHeight : lineHeight / 2;
+    }
+  }
+  pdf.save(`${file.name.replace(/\.(md|pdf)$/i, "")}.pdf`);
 }

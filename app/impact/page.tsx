@@ -71,13 +71,17 @@ function money(value: number) {
   return `$${Math.round(value).toLocaleString("en-US")}`;
 }
 
+function millions(value: number) {
+  return `≈ $${(value / 1_000_000).toFixed(1)}M`;
+}
+
 export default function ImpactPage() {
   const [scenario, setScenario] = useState(DEFAULT_SCENARIO);
   const [inputs, setInputs] = useState<RevenueInputs>(scenarios[DEFAULT_SCENARIO]);
   const result = projectRevenue(inputs);
 
   const outputs = [
-    { label: "NIL dollars to athletes", value: money(result.athleteDollars) },
+    { label: `NIL dollars to athletes (${millions(result.athleteDollars)})`, value: money(result.athleteDollars) },
     { label: "From sponsors", value: money(result.sponsorRevenue) },
     { label: "From athlete campaigns", value: money(result.athleteCampaigns) },
     { label: "From fans", value: money(result.fanRevenue) },
@@ -129,6 +133,7 @@ export default function ImpactPage() {
             followed.
           </p>
           <p className="mt-4 text-5xl font-extrabold">{money(result.athleteDollars)}</p>
+          <p className="text-2xl font-bold">{millions(result.athleteDollars)}</p>
           <p className="text-sm text-white/90">per year in the {scenario} scenario below</p>
         </article>
       </section>
@@ -182,6 +187,7 @@ export default function ImpactPage() {
             <Input
               type="number"
               min={0}
+              step="any"
               value={Number.isNaN(inputs[field.key]) ? "" : inputs[field.key]}
               onChange={(event) => {
                 setScenario("Custom");

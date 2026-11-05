@@ -21,6 +21,7 @@ import {
   PERSONALITY_TAGS,
   pickScenario,
   PROPOSAL_NOTE,
+  sampleChat,
   scenarios,
   undecided,
 } from "@/lib/demo-script";
@@ -145,6 +146,25 @@ function Assistant({ search }: { search: string }) {
     });
   }
 
+  // The sample opens at once; its script id matches no scenario, so follow-ups go to the live AI.
+  function openSample() {
+    commit({
+      id: crypto.randomUUID(),
+      mode: "budget",
+      title: sampleChat.title,
+      createdAt: new Date().toISOString(),
+      script: { id: "sample", step: -1 },
+      messages: [
+        turn("user", sampleChat.ask),
+        turn("assistant", sampleChat.answer, {
+          athleteIds: sampleChat.athleteIds,
+          files: [{ id: crypto.randomUUID(), ...sampleChat.file }],
+          source: "script",
+        }),
+      ],
+    });
+  }
+
   async function send(text: string) {
     const clean = text.trim();
     if (!clean || busy) return;
@@ -261,6 +281,13 @@ function Assistant({ search }: { search: string }) {
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                onClick={openSample}
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-red-50"
+              >
+                <Sparkles className="size-4" /> Try a sample: {sampleChat.title}
+              </button>
             </div>
           ) : (
             <ol className="grid gap-6">

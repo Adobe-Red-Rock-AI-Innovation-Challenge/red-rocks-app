@@ -67,7 +67,7 @@ export const scenarios: Record<string, RevenueInputs> = {
   },
   [DEFAULT_SCENARIO]: {
     ...common,
-    paidPercent: 26,
+    paidPercent: 26.1,
     oneTimeSupports: 8000,
     spotlights: 60,
     meetNights: 20,

@@ -91,6 +91,57 @@ export const scenarios: Record<string, Scenario> = {
 
 export { PROPOSAL_NOTE };
 
+// A saved sample chat that opens instantly, so a live demo never waits on the AI.
+export const sampleChat = {
+  title: "Sego Smoothie, $3,000",
+  ask: "We're Sego Smoothie Co. in Sugar House. We have $3,000 for a Red Rocks campaign that brings active students and families in for post-workout smoothies. What would you suggest?",
+  answer:
+    "I recommend “Fuel Like a Red Rock,” a four-week campaign that ties Sego's post-workout smoothies and acai bowls to the training behind every Red Rocks routine.\n\nBig idea: show what a Red Rock refuels with after practice, through athlete-made recipe content.\nKey message: Train hard, refuel local in Sugar House.\n\nProposed athletes:\n• Avery Neff, the team's all-arounder, for the hero Reel.\n• Elizabeth Gantner, whose profile lists cooking, for a “build your bowl” recipe post.\n• Camie Winger, whose profile lists hiking and biking, for an after-the-trail Story set.\n• Sage Curtis, a floor specialist, for a meet-week Story with the offer.\n\nPlanning split for $3,000 (a guide, not athlete prices): athlete compensation $2,000, content capture $400, local social boost $300, VIP Pass offer and QR setup $200, tracking and contingency $100. A “Red Rock Recharge” member offer uses personal codes, so Sego sees every redemption in store.\n\nAny single athlete deal of $600 or more goes through NIL Go, every post carries #ad, and pay is never tied to performance. Use Request rate on a card to get each athlete's own quote.",
+  athleteIds: ["avery-neff", "elizabeth-gantner", "camie-winger", "sage-curtis"],
+  file: {
+    name: "Sego_Smoothie_Fuel_Like_a_Red_Rock_Plan",
+    content: [
+      "# Fuel Like a Red Rock",
+      "Sego Smoothie Co. × Red Rocks Gymnastics · sample campaign plan",
+      "",
+      "## Big idea",
+      "Show what a Red Rock refuels with after practice, through athlete-made recipe content. Key message: Train hard, refuel local in Sugar House.",
+      "",
+      "## Proposed athletes",
+      "- Avery Neff: hero Reel",
+      "- Elizabeth Gantner: “build your bowl” recipe post",
+      "- Camie Winger: after-the-trail Story set",
+      "- Sage Curtis: meet-week Story with the offer",
+      "",
+      "## Four-week plan",
+      "- Week 1: hero Reel and the Red Rock Recharge offer for VIP Pass members",
+      "- Week 2: recipe post and in-store QR at the Sugar House counter",
+      "- Week 3: after-the-trail Story set",
+      "- Week 4: meet-week Story and offer reminder",
+      "",
+      "## Planning split: $3,000",
+      "- Athlete compensation: $2,000",
+      "- Content capture: $400",
+      "- Local social boost: $300",
+      "- VIP Pass offer and QR setup: $200",
+      "- Tracking and contingency: $100",
+      "This split is a planning guide, not athlete prices. Each athlete quotes their own rate through Request rate.",
+      "",
+      "## How Sego measures results",
+      "- Offer claims and in-store redemptions by personal code",
+      "- Cost per redemption on the Results page",
+      "- Reel and Story views and shares",
+      "",
+      "## Rules",
+      "- Any single athlete deal of $600 or more goes through NIL Go",
+      "- Every post carries #ad; no school marks without approval",
+      "- Pay is never tied to performance",
+      "",
+      PROPOSAL_NOTE,
+    ].join("\n"),
+  },
+};
+
 export const openers = {
   athlete:
     "Which athlete would you like to work with? Type a name, or tell me you're not sure and I'll help you choose by personality.",

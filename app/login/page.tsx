@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { setDemoState, signIn } from "@/lib/demo-store";
 import { roles } from "@/lib/roles";
-import type { DemoUser, Role } from "@/lib/types";
+import type { DemoUser, Membership, Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const noSubscription = () => () => {};
@@ -19,6 +19,16 @@ const audiences: { role: Role; label: string }[] = [
   { role: "fan", label: "Red Rock Nation" },
   { role: "athlete", label: "Athlete" },
 ];
+
+// A fan's name goes on their VIP Pass; a demo fan account also arrives with its membership.
+function startFan(user: DemoUser, demoMembership: Membership | null) {
+  setDemoState((current) => ({
+    ...current,
+    role: "fan",
+    fan: { name: user.name, email: user.email },
+    membership: demoMembership ?? current.membership,
+  }));
+}
 
 function homeFor(role: Role) {
   if (role === "fan") return "/fan/dashboard";
@@ -50,11 +60,9 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [registering, setRegistering] = useState<DemoUser | null>(null);
 
-  function finish(user: DemoUser, role: Role) {
+  function finish(user: DemoUser, role: Role, demoMembership: Membership | null = null) {
     signIn(user, role);
-    if (role === "fan") {
-      setDemoState((current) => ({ ...current, fan: { name: user.name, email: user.email } }));
-    }
+    if (role === "fan") startFan(user, demoMembership);
     toast.success(`Welcome, ${user.name}`);
     router.push(next ?? homeFor(role));
   }
@@ -64,6 +72,7 @@ export default function LoginPage() {
       .then((result) => {
         if (!result) return;
         signIn(result.user, result.role);
+        if (result.role === "fan") startFan(result.user, result.demoMembership);
         if (result.needsRegistration) {
           setRegistering(result.user);
           return;
@@ -96,7 +105,7 @@ export default function LoginPage() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Could not sign in");
-      finish(data.user, data.role);
+      finish(data.user, data.role, data.demoMembership);
       if (data.user.status === "pending") toast("Your account is waiting for admin approval.");
     } catch (error) {
       toast.error((error as Error).message);

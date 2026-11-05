@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { DemoUser, Role } from "@/lib/types";
+import type { DemoUser, Membership, Role } from "@/lib/types";
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 const PENDING_KEY = "red-rocks-google-sign-in";
@@ -41,8 +41,12 @@ export async function completeGoogleSignIn() {
   if (!response.ok) throw new Error("Google sign-in failed");
 
   // The server decides the role from the member list, so nobody can pick "athlete" for themselves.
-  const result: { user: DemoUser; role: Role; needsRegistration: boolean } =
-    await response.json();
+  const result: {
+    user: DemoUser;
+    role: Role;
+    needsRegistration: boolean;
+    demoMembership: Membership | null;
+  } = await response.json();
   return { ...result, next: pending.next };
 }
 

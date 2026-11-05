@@ -1,5 +1,5 @@
 import { findOrCreateMember, hasDatabase } from "@/lib/members";
-import { adminEmails, createSession } from "@/lib/session";
+import { adminEmails, createSession, demoFanEmails } from "@/lib/session";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -25,11 +25,14 @@ export async function POST(request: Request) {
   const email = String(claims.email).toLowerCase();
   const name = claims.name ?? email;
   const isAdmin = adminEmails().includes(email);
+  const demoFan = demoFanEmails().includes(email);
 
   try {
-    // Admins come from ADMIN_EMAILS, so they never need a member row or approval.
-    const member =
-      hasDatabase() && !isAdmin
+    // Admins come from ADMIN_EMAILS, so they never need a member row or approval. Demo fans
+    // always sign in as a fan, even when they are also admins.
+    const member = demoFan
+      ? { role: "fan" as const, status: "active" as const, registered: true }
+      : hasDatabase() && !isAdmin
         ? await findOrCreateMember(email, name)
         : { role: "sponsor" as const, status: isAdmin ? ("active" as const) : ("pending" as const), registered: true };
     const access = { role: member.role, status: member.status };
@@ -39,6 +42,7 @@ export async function POST(request: Request) {
       user: { name, email, picture: claims.picture, provider: "google", isAdmin, status: access.status },
       role: access.role,
       needsRegistration: !member.registered,
+      demoMembership: demoFan ? "inner" : null,
     });
   } catch (error) {
     console.error("Could not load member", error);

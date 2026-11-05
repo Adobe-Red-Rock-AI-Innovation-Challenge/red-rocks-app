@@ -56,3 +56,12 @@ export async function readSession(): Promise<Session | null> {
 export async function clearSession() {
   (await cookies()).delete(COOKIE);
 }
+
+// Emails in DEMO_FAN_EMAILS sign in as a fan who is already an Inner Circle member, so the team can
+// demo member-only features such as messaging athletes without paying.
+export function demoFanEmails() {
+  return (process.env.DEMO_FAN_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}

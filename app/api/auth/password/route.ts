@@ -1,6 +1,6 @@
 import { createPasswordMember, findPasswordMember, hasDatabase } from "@/lib/members";
 import { hashPassword, MIN_PASSWORD_LENGTH, verifyPassword } from "@/lib/passwords";
-import { adminEmails, createSession } from "@/lib/session";
+import { adminEmails, createSession, demoFanEmails } from "@/lib/session";
 import type { Role } from "@/lib/types";
 
 const ATHLETE_DOMAIN = "@umail.utah.edu";
@@ -65,10 +65,13 @@ export async function POST(request: Request) {
   }
 
   const isAdmin = adminEmails().includes(email);
-  const status = isAdmin ? "active" : member.status;
-  await createSession({ email, role: member.role, status, isAdmin });
+  const demoFan = demoFanEmails().includes(email);
+  const memberRole = demoFan ? "fan" : member.role;
+  const status = isAdmin || demoFan ? "active" : member.status;
+  await createSession({ email, role: memberRole, status, isAdmin });
   return Response.json({
     user: { name: member.name, email, provider: "password", isAdmin, status },
-    role: member.role,
+    role: memberRole,
+    demoMembership: demoFan ? "inner" : null,
   });
 }

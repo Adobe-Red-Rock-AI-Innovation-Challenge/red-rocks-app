@@ -6,6 +6,7 @@ import { Briefcase, CheckCircle2, Circle, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AthletePicker } from "@/components/athlete-picker";
 import { useDemo } from "@/components/demo-provider";
+import { GoLivePanel } from "@/components/live";
 import { Button } from "@/components/ui/button";
 import { awaitingReply } from "@/lib/chat";
 import { athletes } from "@/lib/data";
@@ -136,6 +137,7 @@ export default function AthleteTasksPage() {
         Everything businesses and fans are waiting on, in one place.
       </p>
       <AthletePicker />
+      <GoLivePanel athleteId={athlete.id} />
 
       <div role="group" aria-label="Filter tasks" className="mt-6 flex gap-2">
         {(["All", "Business", "Fan"] as const).map((item) => (

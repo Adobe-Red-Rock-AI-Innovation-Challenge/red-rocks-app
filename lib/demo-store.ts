@@ -101,7 +101,25 @@ export const initialState: DemoState = {
   ],
   rsvps: [],
   thanks: [],
-  notifications: [],
+  notifications: [
+    {
+      id: "seed-live-avery",
+      text: "Avery Neff is live on TikTok",
+      href: "/athletes",
+      read: false,
+      createdAt: "2026-11-05T18:00:00.000Z",
+    },
+  ],
+  // A sample live session that links to the team's TikTok, so the live flow can be shown right away.
+  live: [
+    {
+      athleteId: "avery-neff",
+      platform: "TikTok",
+      url: "https://www.tiktok.com/@utahgymnastics",
+      startedAt: "2026-11-05T18:00:00.000Z",
+      sample: true,
+    },
+  ],
   offers: [
     {
       id: "seed-second-peak",

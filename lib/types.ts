@@ -164,6 +164,17 @@ export type SavedCampaign = {
 
 export type ThankYou = { id: string; from: string; message: string; createdAt: string };
 
+// An athlete going live on their own account. The hub only links out; it never embeds the stream.
+export type LiveSession = {
+  athleteId: string;
+  platform: LivePlatform;
+  url: string;
+  startedAt: string;
+  sample?: boolean;
+};
+
+export type LivePlatform = "TikTok" | "Instagram";
+
 export type DemoNotification = {
   id: string;
   text: string;
@@ -280,6 +291,7 @@ export type DemoState = {
   sales: Sale[];
   conversations: Conversation[];
   athleteCampaigns: AthleteCampaign[];
+  live: LiveSession[];
   campaigns: SavedCampaign[];
   aiChats: AiChat[];
   businessProfile: BusinessProfile | null;

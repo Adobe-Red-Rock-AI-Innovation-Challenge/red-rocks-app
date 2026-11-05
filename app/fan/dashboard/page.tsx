@@ -6,6 +6,7 @@ import { Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { ChatThread } from "@/components/chat-thread";
 import { useDemo } from "@/components/demo-provider";
+import { FanSeasonGoal } from "@/components/season-goal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { VipCard } from "@/components/vip-card";
 import { athletes, events, rewards, sponsors } from "@/lib/data";
@@ -57,6 +58,7 @@ export default function FanDashboardPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
       <h1 className="text-4xl">My VIP Pass</h1>
+      <FanSeasonGoal className="mt-6" />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[24rem_1fr]">
         <div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRight, Building2, HeartHandshake, Megaphone, UsersRound } from "lucide-react";
+import { useDemo } from "@/components/demo-provider";
 import { SeasonGoal } from "@/components/season-goal";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
@@ -76,9 +77,12 @@ function millions(value: number) {
 }
 
 export default function ImpactPage() {
+  const { state } = useDemo();
   const [scenario, setScenario] = useState(DEFAULT_SCENARIO);
   const [inputs, setInputs] = useState<RevenueInputs>(scenarios[DEFAULT_SCENARIO]);
   const result = projectRevenue(inputs);
+  // /impact belongs to no role, so it follows the role last chosen in the header.
+  const fanView = state.role === "fan";
 
   const outputs = [
     { label: `NIL dollars to athletes (${millions(result.athleteDollars)})`, value: money(result.athleteDollars) },
@@ -134,7 +138,9 @@ export default function ImpactPage() {
           </p>
           <p className="mt-4 text-5xl font-extrabold">{money(result.athleteDollars)}</p>
           <p className="text-2xl font-bold">{millions(result.athleteDollars)}</p>
-          <p className="text-sm text-white/90">per year in the {scenario} scenario below</p>
+          <p className="text-sm text-white/90">
+            per year in the {fanView ? "$2M Plan" : `${scenario} scenario below`}
+          </p>
         </article>
       </section>
 
@@ -142,81 +148,86 @@ export default function ImpactPage() {
         <SeasonGoal />
       </div>
 
-      <h2 className="mt-12 text-3xl">Revenue model</h2>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        Every input is sourced or marked as an assumption. Change any of them.
-      </p>
+      {/* Fans see where their money goes; the business revenue model is for sponsors and athletes. */}
+      {!fanView && (
+        <>
+          <h2 className="mt-12 text-3xl">Revenue model</h2>
+          <p className="mt-2 max-w-2xl text-muted-foreground">
+            Every input is sourced or marked as an assumption. Change any of them.
+          </p>
 
-      <div role="group" aria-label="Scenario" className="mt-6 flex flex-wrap gap-2">
-        {Object.keys(scenarios).map((name) => (
-          <Button
-            key={name}
-            variant={scenario === name ? "default" : "outline"}
-            aria-pressed={scenario === name}
-            onClick={() => {
-              setScenario(name);
-              setInputs(scenarios[name]);
-            }}
-          >
-            {name}
-          </Button>
-        ))}
-      </div>
-
-      <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
-        {outputs.map((item, index) => (
-          <div
-            key={item.label}
-            className={index === 0 ? "rounded-lg bg-primary p-4 text-white" : "rounded-lg border p-4"}
-          >
-            <dd className="font-heading text-3xl font-extrabold">{item.value}</dd>
-            <dt className={index === 0 ? "text-sm text-red-100" : "text-sm text-muted-foreground"}>
-              {item.label}
-            </dt>
+          <div role="group" aria-label="Scenario" className="mt-6 flex flex-wrap gap-2">
+            {Object.keys(scenarios).map((name) => (
+              <Button
+                key={name}
+                variant={scenario === name ? "default" : "outline"}
+                aria-pressed={scenario === name}
+                onClick={() => {
+                  setScenario(name);
+                  setInputs(scenarios[name]);
+                }}
+              >
+                {name}
+              </Button>
+            ))}
           </div>
-        ))}
-      </dl>
-      <p className="mt-3 rounded-lg bg-neutral-50 p-3 text-sm">
-        <span className="font-bold">{money(result.serviceFees)}</span> in {inputs.serviceFeePercent}% service
-        fees sponsors pay on top runs the hub. It is not counted in the NIL dollars above.
-      </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {fields.map((field) => (
-          <Field key={field.key} label={field.label}>
-            <Input
-              type="number"
-              min={0}
-              step="any"
-              value={Number.isNaN(inputs[field.key]) ? "" : inputs[field.key]}
-              onChange={(event) => {
-                setScenario("Custom");
-                setInputs({ ...inputs, [field.key]: event.target.valueAsNumber || 0 });
-              }}
-            />
-            <span className="text-xs font-normal text-muted-foreground">{field.source}</span>
-          </Field>
-        ))}
-      </div>
+          <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+            {outputs.map((item, index) => (
+              <div
+                key={item.label}
+                className={index === 0 ? "rounded-lg bg-primary p-4 text-white" : "rounded-lg border p-4"}
+              >
+                <dd className="font-heading text-3xl font-extrabold">{item.value}</dd>
+                <dt className={index === 0 ? "text-sm text-red-100" : "text-sm text-muted-foreground"}>
+                  {item.label}
+                </dt>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 rounded-lg bg-neutral-50 p-3 text-sm">
+            <span className="font-bold">{money(result.serviceFees)}</span> in {inputs.serviceFeePercent}% service
+            fees sponsors pay on top runs the hub. It is not counted in the NIL dollars above.
+          </p>
 
-      <section className="mt-10 rounded-lg bg-neutral-50 p-5 text-sm">
-        <h2 className="text-2xl">How this is calculated</h2>
-        <ul className="mt-3 grid list-disc gap-1 pl-5">
-          <li>Sponsor money = deals × package price. Athletes keep all of it; the service fee is added on top and is not part of the goal.</li>
-          <li>
-            Athlete campaigns = youth clinics × {money(CLINIC_PRICE)} + athlete-pitched campaigns ×{" "}
-            {money(PITCHED_CAMPAIGN_PRICE)} + signed drops × ${SIGNED_DROP_PRICE} × {ATHLETE_SHARE_PERCENT}%.
-          </li>
-          <li>
-            Fan money = (current donors + ticket holders × join rate) × monthly price × months, plus
-            one-time supports × average gift. Athletes receive the share you set.
-          </li>
-          <li>
-            Package prices: {sponsorPackages.map((item) => `${item.name} ${money(item.price)}`).join(", ")}.
-          </li>
-          <li>Card fees and taxes are not modeled. Totals are planning estimates, not forecasts.</li>
-        </ul>
-      </section>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {fields.map((field) => (
+              <Field key={field.key} label={field.label}>
+                <Input
+                  type="number"
+                  min={0}
+                  step="any"
+                  value={Number.isNaN(inputs[field.key]) ? "" : inputs[field.key]}
+                  onChange={(event) => {
+                    setScenario("Custom");
+                    setInputs({ ...inputs, [field.key]: event.target.valueAsNumber || 0 });
+                  }}
+                />
+                <span className="text-xs font-normal text-muted-foreground">{field.source}</span>
+              </Field>
+            ))}
+          </div>
+
+          <section className="mt-10 rounded-lg bg-neutral-50 p-5 text-sm">
+            <h2 className="text-2xl">How this is calculated</h2>
+            <ul className="mt-3 grid list-disc gap-1 pl-5">
+              <li>Sponsor money = deals × package price. Athletes keep all of it; the service fee is added on top and is not part of the goal.</li>
+              <li>
+                Athlete campaigns = youth clinics × {money(CLINIC_PRICE)} + athlete-pitched campaigns ×{" "}
+                {money(PITCHED_CAMPAIGN_PRICE)} + signed drops × ${SIGNED_DROP_PRICE} × {ATHLETE_SHARE_PERCENT}%.
+              </li>
+              <li>
+                Fan money = (current donors + ticket holders × join rate) × monthly price × months, plus
+                one-time supports × average gift. Athletes receive the share you set.
+              </li>
+              <li>
+                Package prices: {sponsorPackages.map((item) => `${item.name} ${money(item.price)}`).join(", ")}.
+              </li>
+              <li>Card fees and taxes are not modeled. Totals are planning estimates, not forecasts.</li>
+            </ul>
+          </section>
+        </>
+      )}
     </div>
   );
 }

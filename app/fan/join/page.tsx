@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { useCheckout } from "@/components/checkout";
+import { FanSeasonGoal } from "@/components/season-goal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { MAX_SUPPORT, MIN_SUPPORT, plans } from "@/lib/checkout";
@@ -34,6 +35,7 @@ export default function JoinPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-12">
       <h1 className="text-4xl sm:text-5xl">Join the community</h1>
       <p className="mt-2 text-muted-foreground">Pick a plan or give once. Cancel anytime.</p>
+      <FanSeasonGoal className="mt-6" />
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {(Object.entries(plans) as [Membership, (typeof plans)[Membership]][]).map(([id, plan]) => (

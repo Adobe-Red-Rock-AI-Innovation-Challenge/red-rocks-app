@@ -83,3 +83,15 @@ export function SeasonGoal() {
     </div>
   );
 }
+
+// Fans see the same season counter, with the promise that matters to them.
+export function FanSeasonGoal({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <SeasonGoal />
+      <p className="mt-2 text-sm font-semibold text-primary">
+        100% of your membership reaches athletes, minus card processing.
+      </p>
+    </div>
+  );
+}

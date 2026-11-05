@@ -18,7 +18,8 @@ export function SiteHeader() {
   const links = [
     ...navByRole[activeRole],
     { href: "/gifts", label: "Gifts" },
-    { href: "/impact", label: "Impact" },
+    // The revenue model is business detail, so fans see their own money story on Join and My Pass instead.
+    ...(activeRole === "fan" ? [] : [{ href: "/impact", label: "Impact" }]),
   ];
 
   function handleReset() {

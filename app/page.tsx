@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { FadeIn } from "@/components/fade-in";
 import { AthleteCarousel } from "@/components/home/athlete-carousel";
+import { HeroLinks } from "@/components/home/hero-links";
 import { JoinForm } from "@/components/home/join-form";
 import { ReachSection } from "@/components/home/reach-section";
 import { plans } from "@/lib/checkout";
@@ -19,13 +20,6 @@ const photos = {
   allAccess: "/images/home/all-access.webp",
   innerCircle: "/images/home/inner-circle.webp",
 };
-
-const heroLinks = [
-  { href: "#about", label: "About Red Rocks" },
-  { href: "#athletes", label: "Meet the Athletes" },
-  { href: "#partners", label: "Brand Partnerships" },
-  { href: "#fan-club", label: "Fan Club" },
-];
 
 // Every figure below is sourced: Utah Athletics (titles, attendance, home streak) and the
 // team's program history brief (Final Fours).
@@ -75,17 +69,7 @@ export default function Home() {
         </div>
         <div className="relative flex min-h-[32rem] flex-col p-5 pt-16 sm:p-8 sm:pt-16">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <nav aria-label="Home sections" className="flex flex-wrap gap-2">
-              {heroLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-full border border-white/70 px-3 py-1 text-xs hover:bg-white/15"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
+            <HeroLinks />
             <Link
               href="/login"
               className="flex items-center gap-1.5 rounded-full bg-primary py-1 pr-1 pl-3 text-xs"

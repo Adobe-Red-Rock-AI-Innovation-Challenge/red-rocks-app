@@ -1,46 +1,47 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState, type PointerEvent } from "react";
+import { sponsorPackages } from "@/lib/packages";
 
-// Planning estimates: impressions assume a blended cost of roughly $15 to $25 per thousand
-// across athlete social, team channels, VIP Pass offers and in-arena placements.
-const levels = [
-  { label: "$1,000", reach: "40K", channels: "1 channel", launch: "21 Days" },
-  { label: "$2,000", reach: "90K", channels: "2 channels", launch: "21 Days" },
-  { label: "$3,000", reach: "140K", channels: "2 channels", launch: "14 Days" },
-  { label: "$5,000", reach: "250K", channels: "3 channels", launch: "14 Days" },
-  { label: "$10K", reach: "550K", channels: "3 channels", launch: "10 Days" },
-  { label: "$20K", reach: "1.2M", channels: "4 channels", launch: "10 Days" },
-  { label: "$50K", reach: "3M", channels: "5 channels", launch: "7 Days" },
-  { label: "$100K", reach: "6.5M", channels: "6 channels", launch: "7 Days" },
-  { label: "$200K", reach: "13M", channels: "7 channels", launch: "5 Days" },
-  { label: "$500K", reach: "30M", channels: "8 channels", launch: "3 Days" },
-  { label: "Unlimited", reach: "Custom", channels: "Every channel", launch: "Priority" },
-];
+// The dial stops only at the three real packages, so its prices always match the Packages page.
+const details: Record<string, { athletes: string; runs: string }> = {
+  spotlight: { athletes: "1 athlete", runs: "One campaign" },
+  "meet-night": { athletes: "4 athletes", runs: "One meet week" },
+  anchor: { athletes: "Every athlete", runs: "The whole season" },
+};
+
+const levels = sponsorPackages.map((item) => ({
+  label: `$${item.price.toLocaleString("en-US")}`,
+  note: item.priceNote ?? "per campaign",
+  name: item.name,
+  ...details[item.id],
+}));
 
 const SIZE = 184;
 const RADIUS = 74;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export function BudgetDial() {
-  const [index, setIndex] = useState(3);
+  const [index, setIndex] = useState(0);
   const dragging = useRef(false);
   const level = levels[index];
-  const fraction = index / (levels.length - 1);
+  // Thirds of the ring: Spotlight fills one, Meet Night two, Anchor the whole ring.
+  const fraction = (index + 1) / levels.length;
   const angle = fraction * 2 * Math.PI;
   const knob = {
     x: SIZE / 2 + RADIUS * Math.sin(angle),
     y: SIZE / 2 - RADIUS * Math.cos(angle),
   };
 
-  function pick(event: PointerEvent<SVGSVGElement>) {
+  function pick(event: PointerEvent<SVGSVGElement>, dragged: boolean) {
     const box = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - box.left - box.width / 2;
     const y = event.clientY - box.top - box.height / 2;
     const turned = (Math.atan2(x, -y) + 2 * Math.PI) % (2 * Math.PI);
-    const next = Math.round((turned / (2 * Math.PI)) * (levels.length - 1));
-    // Ignore jumps across the top so dragging past either end doesn't wrap around.
-    setIndex((current) => (Math.abs(next - current) > levels.length / 2 ? current : next));
+    const next = Math.min(levels.length - 1, Math.max(0, Math.round((turned / (2 * Math.PI)) * levels.length) - 1));
+    // While dragging, ignore jumps across the top so dragging past either end doesn't wrap around.
+    setIndex((current) => (dragged && Math.abs(next - current) > levels.length / 2 ? current : next));
   }
 
   return (
@@ -51,18 +52,18 @@ export function BudgetDial() {
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="slider"
         tabIndex={0}
-        aria-label="Estimated budget"
+        aria-label="Sponsor package"
         aria-valuemin={0}
         aria-valuemax={levels.length - 1}
         aria-valuenow={index}
-        aria-valuetext={level.label}
+        aria-valuetext={`${level.name}, ${level.label} ${level.note}`}
         className="cursor-grab touch-none rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:cursor-grabbing"
         onPointerDown={(event) => {
           dragging.current = true;
           event.currentTarget.setPointerCapture(event.pointerId);
-          pick(event);
+          pick(event, false);
         }}
-        onPointerMove={(event) => dragging.current && pick(event)}
+        onPointerMove={(event) => dragging.current && pick(event, true)}
         onPointerUp={() => (dragging.current = false)}
         onKeyDown={(event) => {
           if (event.key === "ArrowRight" || event.key === "ArrowUp") setIndex((i) => Math.min(levels.length - 1, i + 1));
@@ -91,16 +92,16 @@ export function BudgetDial() {
           {level.label}
         </text>
         <text x="50%" y="60%" textAnchor="middle" className="fill-muted-foreground text-[11px]">
-          Est. Budget
+          {level.note}
         </text>
         <circle cx={knob.x} cy={knob.y} r={11} fill="#000" stroke="#fff" strokeWidth={3} />
       </svg>
 
       <dl className="grid w-full max-w-60 gap-2 text-sm">
         {[
-          ["Delivering up to", `${level.reach} impressions`],
-          ["Across", level.channels],
-          ["With priority launch in", level.launch],
+          ["Package", level.name],
+          ["With", level.athletes],
+          ["Runs for", level.runs],
         ].map(([label, value]) => (
           <div key={label}>
             <dt>{label}</dt>
@@ -109,7 +110,11 @@ export function BudgetDial() {
         ))}
       </dl>
       <p className="max-w-60 text-xs text-muted-foreground">
-        All figures are estimates. For more, <a href="#join" className="underline">contact our team</a>.
+        Prices are planning estimates.{" "}
+        <Link href="/sponsor/packages" className="underline">
+          See what each package includes
+        </Link>
+        .
       </p>
     </div>
   );

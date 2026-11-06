@@ -59,7 +59,7 @@ export default function SponsorAthletesPage() {
           <p className="mt-2 text-muted-foreground">Pick who you want to work with.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link href="/sponsor" className={buttonVariants({ variant: "outline", size: "lg", className: "px-4" })}>
+          <Link href="/business/assistant" className={buttonVariants({ variant: "outline", size: "lg", className: "px-4" })}>
             <Sparkles />
             Let AI pick for me
           </Link>
